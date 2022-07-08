@@ -3,15 +3,16 @@ import "antd/dist/antd.min.css";
 import styled from "styled-components";
 import { PageHeader } from "antd";
 
-const Container = styled.div`
+export const Container = styled.div`
   display: flex;
   width: 100%;
   padding: 1rem;
+  flex-wrap: wrap;
 `;
-const Card = styled.div`
+export const Card = styled.div`
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   border-radius: 10px;
-  width: 33%;
+  width: 31%;
   padding: 1rem;
   margin: 0.3rem;
   :hover {
@@ -19,12 +20,12 @@ const Card = styled.div`
   }
 `;
 
-const CardTitle = styled.div`
+export const CardTitle = styled.div`
   margin-top: 2rem;
   margin-bottom: 0.3rem;
   font-weight: 500;
 `;
-const CardDescription = styled.p`
+export const CardDescription = styled.p`
   font-size: 13px;
   color: gray;
 `;
