@@ -58,7 +58,7 @@ function LoginLayout() {
           onClick={handleLogin}
           variant="contained"
           type="submit"
-          sx={{ mb: 1 }}
+          sx={{ mb: 1, bgcolor: 'yellow', color: 'black' }}
         >
           카카오 로그인
         </KakaoButton>
