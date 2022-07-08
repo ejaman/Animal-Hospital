@@ -1,14 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 
-const TitleName = styled.h2`
-  
+const Line = styled.div`
+  margin: 20px 0;
+  border-bottom: solid 1px black;
 `
 
-export default function Title({title}) {
+export default function Title({title}: any) {
   return (
     <>
-      <TitleName>{title}</TitleName>
+      <h2>{title}</h2>
+      <Line />
     </>
   )
 }
