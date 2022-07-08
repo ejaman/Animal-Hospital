@@ -14,6 +14,9 @@ const Card = styled.div`
   width: 33%;
   padding: 1rem;
   margin: 0.3rem;
+  :hover {
+    transform: scale(1.01);
+  }
 `;
 
 const CardTitle = styled.div`
