@@ -14,31 +14,7 @@ const SearchAddr = styled(Button)`
   text-align: center;
 `
 
-const RegisterBtn = styled.button`
-  width: 120px;
-  height: 40px;
-  margin: 20px 0;
-  text-align: center;
-  background-color: ${props => props.theme.palette.blue};
-  border: none;
-  cursor: pointer;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  transition: all 0.1s ease-in;
-  border-radius: 4px;
-  &:hover {
-    transform: scale(1.02);
-  }
-  &:active {
-    transform: scale(1);
-  }
-`
 
-const RegisterBtnContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`
 
 export default function NRegisterForm() {
   const [username, setUsername] = useState<string>('');
@@ -50,62 +26,53 @@ export default function NRegisterForm() {
   const [address1, setAddress1] = useState<string>('');
   const [address2, setAddress2] = useState<string>('');
 
-  function handleSubmit(e:React.MouseEvent<HTMLElement>) {
-    e.preventDefault();
-  }
-
   return (
     <>
-      <form>
+      <Input
+        placeholder="이름을 입력해주세요"
+        value = {username}
+        onChange = {(e) => setUsername(e.target.value)}
+        style={{ marginBottom: "1rem", marginTop: "0.5rem" }}
+      />
+      <Input
+        placeholder="이메일을 입력해주세요"
+        value = {email}
+        onChange = {(e) => setEmail(e.target.value)}
+        style={{ marginBottom: "1rem" }}
+      />
+      <Input
+        placeholder="비밀번호를 입력해주세요"
+        value = {password}
+        onChange = {(e) => setPassword(e.target.value)}
+        style={{ marginBottom: "1rem" }}
+      />
+      <Input
+        placeholder="비밀번호를 다시 입력해주세요"
+        value = {checkPwd}
+        onChange = {(e) => setCheckPwd(e.target.value)}
+        style={{ marginBottom: "1rem" }}
+      />
+      <Input
+        placeholder="전화번호를 입력해주세요" 
+        value = {phone}
+        onChange = {(e) => setPhone(e.target.value)}
+        style={{ marginBottom: "1rem" }}
+      />
+      <AddressContainer>
         <Input
-          placeholder="이름을 입력해주세요"
-          value = {username}
-          onChange = {(e) => setUsername(e.target.value)}
-          style={{ marginBottom: "1rem", marginTop: "0.5rem" }}
+          placeholder="우편번호"
+          style={{ marginBottom: "0.5rem" }}
+        />
+        <SearchAddr>주소 찾기</SearchAddr>
+        <Input
+          placeholder="주소"
+          style={{ marginBottom: "0.5rem" }}
         />
         <Input
-          placeholder="이메일을 입력해주세요"
-          value = {email}
-          onChange = {(e) => setEmail(e.target.value)}
-          style={{ marginBottom: "1rem" }}
+          placeholder="상세주소"
+          style={{ marginBottom: "0.5rem" }}
         />
-        <Input
-          placeholder="비밀번호를 입력해주세요"
-          value = {password}
-          onChange = {(e) => setPassword(e.target.value)}
-          style={{ marginBottom: "1rem" }}
-        />
-        <Input
-          placeholder="비밀번호를 다시 입력해주세요"
-          value = {checkPwd}
-          onChange = {(e) => setCheckPwd(e.target.value)}
-          style={{ marginBottom: "1rem" }}
-        />
-        <Input
-          placeholder="전화번호를 입력해주세요" 
-          value = {phone}
-          onChange = {(e) => setPhone(e.target.value)}
-          style={{ marginBottom: "1rem" }}
-        />
-        <AddressContainer>
-          <Input
-            placeholder="우편번호"
-            style={{ marginBottom: "0.5rem" }}
-          />
-          <SearchAddr>주소 찾기</SearchAddr>
-          <Input
-            placeholder="주소"
-            style={{ marginBottom: "0.5rem" }}
-          />
-          <Input
-            placeholder="상세주소"
-            style={{ marginBottom: "0.5rem" }}
-          />
-        </AddressContainer>
-        <RegisterBtnContainer>
-          <RegisterBtn type="submit" onClick={handleSubmit}>회원가입</RegisterBtn>
-        </RegisterBtnContainer>
-      </form>
+      </AddressContainer>
     </>
   )
 }
