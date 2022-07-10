@@ -7,6 +7,7 @@ import Title from './Title';
 import RegisterForm from './RegisterForm'
 
 const Container = styled.div`
+  margin: 20px 0;
   width: 500px;
   padding: 28px;
   box-shadow: rgb(0 0 0 / 12%) 0px 6px 16px;
@@ -25,22 +26,35 @@ const BtnContainer = styled.div`
   display: flex;
 `
 
-const SelectBtn = styled(Button)`
+interface IButtonProps {
+  isHospital: boolean
+}
+const UserSelectBtn = styled.button<IButtonProps>`
+  margin-right: 4px;
+
+  background-color: ${props => !props.isHospital ? props => props.theme.palette.blue : 'white'};
+  color: ${props => !props.isHospital ? 'white' : props.theme.palette.blue};
+  border: 1px solid ${props => props.theme.palette.blue};
+  padding: 8px;
+  transition: all 0.2s ease-in-out;
+  font-weight: ${props => !props.isHospital ? 'bold' : 'normal'};
+  cursor: pointer;
+  border-radius: 5px;
+
   &:hover {
-    color: ${props => props.theme.palette.blue};
-    border-color: ${props => props.theme.palette.blue};
+    background-color: ${props => props.theme.palette.blue};
+    color: white;
   }
 `
 
-const UserSelectBtn = styled(SelectBtn)`
-
+const HospitalSelectBtn = styled(UserSelectBtn)<IButtonProps>`
+  margin-right: 0;
+  background-color: ${props => props.isHospital ? props => props.theme.palette.blue : 'white'};
+  color: ${props => props.isHospital ? 'white' : props.theme.palette.blue};
+  font-weight: ${props => props.isHospital ? 'bold' : 'normal'};
 `
 
-const HospitalSelectBtn = styled(SelectBtn)`
-
-`
-
-export default function Register() {
+export default function Register () {
   const [isHospital, setIsHospital] = useState<boolean>(false);
 
   return (
@@ -48,10 +62,10 @@ export default function Register() {
       <Title title='회원가입' />
       <Welcome>동물병원에 오신 것을 환영합니다:)</Welcome>
       <BtnContainer>
-        <UserSelectBtn onClick={() => setIsHospital(false)}>
+        <UserSelectBtn isHospital={isHospital} onClick={() => setIsHospital(false)}>
           일반 회원
         </UserSelectBtn>
-        <HospitalSelectBtn onClick={() => setIsHospital(true)}>
+        <HospitalSelectBtn isHospital={isHospital} onClick={() => setIsHospital(true)}>
           병원 회원
         </HospitalSelectBtn>
       </BtnContainer>
