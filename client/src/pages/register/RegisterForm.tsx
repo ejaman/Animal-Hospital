@@ -69,11 +69,19 @@ const  RegisterForm: React.FC<Props> = ({isHospital}) => {
   return (
     <>
       <form>
+        {isHospital && 
+          <Input
+          placeholder="병원 이름을 입력해주세요"
+          value = {hospitalname}
+          onChange = {(e) => setHospitalname(e.target.value)}
+          style={{ marginTop: "1rem" }}
+        />
+        }
         <Input
           placeholder="이름을 입력해주세요"
           value = {username}
           onChange = {(e) => setUsername(e.target.value)}
-          style={{ marginBottom: "1rem", marginTop: "0.5rem" }}
+          style={{ marginBottom: "1rem", marginTop: "1rem" }}
         />
         <Input
           placeholder="이메일을 입력해주세요"
@@ -107,13 +115,29 @@ const  RegisterForm: React.FC<Props> = ({isHospital}) => {
           <SearchAddr>주소 찾기</SearchAddr>
           <Input
             placeholder="주소"
-            style={{ marginBottom: "0.5rem" }}
+            style={{ marginBottom: "1rem" }}
           />
           <Input
             placeholder="상세주소"
-            style={{ marginBottom: "0.5rem" }}
+            style={{ marginBottom: "1rem" }}
           />
         </AddressContainer>
+        {isHospital &&
+          <div>
+            <Input
+            placeholder="사업자 등록번호를 입력해주세요"
+            value = {CRN}
+            onChange = {(e) => setCRN(e.target.value)}
+            style={{ marginBottom: "1rem" }}
+            />
+            <Input
+            placeholder="면허 번호를 입력해주세요"
+            value = {license}
+            onChange = {(e) => setLicense(e.target.value)}
+            style={{ marginBottom: "1rem" }}
+            />
+          </div>
+        }
         <RegisterBtnContainer>
           <RegisterBtn type="submit" onClick={handleSubmit}>회원가입</RegisterBtn>
         </RegisterBtnContainer>
