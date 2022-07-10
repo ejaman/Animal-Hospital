@@ -7,7 +7,7 @@ import Title from './Title';
 import RegisterForm from './RegisterForm'
 
 const Container = styled.div`
-  margin: 20px 0;
+  margin: 10px 0;
   width: 500px;
   padding: 28px;
   box-shadow: rgb(0 0 0 / 12%) 0px 6px 16px;
@@ -40,6 +40,8 @@ const UserSelectBtn = styled.button<IButtonProps>`
   font-weight: ${props => !props.isHospital ? 'bold' : 'normal'};
   cursor: pointer;
   border-radius: 5px;
+  width: 50%;
+  font-size: 16px;
 
   &:hover {
     background-color: ${props => props.theme.palette.blue};
