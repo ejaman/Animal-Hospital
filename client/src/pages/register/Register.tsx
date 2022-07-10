@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 import { Button } from 'antd';
 
 import Title from './Title';
-import NRegisterForm from './NRegisterForm'
+import RegisterForm from './RegisterForm'
 
 const Container = styled.div`
   width: 500px;
@@ -40,39 +40,9 @@ const HospitalSelectBtn = styled(SelectBtn)`
 
 `
 
-const RegisterBtn = styled.button`
-  width: 120px;
-  height: 40px;
-  margin: 20px 0;
-  text-align: center;
-  background-color: ${props => props.theme.palette.blue};
-  border: none;
-  cursor: pointer;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  transition: all 0.1s ease-in;
-  border-radius: 4px;
-  &:hover {
-    transform: scale(1.02);
-  }
-  &:active {
-    transform: scale(1);
-  }
-`
-
-const RegisterBtnContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`
-
 export default function Register() {
   const [isHospital, setIsHospital] = useState<boolean>(false);
 
-  function handleSubmit(e:React.MouseEvent<HTMLElement>) {
-    e.preventDefault();
-  }
-  
   return (
     <Container>
       <Title title='회원가입' />
@@ -85,12 +55,8 @@ export default function Register() {
           병원 회원
         </HospitalSelectBtn>
       </BtnContainer>
-      <form>
-        <NRegisterForm />
-        <RegisterBtnContainer>
-          <RegisterBtn type="submit" onClick={handleSubmit}>회원가입</RegisterBtn>
-        </RegisterBtnContainer>
-      </form>
+
+      <RegisterForm isHospital={isHospital} />
     </Container>
   )
 }
