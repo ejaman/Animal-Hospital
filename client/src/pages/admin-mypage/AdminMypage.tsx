@@ -5,7 +5,7 @@ import {
   Card,
   CardTitle,
   CardDescription,
-} from "../user-mypage/UserMypage";
+} from "../../components/MypageCardBtn";
 
 function AdminMypage() {
   return (
