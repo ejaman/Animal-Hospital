@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import styled from 'styled-components';
 import 'antd/dist/antd.css';
-import { Button } from 'antd';
 
 import Title from './Title';
 import RegisterForm from './RegisterForm'
