@@ -84,16 +84,14 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
 
   function handleChangePwd(e: React.ChangeEvent<HTMLInputElement>) {
     setPassword(e.target.value);
-    const passwordRegex:RegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/
+    const passwordRegex:RegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,20}/
     setIsPwd(passwordRegex.test(password) ? true : false);
     checkPwd.length && setIsSamePwd(password === checkPwd ? true : false);
   }
 
-  function handleChangeCheckPwd(e: React.ChangeEvent<HTMLInputElement>) {
-    setCheckPwd(e.target.value);
-    console.log(password, checkPwd);
+  useEffect(() => {
     setIsSamePwd(password === checkPwd ? true : false);
-  }
+  }, [checkPwd, password])
 
   return (
     <>
@@ -135,7 +133,7 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
           placeholder="비밀번호를 다시 입력해주세요"
           type= 'password'
           value = {checkPwd}
-          onChange = {handleChangeCheckPwd}
+          onChange = {e => setCheckPwd(e.target.value)}
           style={{ marginTop: "1rem" }}
           required
         />
