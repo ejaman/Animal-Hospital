@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import 'antd/dist/antd.css';
 import { Input } from 'antd';
+// import { useNavigate } from 'react-router-dom';
 
 import Postcode from './Postcode';
 
@@ -59,8 +60,12 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
   const [isEmail, setIsEmail] = useState<boolean>(true);
   const [isPwd, setIsPwd] = useState<boolean>(true);
 
+  // const navigate = useNavigate();
+
   function handleSubmit(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
+
+    // isSamePwd && isEmail && isPwd && navigate('/') // 펫 등록 페이지로 이동
   }
 
   function handleChangeEmail(e: React.ChangeEvent<HTMLInputElement>) {
