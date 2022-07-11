@@ -68,17 +68,32 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
   const [CRN, setCRN] = useState<string>('');
   const [license, setLicense] = useState<string>('');
 
-  const [isSamePwd, setIsSamePwd] = useState<boolean>(true)
+  const [isSamePwd, setIsSamePwd] = useState<boolean>(true);
+  const [isEmail, setIsEmail] = useState<boolean>(true);
+  const [isPwd, setIsPwd] = useState<boolean>(true);
 
-  function handleSubmit(e:React.MouseEvent<HTMLElement>) {
+  function handleSubmit(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
-    
   }
 
-  useEffect(() => {
-    setIsSamePwd(password === checkPwd ? true : false)
-  }, [password, checkPwd])
-  
+  function handleChangeEmail(e: React.ChangeEvent<HTMLInputElement>) {
+    setEmail(e.target.value);
+    const emailRegex:RegExp =  /^(([^<>()[].,;:\s@"]+(.[^<>()[].,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
+    setIsEmail(emailRegex.test(email) ? true : false);
+  }
+
+  function handleChangePwd(e: React.ChangeEvent<HTMLInputElement>) {
+    setPassword(e.target.value);
+    const passwordRegex:RegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/
+    setIsPwd(passwordRegex.test(password) ? true : false);
+    checkPwd.length && setIsSamePwd(password === checkPwd ? true : false);
+  }
+
+  function handleChangeCheckPwd(e: React.ChangeEvent<HTMLInputElement>) {
+    setCheckPwd(e.target.value);
+    console.log(password, checkPwd);
+    setIsSamePwd(password === checkPwd ? true : false);
+  }
 
   return (
     <>
@@ -102,23 +117,25 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
         <Input
           placeholder="이메일을 입력해주세요"
           value = {email}
-          onChange = {(e) => setEmail(e.target.value)}
+          onChange = {handleChangeEmail}
           style={{ marginTop: "1rem" }}
           required
         />
+        {!isEmail && <ErrorMessage>이메일 형식이 올바르지 않습니다.</ErrorMessage>}
         <Input
           placeholder="비밀번호를 입력해주세요"
           type='password'
           value = {password}
-          onChange = {(e) => setPassword(e.target.value)}
+          onChange = {handleChangePwd}
           style={{ marginTop: "1rem" }}
           required
         />
+        {!isPwd && <ErrorMessage>비밀번호는 영문, 숫자, 특수문자 조합으로 8자 이상 입력해주세요.</ErrorMessage>}
         <Input
           placeholder="비밀번호를 다시 입력해주세요"
           type= 'password'
           value = {checkPwd}
-          onChange = {(e) => setCheckPwd(e.target.value)}
+          onChange = {handleChangeCheckPwd}
           style={{ marginTop: "1rem" }}
           required
         />
