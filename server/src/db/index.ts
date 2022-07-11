@@ -16,3 +16,4 @@ db.on('error', (error) =>
 
 export * from './models/HospStatusModel';
 export * from './models/HospRegStatusModel';
+export * from './models/HospTagModel';
