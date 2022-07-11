@@ -1,32 +1,59 @@
-import React from 'react';
+import React, { useState } from 'react';
+
 import {
   LoginWrapper,
-  LoginContainer,
   LoginInput,
   LoginButton,
   LoginTitle,
   RegisterButton,
   KakaoButton,
-  HospitalCheck,
   PasswordInput,
+  UserCheckBox,
+  UserInput,
 } from './LoginStyle';
 
-import { FormControlLabel, Checkbox } from '@mui/material';
+import axios from 'axios';
 
-const handleRegister = (e: React.MouseEvent<HTMLElement>): void => {
-  console.log('login 클릭이 발생했나요?');
-};
-
-const handleLogin = (e: React.MouseEvent<HTMLElement>): void => {
-  console.log('register 클릭이 발생했나요?');
+type LoginState = {
+  email: string;
+  password: string;
 };
 
 function LoginLayout() {
+  const [isCheckUser, setIsCheckUser] = useState<boolean>(false);
+  const [logins, setLogins] = useState<LoginState>({
+    email: '',
+    password: '',
+  });
+
+  // 비구조화 할당으로 email , password 값을 추출한다.
+  const { email, password } = logins;
+
+  // state를 사용하여 login 값 관리
+  const handleLoginState = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+    setLogins({
+      ...logins,
+      [name]: value,
+    });
+  };
+
+  const handleLoginChecked = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    console.log(logins);
+
+    // 로그인 버튼 클릭시에 입력한 이메일을 기준으로 백엔드에서 데이터를 찾고 그 이메일을 기준으로 password까지 확인해서 맞으면 pass시키고 틀리면 fail 시킨다.
+    axios.get('유저 정보 url 접근').then((res) => console.log(res));
+  };
+
   return (
-    <LoginContainer action="">
+    <form>
       <LoginWrapper>
         <LoginTitle>로그인</LoginTitle>
         <LoginInput
+          name="email"
+          value={email}
+          onChange={handleLoginState}
           label="이메일을 입력해주세요"
           variant="outlined"
           required
@@ -34,20 +61,25 @@ function LoginLayout() {
           sx={{ mb: 1 }}
         />
         <PasswordInput
+          name="password"
+          value={password}
+          onChange={handleLoginState}
           label="비밀번호를 입력해주세요"
           variant="outlined"
           required
           sx={{ mb: 1 }}
         />
-        <HospitalCheck>
-          <FormControlLabel control={<Checkbox />} label="병원 회원" />
-          <FormControlLabel
-            control={<Checkbox defaultChecked />}
-            label="일반 회원"
+        <UserCheckBox>
+          <UserInput
+            onClick={() => setIsCheckUser(!isCheckUser)}
+            type="checkbox"
+            id="hospital"
+            name="hospital"
           />
-        </HospitalCheck>
+          <label htmlFor="hospital">병원 회원</label>
+        </UserCheckBox>
         <LoginButton
-          onClick={handleLogin}
+          onClick={handleLoginChecked}
           variant="contained"
           type="submit"
           sx={{ mb: 1, bgcolor: '#F87474' }}
@@ -55,22 +87,17 @@ function LoginLayout() {
           로그인
         </LoginButton>
         <KakaoButton
-          onClick={handleLogin}
           variant="contained"
           type="submit"
-          sx={{ mb: 1, bgcolor: 'yellow', color: 'black' }}
+          sx={{ mb: 1, bgcolor: '#fae100', color: 'black' }}
         >
           카카오 로그인
         </KakaoButton>
-        <RegisterButton
-          onClick={handleRegister}
-          variant="outlined"
-          type="submit"
-        >
+        <RegisterButton variant="outlined" type="submit">
           회원 가입
         </RegisterButton>
       </LoginWrapper>
-    </LoginContainer>
+    </form>
   );
 }
 

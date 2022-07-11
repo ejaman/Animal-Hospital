@@ -9,9 +9,6 @@ const LoginTitle = styled.h3`
   padding-bottom: 36px;
 `;
 
-// LoginForm
-const LoginContainer = styled.form``;
-
 // Login을 둘러싸고 있는 Wrapper
 const LoginWrapper = styled.div`
   width: 340px;
@@ -44,20 +41,29 @@ const LoginButton = styled(Button)`
 // register Button
 const RegisterButton = styled(LoginButton)``;
 const KakaoButton = styled(LoginButton)``;
-const HospitalCheck = styled.div`
+
+const UserCheckBox = styled.div`
   display: flex;
   width: 340px;
   margin: 0 auto;
+  align-items: center;
+`;
+
+const UserInput = styled.input`
+  width: 15px;
+  height: 15px;
+  margin-right: 10px;
+  margin-bottom: 10px;
 `;
 
 export {
   LoginButton,
-  LoginContainer,
   LoginWrapper,
   LoginInput,
   LoginTitle,
   RegisterButton,
   KakaoButton,
-  HospitalCheck,
   PasswordInput,
+  UserCheckBox,
+  UserInput,
 };
