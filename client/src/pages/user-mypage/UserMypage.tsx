@@ -1,21 +1,22 @@
 import React from "react";
-import "antd/dist/antd.min.css";
 import { PageHeader } from "antd";
 import {
   Container,
   Card,
   CardTitle,
   CardDescription,
+  MypageHeader,
+  HeaderTitle,
+  HeaderDescription,
 } from "../../components/MypageCardBtn";
 
 function UserMypage() {
   return (
     <div style={{ maxWidth: "700px", margin: "2rem auto" }}>
-      <PageHeader
-        onBack={() => null}
-        title="name님"
-        subTitle="마이페이지에 오신걸 환영합니다"
-      />
+      <MypageHeader>
+        <HeaderTitle>이름님</HeaderTitle>
+        <HeaderDescription>마이페이지에 오신걸 환영합니다.</HeaderDescription>
+      </MypageHeader>
       <Container>
         <Card>
           <i className="fa-solid fa-id-card fa-xl"></i>
