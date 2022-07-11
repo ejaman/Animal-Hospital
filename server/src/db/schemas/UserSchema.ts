@@ -2,7 +2,7 @@ import {Schema} from 'mongoose';
 
 const UserSchema = new Schema (
     {
-        name : {
+        userName : {
             type :String,
             required : true,
         },
@@ -33,7 +33,7 @@ const UserSchema = new Schema (
                 _id: false,
             }
             ),
-            required: false,
+            required: true,
         },
     
         pet : [{
@@ -84,7 +84,7 @@ const UserSchema = new Schema (
                 vaccination :
                     {
                         type : String,
-                        required : true
+                        required : false
                     },
                 
                 neutralized : 
@@ -104,21 +104,10 @@ const UserSchema = new Schema (
             required : false
         }],
         
-        refreshtoken : {
-            type : new Schema({
-                kakao: String,
-                base : String,
-            }),
-            required : false
+        role : {
+            type : String,
+            required : true
         },
-
-        
-        isOAuth: {
-            type: Boolean,
-            required: false,
-            default: false,
-          },
-
                
         userStatus : {
             type : String,
