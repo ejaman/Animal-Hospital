@@ -1,5 +1,15 @@
 import styled from "styled-components";
 
+export const MypageHeader = styled.div`
+  padding: 1rem;
+`;
+export const HeaderTitle = styled.h3`
+  margin-bottom: 1rem;
+`;
+export const HeaderDescription = styled.p`
+  color: gray;
+`;
+
 export const Container = styled.div`
   display: flex;
   width: 100%;

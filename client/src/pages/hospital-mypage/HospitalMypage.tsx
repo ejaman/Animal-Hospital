@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import {
   Container,
   Card,
@@ -9,7 +10,7 @@ import {
   HeaderDescription,
 } from "../../components/MypageCardBtn";
 
-function AdminMypage() {
+function HospitalMypage() {
   return (
     <div style={{ maxWidth: "700px", margin: "2rem auto" }}>
       <MypageHeader>
@@ -19,17 +20,8 @@ function AdminMypage() {
       <Container>
         <Card>
           <i className="fa-solid fa-users fa-xl"></i>
-          <CardTitle>전체 유저정보</CardTitle>
-          <CardDescription>
-            전체 회원 정보를 열람하고 관리합니다.
-          </CardDescription>
-        </Card>
-        <Card>
-          <i className="fa-solid fa-hospital fa-xl"></i>
-          <CardTitle>전체 병원 정보</CardTitle>
-          <CardDescription>
-            전체 병원 정보를 열람하고 관리합니다.
-          </CardDescription>
+          <CardTitle>내 병원 정보</CardTitle>
+          <CardDescription>병원 정보를 열람하고 관리합니다.</CardDescription>
         </Card>
         <Card>
           <i className="fa-solid fa-book fa-xl"></i>
@@ -38,14 +30,9 @@ function AdminMypage() {
             전체 예약 내역을 확인하고 관리합니다.
           </CardDescription>
         </Card>
-        <Card>
-          <i className="fa-brands fa-adversal fa-xl"></i>
-          <CardTitle>프로모션 관리</CardTitle>
-          <CardDescription>프로모션을 관리합니다.</CardDescription>
-        </Card>
       </Container>
     </div>
   );
 }
 
-export default AdminMypage;
+export default HospitalMypage;
