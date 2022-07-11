@@ -1,6 +1,8 @@
 import cors from "cors";
 import express from "express";
 
+import { userRouter } from "./routers";
+
 const app = express();
 
 // CORS 에러 방지
@@ -13,5 +15,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // 미들웨어 (에러를 error.log 파일에 기록 및, 에러를 프론트엔드에 전달)
+
+
+//라우팅
+app.use('/api', userRouter)
 
 export { app };
