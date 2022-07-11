@@ -24,15 +24,23 @@ userRouter.post('/register', async(req : Request,res : Response, next : NextFunc
         const userStatus : string = req.body.userStatus;
         
         // 필수정보 기입되었는지, 이메일 형식 맞는지, 이메일 중복 없는지 체크
-        if (!userName || !email || !password || !phoneNumber) {
+        if (!userName || !email || !password || !phoneNumber || !address) {
             throw new Error("필수 정보가 모두 입력되었는지 확인해주세요.");
           }
 
-        if (email.indexOf("@") === -1) {
-            throw new Error("이메일 형식이 올바르지 않습니다.");
+        const regexEmail = /^(([^<>()[\]\.,;:\s@"]+(\.[^<>()[\]\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        if (!regexEmail.test(email)) {
+            throw new Error('이메일 형식이 올바르지 않습니다. 이메일 형식을 다시 한 번 확인해주세요.');
           }
 
-          const newUser = await userService.addUser({
+
+        const regixPW = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,20}/
+        if (!regixPW.test(password)){
+            throw new Error("비밀번호 규칙을 다시 한 번 확인해주세요.")
+        }
+
+        const newUser = await userService.addUser({
             userName,
             email,
             password,
