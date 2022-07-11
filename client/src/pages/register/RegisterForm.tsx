@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import 'antd/dist/antd.css';
 import { Input, Button } from 'antd';
@@ -12,6 +12,7 @@ const AddressContainer = styled.div`
 const SearchAddr = styled(Button)`
   width: 100px;
   text-align: center;
+  margin-top: 1rem;
 `;
 
 const RegisterBtn = styled.button`
@@ -40,6 +41,11 @@ const RegisterBtnContainer = styled.div`
   justify-content: center;
 `;
 
+const ErrorMessage = styled.p`
+  color: ${props => props.theme.palette.peach};
+  font-size: 12px;
+  margin-top: 4px;
+`;
 
 
 interface Props {
@@ -62,11 +68,16 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
   const [CRN, setCRN] = useState<string>('');
   const [license, setLicense] = useState<string>('');
 
+  const [isSamePwd, setIsSamePwd] = useState<boolean>(true)
+
   function handleSubmit(e:React.MouseEvent<HTMLElement>) {
     e.preventDefault();
   }
 
-  use
+  useEffect(() => {
+    setIsSamePwd(password === checkPwd ? true : false)
+  }, [password, checkPwd])
+  
 
   return (
     <>
@@ -84,52 +95,55 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
           placeholder="이름을 입력해주세요"
           value = {username}
           onChange = {(e) => setUsername(e.target.value)}
-          style={{ marginBottom: "1rem", marginTop: "1rem" }}
+          style={{ marginTop: "1rem" }}
           required
         />
         <Input
           placeholder="이메일을 입력해주세요"
           value = {email}
           onChange = {(e) => setEmail(e.target.value)}
-          style={{ marginBottom: "1rem" }}
+          style={{ marginTop: "1rem" }}
           required
         />
         <Input
           placeholder="비밀번호를 입력해주세요"
+          type='password'
           value = {password}
           onChange = {(e) => setPassword(e.target.value)}
-          style={{ marginBottom: "1rem" }}
+          style={{ marginTop: "1rem" }}
           required
         />
         <Input
           placeholder="비밀번호를 다시 입력해주세요"
+          type= 'password'
           value = {checkPwd}
           onChange = {(e) => setCheckPwd(e.target.value)}
-          style={{ marginBottom: "1rem" }}
+          style={{ marginTop: "1rem" }}
           required
         />
+        {!isSamePwd && <ErrorMessage>비밀번호와 일치하지 않습니다.</ErrorMessage>}
         <Input
           placeholder="전화번호를 입력해주세요" 
           value = {phone}
           onChange = {(e) => setPhone(e.target.value)}
-          style={{ marginBottom: "1rem" }}
+          style={{ marginTop: "1rem" }}
           required
         />
         <AddressContainer>
           <Input
             placeholder="우편번호"
-            style={{ marginBottom: "0.5rem" }}
+            style={{ marginTop: "1rem" }}
             required
           />
           <SearchAddr>주소 찾기</SearchAddr>
           <Input
             placeholder="주소"
-            style={{ marginBottom: "1rem" }}
+            style={{ marginTop: "0.5rem" }}
             required
           />
           <Input
             placeholder="상세주소"
-            style={{ marginBottom: "1rem" }}
+            style={{ marginTop: "0.5rem" }}
             required
           />
         </AddressContainer>
@@ -139,14 +153,14 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
             placeholder="사업자 등록번호를 입력해주세요"
             value = {CRN}
             onChange = {(e) => setCRN(e.target.value)}
-            style={{ marginBottom: "1rem" }}
+            style={{ marginTop: "1rem" }}
             required
             />
             <Input
             placeholder="면허 번호를 입력해주세요"
             value = {license}
             onChange = {(e) => setLicense(e.target.value)}
-            style={{ marginBottom: "1rem" }}
+            style={{ marginTop: "1rem" }}
             required
             />
           </div>
