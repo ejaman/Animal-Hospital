@@ -71,6 +71,7 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
   const [isSamePwd, setIsSamePwd] = useState<boolean>(true);
   const [isEmail, setIsEmail] = useState<boolean>(true);
   const [isPwd, setIsPwd] = useState<boolean>(true);
+  const [isPhone, setIsPhone] = useState<boolean>(true);
 
   function handleSubmit(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
@@ -78,16 +79,19 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
 
   function handleChangeEmail(e: React.ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value);
-    const emailRegex:RegExp =  /^(([^<>()[].,;:\s@"]+(.[^<>()[].,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
+    const emailRegex:RegExp = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/;
     setIsEmail(emailRegex.test(email) ? true : false);
   }
 
   function handleChangePwd(e: React.ChangeEvent<HTMLInputElement>) {
     setPassword(e.target.value);
-    const passwordRegex:RegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,20}/
-    setIsPwd(passwordRegex.test(password) ? true : false);
     checkPwd.length && setIsSamePwd(password === checkPwd ? true : false);
   }
+
+  useEffect(() => {
+    const passwordRegex:RegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,20}/
+    setIsPwd(passwordRegex.test(password) ? true : false);
+  }, [password])
 
   useEffect(() => {
     setIsSamePwd(password === checkPwd ? true : false);
