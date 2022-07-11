@@ -6,6 +6,8 @@ import {UserAddress} from '../db';
 
 const userRouter = Router();
 
+
+//회원가입
 userRouter.post('/register', async(req : Request,res : Response, next : NextFunction)=>{
     try{
 
@@ -57,7 +59,7 @@ userRouter.post('/register', async(req : Request,res : Response, next : NextFunc
     }
 })
 
-
+//로그인
 userRouter.post('/login', async(req : Request,res : Response, next : NextFunction)=>{
     try{
 
@@ -80,5 +82,8 @@ userRouter.post('/login', async(req : Request,res : Response, next : NextFunctio
     }
 })
 
+
+//일반회원 개인정보
+userRouter.get('/')
 
 export {userRouter};
