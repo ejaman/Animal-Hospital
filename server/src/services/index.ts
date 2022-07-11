@@ -1,1 +1,2 @@
-export * from "./HospStatusService";
+export * from './HospStatusService';
+export * from './HospRegStatusService';

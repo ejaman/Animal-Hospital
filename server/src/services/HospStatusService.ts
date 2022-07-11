@@ -1,4 +1,4 @@
-import { HospStatusInfo, HospStatusModel, hospStatusModel } from "../db";
+import { HospStatusInfo, HospStatusModel, hospStatusModel } from '../db';
 
 interface ToUpdate {
   hospStatusId: string;
@@ -10,11 +10,11 @@ interface ToUpdate {
 class HospStatusService {
   constructor(private hospStatusModel: HospStatusModel) {}
 
-  async findById(email: string): Promise<HospStatusInfo> {
-    const hospStatus = await this.hospStatusModel.findById(email);
+  async findById(hospStatusId: string): Promise<HospStatusInfo> {
+    const hospStatus = await this.hospStatusModel.findById(hospStatusId);
     if (!hospStatus) {
       throw new Error(
-        "해당 병원상태코드 내역이 없습니다. 다시 한 번 확인해 주세요."
+        '해당 병원상태코드 내역이 없습니다. 다시 한 번 확인해 주세요.'
       );
     }
     return hospStatus;
@@ -29,7 +29,7 @@ class HospStatusService {
     const hospStatus = await this.hospStatusModel.findByName(hospStatusName);
     if (!hospStatus) {
       throw new Error(
-        "해당 병원상태코드 내역이 없습니다. 다시 한 번 확인해 주세요."
+        '해당 병원상태코드 내역이 없습니다. 다시 한 번 확인해 주세요.'
       );
     }
     return hospStatus;
@@ -39,7 +39,7 @@ class HospStatusService {
     const isExist = await this.hospStatusModel.findByName(hospStatusName);
     if (isExist) {
       throw new Error(
-        "이 이름으로 생성된 병원상태코드가 있습니다. 다른 이름을 지어주세요."
+        '이 이름으로 생성된 병원상태코드가 있습니다. 다른 이름을 지어주세요.'
       );
     }
     const newHospStatus = await this.hospStatusModel.create(hospStatusName);
@@ -50,7 +50,7 @@ class HospStatusService {
     const isExist = await this.hospStatusModel.findById(hospStatusId);
     if (!isExist) {
       throw new Error(
-        "해당 병원상태코드 내역이 없습니다. 다시 한 번 확인해 주세요."
+        '해당 병원상태코드 내역이 없습니다. 다시 한 번 확인해 주세요.'
       );
     }
 
@@ -65,7 +65,7 @@ class HospStatusService {
     const isExist = await this.hospStatusModel.findById(hospStatusId);
     if (!isExist) {
       throw new Error(
-        "해당 병원상태코드 내역이 없습니다. 다시 한 번 확인해 주세요."
+        '해당 병원상태코드 내역이 없습니다. 다시 한 번 확인해 주세요.'
       );
     }
     const { deletedCount } = await this.hospStatusModel.deleteById(
