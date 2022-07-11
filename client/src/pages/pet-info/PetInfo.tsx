@@ -37,28 +37,33 @@ export default function PetCard({
   name, age, image, weight, species, breed, vaccination, medicalHistory, neutralized
 }: PetCard) {
 
-  const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    alert(
-      '버튼이 클릭되었습니다(확인용)'
-    )
+  const [petList, setPetList] = useState([
+    {pets: "두식이"}
+  ]);
+  const [index, setIndex] = useState<number>(1);
+
+  const selectDivHandler = (event: React.MouseEvent<HTMLDivElement>) => {
+    console.log('반려동물 선택 클릭, idx:', index);
+    // setIndex(idx);
   };
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(PetCard);
+    console.log("제출 클릭");
   }
-
-  const petButtonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    alert(
-      '반려동물이 선택되었습니다(확인용)'
-    )
-  };
 
   const addButtonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    alert("추가 버튼 클릭");
+    console.log("추가 버튼 클릭");
+    setPetList([...petList, {pets: ""}]);
+  };
+
+  const deleteButtonHandler = (event: React.MouseEvent<Element, MouseEvent>, idx: number) => {
+    // type err sol.: https://stackoverflow.com/questions/60471034/type-mouseeventelement-mouseevent-is-not-assignable-to-type-mouseeventhtm
+    console.log("삭제 버튼 클릭");
+    const list = [...petList];
+    list.splice(idx, 1);
+    setPetList(list);
   };
 
   return (<div>
@@ -73,20 +78,27 @@ export default function PetCard({
       alignItems="center"
     >
       {/* 펫 DB에서 item들을 순회하여 버튼 생성 예정 */}
-      <Grid item>
-        <div style={{
-          width: "150px",
-          height: "150px",
-          borderStyle: "solid",
-          borderColor: `${theme.palette.orange}`,
-          borderWidth: "7px",
-          borderRadius: "100%",
-          backgroundImage: "url(https://cdn.imweb.me/upload/S201712205a3a0910b89f5/d95b7faed6d64.jpg)",
-          backgroundSize: "200px",
-          backgroundPosition: "center",
-          cursor: "pointer"
-        }} />
+      {petList.map((pet, index) => (
+        <Grid item key={index}>
+        <div 
+          key={index}
+          onMouseEnter={selectDivHandler}
+          style={{
+            width: "150px",
+            height: "150px",
+            borderStyle: "solid",
+            borderColor: `${theme.palette.orange}`,
+            borderWidth: "7px",
+            borderRadius: "100%",
+            backgroundImage: "url(https://cdn.imweb.me/upload/S201712205a3a0910b89f5/d95b7faed6d64.jpg)",
+            backgroundSize: "200px",
+            backgroundPosition: "center",
+            cursor: "pointer"
+          }}
+        />
       </Grid>
+      ))}
+
       <Grid item>
         <Button
           name="addButton"
@@ -99,10 +111,6 @@ export default function PetCard({
             borderWidth: "7px",
             borderRadius: "100%",
             backgroundImage: `url("./plus.png")`,
-            // backgroundSize: "200px",
-            // backgroundPosition: "center",
-            // cursor: "pointer",
-            // position: "absolute",
             alignItems: "center",
             justifyContent: "flex-start"
           }}
@@ -191,7 +199,7 @@ export default function PetCard({
               style={{
                 marginLeft: "0.5rem"
               }}
-              onClick={buttonHandler}
+              onSubmit={onSubmit}
             >수정</Button>
           </div>
         </div>
@@ -276,11 +284,23 @@ export default function PetCard({
             />모름
           </label>
         </div>
-        <Button
-          style={{ marginTop: "1rem" }}
-          onClick={buttonHandler}
-        >수정
-        </Button>
+        <div>
+          <Button
+            style={{ marginTop: "1rem" }}
+            onSubmit={onSubmit}
+          >수정
+          </Button>
+          {petList.length > 1 && (
+            <Button
+              style={{
+                marginTop: "1rem",
+                marginLeft: "1rem"
+              }}
+              onClick={(e) => deleteButtonHandler(e, index)}
+            >삭제
+           </Button>
+          )}
+        </div>
       </Form>
     </Grid>
   </div>);
