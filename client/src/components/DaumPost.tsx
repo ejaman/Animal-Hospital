@@ -16,12 +16,19 @@ const ModalStyle = {
   },
 };
 
-function DaumPost({ isOpen, completeHandler }: any) {
+interface DaumPostProps {
+  isOpen: boolean;
+  completeHandler: any;
+}
+
+const DaumPost: React.FC<DaumPostProps> = ({ isOpen, completeHandler }) => {
+  console.log(completeHandler);
+
   return (
     <Modal isOpen={isOpen} ariaHideApp={false} style={ModalStyle}>
       <DaumPostcode onComplete={completeHandler} />
     </Modal>
   );
-}
+};
 
 export default DaumPost;

@@ -8,7 +8,12 @@ function AddressForm({}) {
   const [detailAddress, setDetailAddress] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const completeHandler = (data: any) => {
+  interface Data {
+    zonecode: string;
+    roadAddress: string;
+  }
+
+  const completeHandler = (data: Data) => {
     setZipcode(data.zonecode);
     setRoadAddress(data.roadAddress);
     setIsOpen(false);
