@@ -15,7 +15,7 @@ export interface UserInfo {
     userName : string,
     email : string,
     password : string,
-    phoneNumber : number,
+    phoneNumber : string,
     address : UserAddress,
     role ? : string,
     userStatus ? : string

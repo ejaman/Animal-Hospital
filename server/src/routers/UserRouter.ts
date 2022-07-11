@@ -18,7 +18,7 @@ userRouter.post('/register', async(req : Request,res : Response, next : NextFunc
         const userName : string = req.body.userName;
         const email : string = req.body.email;
         const password : string = req.body.password;
-        const phoneNumber : number = req.body.phoneNumber;
+        const phoneNumber : string = req.body.phoneNumber;
         const address : UserAddress = req.body.address;
         const role : string = req.body.role;
         const userStatus : string = req.body.userStatus;
