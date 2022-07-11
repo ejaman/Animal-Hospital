@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import AddressForm from "../../components/AddressForm";
 import {
   MainContainer,
   Title,
@@ -7,16 +8,16 @@ import {
   InputLabel,
   InfoInput,
   InfoBtn,
-  Divider,
   DeactivateContainer,
   DeactiveBtn,
 } from "../../components/InfoForm";
 
-const onhandleUpadate = (event: React.MouseEvent<HTMLElement>) => {
-  event.preventDefault();
-  console.log("click", event);
-};
 function UserInfo() {
+  const onhandleUpadate = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    console.log("click", event);
+  };
+
   return (
     <MainContainer>
       <Title>개인정보</Title>
@@ -38,17 +39,7 @@ function UserInfo() {
           <InputLabel>전회번호</InputLabel>
           <InfoInput value="010-1234-5678" />
         </Container>
-
-        <Container>
-          <InputLabel>주소</InputLabel>
-          <InfoInput value="우편번호" />
-          <InfoBtn>주소찾기</InfoBtn>
-          <Divider>
-            <InfoInput value="주소" />
-            <InfoInput value="상세주소" />
-          </Divider>
-        </Container>
-
+        <AddressForm />
         <div style={{ display: "flex" }}>
           <InfoBtn style={{ marginLeft: "auto" }} onClick={onhandleUpadate}>
             수정
