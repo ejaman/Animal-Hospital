@@ -12,7 +12,7 @@ const AddressContainer = styled.div`
 const SearchAddr = styled(Button)`
   width: 100px;
   text-align: center;
-`
+`;
 
 const RegisterBtn = styled.button`
   width: 120px;
@@ -33,22 +33,22 @@ const RegisterBtn = styled.button`
   &:active {
     transform: scale(1);
   }
-`
+`;
 
 const RegisterBtnContainer = styled.div`
   display: flex;
   justify-content: center;
-`
+`;
 
 
 
 interface Props {
   isHospital: boolean,
-}
+};
 
 
 
-const  RegisterForm: React.FC<Props> = ({isHospital}) => {
+const RegisterForm: React.FC<Props> = ({isHospital}) => {
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -66,6 +66,8 @@ const  RegisterForm: React.FC<Props> = ({isHospital}) => {
     e.preventDefault();
   }
 
+  use
+
   return (
     <>
       <form>
@@ -75,6 +77,7 @@ const  RegisterForm: React.FC<Props> = ({isHospital}) => {
           value = {hospitalname}
           onChange = {(e) => setHospitalname(e.target.value)}
           style={{ marginTop: "1rem" }}
+          required
         />
         }
         <Input
@@ -82,44 +85,52 @@ const  RegisterForm: React.FC<Props> = ({isHospital}) => {
           value = {username}
           onChange = {(e) => setUsername(e.target.value)}
           style={{ marginBottom: "1rem", marginTop: "1rem" }}
+          required
         />
         <Input
           placeholder="이메일을 입력해주세요"
           value = {email}
           onChange = {(e) => setEmail(e.target.value)}
           style={{ marginBottom: "1rem" }}
+          required
         />
         <Input
           placeholder="비밀번호를 입력해주세요"
           value = {password}
           onChange = {(e) => setPassword(e.target.value)}
           style={{ marginBottom: "1rem" }}
+          required
         />
         <Input
           placeholder="비밀번호를 다시 입력해주세요"
           value = {checkPwd}
           onChange = {(e) => setCheckPwd(e.target.value)}
           style={{ marginBottom: "1rem" }}
+          required
         />
         <Input
           placeholder="전화번호를 입력해주세요" 
           value = {phone}
           onChange = {(e) => setPhone(e.target.value)}
           style={{ marginBottom: "1rem" }}
+          required
         />
         <AddressContainer>
           <Input
             placeholder="우편번호"
             style={{ marginBottom: "0.5rem" }}
+            required
           />
           <SearchAddr>주소 찾기</SearchAddr>
           <Input
             placeholder="주소"
             style={{ marginBottom: "1rem" }}
+            required
           />
           <Input
             placeholder="상세주소"
             style={{ marginBottom: "1rem" }}
+            required
           />
         </AddressContainer>
         {isHospital &&
@@ -129,12 +140,14 @@ const  RegisterForm: React.FC<Props> = ({isHospital}) => {
             value = {CRN}
             onChange = {(e) => setCRN(e.target.value)}
             style={{ marginBottom: "1rem" }}
+            required
             />
             <Input
             placeholder="면허 번호를 입력해주세요"
             value = {license}
             onChange = {(e) => setLicense(e.target.value)}
             style={{ marginBottom: "1rem" }}
+            required
             />
           </div>
         }
