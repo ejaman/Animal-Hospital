@@ -57,4 +57,24 @@ userRouter.post('/register', async(req : Request,res : Response, next : NextFunc
     }
 })
 
+
+userRouter.post('/login', async(req : Request,res : Response, next : NextFunction)=>{
+    try{
+
+        if(_.isEmpty(req.body)){
+            throw new Error("body가 비어있거나 header의 Content-Type이 'application/json'인지 확인해주세요")
+        }
+
+        const email : string = req.body.email;
+        const password : string = req.body.password;
+
+        const userToken = await userService.getUserToken({email, password});
+
+    }
+    catch(error){
+        next(error)
+    }
+})
+
+
 export {userRouter};

@@ -21,6 +21,10 @@ export interface UserInfo {
     userStatus ? : string
 }
 
+export interface UserData extends UserInfo{
+    _id : string
+}
+
 export class UserModel {
     async findByEmail(email : string) : Promise<UserInfo | null> {
         const user = await User.findOne({email});
