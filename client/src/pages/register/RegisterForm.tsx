@@ -1,19 +1,9 @@
 import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import 'antd/dist/antd.css';
-import { Input, Button } from 'antd';
+import { Input } from 'antd';
 
-const AddressContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-column-gap: 4px;
-`;
-
-const SearchAddr = styled(Button)`
-  width: 100px;
-  text-align: center;
-  margin-top: 1rem;
-`;
+import Postcode from './Postcode';
 
 const RegisterBtn = styled.button`
   width: 120px;
@@ -60,9 +50,6 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
   const [password, setPassword] = useState<string>('');
   const [checkPwd, setCheckPwd] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
-  const [postal, setPostal] = useState<string>('');
-  const [address1, setAddress1] = useState<string>('');
-  const [address2, setAddress2] = useState<string>('');
 
   const [hospitalname, setHospitalname] = useState<string>('');
   const [CRN, setCRN] = useState<string>('');
@@ -71,7 +58,6 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
   const [isSamePwd, setIsSamePwd] = useState<boolean>(true);
   const [isEmail, setIsEmail] = useState<boolean>(true);
   const [isPwd, setIsPwd] = useState<boolean>(true);
-  const [isPhone, setIsPhone] = useState<boolean>(true);
 
   function handleSubmit(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
@@ -79,7 +65,7 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
 
   function handleChangeEmail(e: React.ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value);
-    const emailRegex:RegExp = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/;
+    const emailRegex:RegExp = /^(([^<>()[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/;
     setIsEmail(emailRegex.test(email) ? true : false);
   }
 
@@ -89,8 +75,8 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
   }
 
   useEffect(() => {
-    const passwordRegex:RegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,20}/
-    setIsPwd(passwordRegex.test(password) ? true : false);
+    const passwordRegex:RegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,20}/;
+    password.length && setIsPwd(passwordRegex.test(password) ? true : false);
   }, [password])
 
   useEffect(() => {
@@ -149,24 +135,7 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
           style={{ marginTop: "1rem" }}
           required
         />
-        <AddressContainer>
-          <Input
-            placeholder="우편번호"
-            style={{ marginTop: "1rem" }}
-            required
-          />
-          <SearchAddr>주소 찾기</SearchAddr>
-          <Input
-            placeholder="주소"
-            style={{ marginTop: "0.5rem" }}
-            required
-          />
-          <Input
-            placeholder="상세주소"
-            style={{ marginTop: "0.5rem" }}
-            required
-          />
-        </AddressContainer>
+        <Postcode />
         {isHospital &&
           <div>
             <Input
