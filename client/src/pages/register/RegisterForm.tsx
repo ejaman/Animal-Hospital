@@ -72,6 +72,7 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
 
   function handleSubmit(e:React.MouseEvent<HTMLElement>) {
     e.preventDefault();
+    
   }
 
   useEffect(() => {
@@ -123,7 +124,7 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
         />
         {!isSamePwd && <ErrorMessage>비밀번호와 일치하지 않습니다.</ErrorMessage>}
         <Input
-          placeholder="전화번호를 입력해주세요" 
+          placeholder="전화번호를 입력해주세요 (- 제외)" 
           value = {phone}
           onChange = {(e) => setPhone(e.target.value)}
           style={{ marginTop: "1rem" }}
