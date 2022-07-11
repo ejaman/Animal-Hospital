@@ -50,7 +50,7 @@ userRouter.post('/register', async(req : Request,res : Response, next : NextFunc
             userStatus,
         })
 
-        res.status(201).json(newUser)
+        res.sendStatus(201).json(newUser)
 
     } catch (error) {
         next(error)
@@ -69,6 +69,10 @@ userRouter.post('/login', async(req : Request,res : Response, next : NextFunctio
         const password : string = req.body.password;
 
         const userToken = await userService.getUserToken({email, password});
+
+        // console.log(userToken);
+        res.send(200).json(userToken); //userId, role, userStatus
+    
 
     }
     catch(error){
