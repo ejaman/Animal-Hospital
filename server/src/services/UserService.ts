@@ -15,7 +15,7 @@ interface LoginResult {
 }
 
 interface UserInfoRequired {
-    userId : string,
+    email : string,
     currentPassword : string
 }
 class UserService {
@@ -95,9 +95,9 @@ class UserService {
         toUpdate : Partial<UserInfo>
         ) : Promise<UserData | null> {
 
-            const {userId, currentPassword} = userInfoRequired;
+            const {email, currentPassword} = userInfoRequired;
 
-            let user = await this.userModel.findById(userId) as UserData ;
+            let user = await this.userModel.findByEmail(email) as UserData ;
 
             const correctPasswordHash = user.password;
 
@@ -120,7 +120,7 @@ class UserService {
             }
 
             user = await this.userModel.update({
-                userId,
+                email,
                 update :toUpdate
             }) as UserData;
 

@@ -96,7 +96,7 @@ userRouter.get('/user', loginRequired, async(req,res,next)=>{
 })
 
 //일반회원 개인정보 수정
-userRouter.patch('/users/:userId', loginRequired, async(req,res,next)=>{
+userRouter.patch('/users/:userEmail', loginRequired, async(req,res,next)=>{
     try{
         if(_.isEmpty(req.body)){
             throw new Error(
@@ -104,7 +104,7 @@ userRouter.patch('/users/:userId', loginRequired, async(req,res,next)=>{
             )
         }
 
-        const userId = req.params.userId;
+        const email = req.params.userEmail;
 
         //업데이트할 정보 body로 부터 추출함
         const userName : string = req.body.userName;
@@ -120,7 +120,7 @@ userRouter.patch('/users/:userId', loginRequired, async(req,res,next)=>{
             throw new Error (req.body.currentPassword)
         }
 
-        const userInfoRequired = { userId, currentPassword };
+        const userInfoRequired = { email, currentPassword };
 
         const toUpdate = {
             ...(userName && { userName }),

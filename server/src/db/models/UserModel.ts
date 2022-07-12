@@ -26,7 +26,7 @@ export interface UserData extends UserInfo{
 }
 
 interface ToUpdate {
-    userId : string,
+    email : string,
     update : {
         [key: string] : string | UserAddress;
     }
@@ -48,8 +48,8 @@ export class UserModel {
         return user;
     }
 
-    async update({userId, update} : ToUpdate) : Promise<UserData | null>{
-        const filter = {_id : userId};
+    async update({email, update} : ToUpdate) : Promise<UserData | null>{
+        const filter = {email : email};
         const option = {returnOriginal : false};
         const updatedUser = await User.findOneAndUpdate(filter, update, option);
 
