@@ -201,7 +201,7 @@ export default function HospitalCard() {
           <div>
             <div>
               <input type="file"
-                accept='image/jpg,impge/png,image/jpeg,image/gif'
+                accept='image/jpg,image/png,image/jpeg,image/gif'
                 name='profile_img'
                 onChange={(e: any) => {
                   convertFileToBase64(e.target.files[0]);
