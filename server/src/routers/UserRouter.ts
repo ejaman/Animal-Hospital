@@ -104,9 +104,13 @@ userRouter.patch('/users/:userEmail', loginRequired, async(req,res,next)=>{
             )
         }
 
+        //잘못된 접근 에러 처리
+        const userId = req.currentUserId;
+        const user = await userService.getUserData(userId)
         const email = req.params.userEmail;
 
-        //업데이트할 정보 body로 부터 추출함
+        if (email === user.email){
+            
         const userName : string = req.body.userName;
         const currentPassword = req.body.currentPassword;
         const password : string = req.body.newPassword;
@@ -137,6 +141,11 @@ userRouter.patch('/users/:userEmail', loginRequired, async(req,res,next)=>{
 
         res.status(200).json(updatedUserInfo)
 
+        } else {
+            throw new Error('잘못된 접근입니다. 로그인한 계정이 맞는지 확인해주세요.')
+        }
+
+        
     } catch(error){
         next(error)
     }
