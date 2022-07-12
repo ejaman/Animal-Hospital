@@ -97,7 +97,7 @@ class UserService {
 
             const {userId, currentPassword} = userInfoRequired;
 
-            let user = await this.userModel.findById(userId) as UserInfo ;
+            let user = await this.userModel.findById(userId) as UserData ;
 
             const correctPasswordHash = user.password;
 
@@ -122,7 +122,7 @@ class UserService {
             user = await this.userModel.update({
                 userId,
                 update :toUpdate
-            });
+            }) as UserData;
 
             return user;
 
