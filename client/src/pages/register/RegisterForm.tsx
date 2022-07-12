@@ -5,6 +5,7 @@ import { Input } from 'antd';
 // import { useNavigate } from 'react-router-dom';
 
 import Postcode from './Postcode';
+import reg from "../../components/RegExp";
 
 const RegisterBtn = styled.button`
   width: 120px;
@@ -59,6 +60,7 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
   const [isSamePwd, setIsSamePwd] = useState<boolean>(true);
   const [isEmail, setIsEmail] = useState<boolean>(true);
   const [isPwd, setIsPwd] = useState<boolean>(true);
+  const [isPhone, setIsPhone] = useState<boolean>(true);
 
   // const navigate = useNavigate();
 
@@ -70,7 +72,7 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
 
   function handleChangeEmail(e: React.ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value);
-    const emailRegex:RegExp = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const emailRegex:RegExp = reg.email;
     setIsEmail(emailRegex.test(email) ? true : false);
   }
 
@@ -80,13 +82,18 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
   }
 
   useEffect(() => {
-    const passwordRegex:RegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,20}/;
+    const passwordRegex:RegExp = reg.password;
     password.length && setIsPwd(passwordRegex.test(password) ? true : false);
   }, [password])
 
   useEffect(() => {
     setIsSamePwd(password === checkPwd ? true : false);
   }, [checkPwd, password])
+
+  useEffect(() => {
+    const phoneRegex: RegExp = reg.phone;
+    phone.length && setIsPhone(phoneRegex.test(phone) ? true : false);
+  }, [phone])
 
   return (
     <>
@@ -134,12 +141,13 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
         />
         {!isSamePwd && <ErrorMessage>비밀번호와 일치하지 않습니다.</ErrorMessage>}
         <Input
-          placeholder="전화번호를 입력해주세요 (- 제외)" 
+          placeholder="전화번호를 입력해주세요 (- 포함)" 
           value = {phone}
           onChange = {(e) => setPhone(e.target.value)}
           style={{ marginTop: "1rem" }}
           required
         />
+        {!isPhone && <ErrorMessage>전화번호를 바르게 입력해주세요.</ErrorMessage>}
         <Postcode />
         {isHospital &&
           <div>
