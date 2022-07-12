@@ -5,6 +5,8 @@ export const theme: DefaultTheme = {
     beige: "#F9F2ED",
     blue:"#3AB0FF",
     orange:"#FFB562",
-    peach:"#F87474"
+    peach:"#F87474",
+    lightgray: "#ebebeb",
+    gray: "#a0a0a0"
   },
 };
