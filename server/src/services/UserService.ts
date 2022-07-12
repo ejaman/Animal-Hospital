@@ -8,10 +8,15 @@ interface LoginInfo {
 }
 
 interface LoginResult {
-    token : string;
+    token : string,
     role : string,
     userStatus : string
 
+}
+
+interface UserInfoRequired {
+    userId : string,
+    currentPassword : string
 }
 class UserService {
     constructor(private userModel : UserModel) {}
@@ -83,6 +88,77 @@ class UserService {
 
         return user;
     }
+
+    // 개인정보 수정
+    async setUser (
+        userInfoRequired : UserInfoRequired,
+        toUpdate : Partial<UserInfo>
+        ) : Promise<UserData | null> {
+
+            const {userId, currentPassword} = userInfoRequired;
+
+            let user = await this.userModel.findById(userId) as UserInfo ;
+
+            const correctPasswordHash = user.password;
+
+            const isPasswordCorrect = await bcrypt.compare(
+            currentPassword,
+            correctPasswordHash
+            );
+
+            if (!isPasswordCorrect) {
+            throw new Error(
+                '현재 비밀번호가 일치하지 않습니다. 다시 한 번 확인해 주세요.'
+            );
+            }
+
+            const {password} = toUpdate;
+
+            if(password){
+                const newPasswordHash = await bcrypt.hash(password, 10);
+                toUpdate.password = newPasswordHash
+            }
+
+            user = await this.userModel.update({
+                userId,
+                update :toUpdate
+            });
+
+            return user;
+
+
+
+        }
+
+
+    // 비밀번호 맞는지 확인
+    async checkUserPassword(userId: string, password: string): Promise<Boolean> {
+        // 이메일 db에 존재 여부 확인
+        const user = await this.userModel.findById(userId);
+    
+        // 비밀번호 일치 여부 확인
+        const correctPasswordHash = user?.password;
+
+        if (correctPasswordHash){
+            const isPasswordCorrect = await bcrypt.compare(
+                password,
+                correctPasswordHash
+                );
+            if (!isPasswordCorrect) {
+                throw new Error(
+                    '비밀번호가 일치하지 않습니다. 다시 한 번 확인해 주세요.'
+                );
+                }
+            
+                // 비밀번호 일치함. 유저 정보 반환
+            return true;
+        } else {
+            return false;
+        }
+         
+    
+        
+      }
 }
 
 const userService = new UserService(userModel);

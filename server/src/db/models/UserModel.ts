@@ -25,6 +25,13 @@ export interface UserData extends UserInfo{
     _id : mongoose.Types.ObjectId
 }
 
+interface ToUpdate {
+    userId : string,
+    update : {
+        [key: string] : string | UserAddress;
+    }
+}
+
 export class UserModel {
     async findByEmail(email : string) : Promise<UserData | null> {
         const user = await User.findOne({email});
@@ -39,6 +46,14 @@ export class UserModel {
     async findById(userId : string) : Promise<UserData | null>{
         const user = await User.findOne({_id:userId});
         return user;
+    }
+
+    async update({userId, update} : ToUpdate) : Promise<UserData | null>{
+        const filter = {_id : userId};
+        const option = {returnOriginal : false};
+        const updatedUser = await User.findOneAndUpdate(filter, update, option);
+
+        return updatedUser;
     }
 }
 
