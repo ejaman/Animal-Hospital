@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import "antd/dist/antd.min.css";
 import styled from "styled-components";
 import { Button, Form, Input, Typography } from "antd";
+import { theme } from '../../styles/Colors';
 
 import axios from "axios";
 
@@ -198,16 +199,19 @@ export default function HospitalCard() {
         <div>
           <SubTitle>병원 사진</SubTitle>
           <div style={{ marginBottom: "0.5rem" }} />
+          <div style={{ marginBottom: "0.5rem" }}>
+            <UploadFileLabel htmlFor="uploadFile">업로드</UploadFileLabel>
+            <UploadFileInput type="file"
+              id="uploadFile"
+              accept='image/jpg,image/png,image/jpeg,image/gif'
+              name='profile_img'
+              onChange={(e: any) => {
+                convertFileToBase64(e.target.files[0]);
+                console.log(e.target.files);
+              }}
+            />
+          </div>
           <div>
-            <div>
-              <input type="file"
-                accept='image/jpg,image/png,image/jpeg,image/gif'
-                name='profile_img'
-                onChange={(e: any) => {
-                  convertFileToBase64(e.target.files[0]);
-                }}
-              />
-            </div>
             {image && <img src={image} width="280px" alt="" />}
           </div>
         </div>
@@ -275,4 +279,27 @@ export default function HospitalCard() {
 
 const SubTitle = styled.span`
   font-size: 16px;
+`
+const UploadFileLabel = styled.label`
+  display: inline-block;
+  padding: .5em .8em;
+  font-size: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid ${theme.palette.lightgray};
+  border-radius: .25em;
+
+  :hover {
+    transition: 2ms ease-in;
+    border-color: ${theme.palette.blue};
+    color: ${theme.palette.blue};
+  }
+`
+const UploadFileInput = styled.input`
+  position: absolute;
+  padding: 0;
+  margin: -1px;
+  clip:rect(0,0,0,0);
+  border: 0;
 `
