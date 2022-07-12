@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { Schema } from 'mongoose';
 
 const HospitalSchema = new Schema(
   {
@@ -70,19 +70,13 @@ const HospitalSchema = new Schema(
     tag: [
       {
         type: Schema.Types.ObjectId,
-        ref: "hospTag",
+        ref: 'hospTag',
       },
     ],
     keyword: {
       type: [String],
       required: false,
     },
-    service: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "hospService",
-      },
-    ],
     image: {
       type: String,
       required: false,
@@ -93,17 +87,17 @@ const HospitalSchema = new Schema(
     },
     hospStatus: {
       type: Schema.Types.ObjectId,
-      ref: "hospStatus",
+      ref: 'hospStatus',
       required: false,
     },
     hospRegStatus: {
       type: Schema.Types.ObjectId,
-      ref: "hospRegStatus",
+      ref: 'hospRegStatus',
       required: false,
     },
   },
   {
-    collection: "hospitals",
+    collection: 'hospitals',
     timestamps: true,
   }
 );
