@@ -89,11 +89,13 @@ const HospitalSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'hospStatus',
       required: false,
+      default: '62ccf2f039864cbe2c2dccf4',
     },
     hospRegStatus: {
       type: Schema.Types.ObjectId,
       ref: 'hospRegStatus',
       required: false,
+      default: '62cc3c7532b6e445bc83920e',
     },
   },
   {
