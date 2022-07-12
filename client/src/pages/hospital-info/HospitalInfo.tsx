@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import "antd/dist/antd.min.css";
 import styled from "styled-components";
-import { Button, Form, Typography } from "antd";
+import { Button, Form, Input, Typography } from "antd";
+
 import axios from "axios";
 
 const { Title } = Typography;
@@ -25,7 +26,8 @@ const jsonData = {
   "hospitalCapacity": 3,
   "tag": [""],
   "keyword": [""],
-  "image": "https://o-oa.com/wp-content/uploads/2020/05/LJS_01.jpg",
+  // "image": "https://o-oa.com/wp-content/uploads/2020/05/LJS_01.jpg",
+  "image": "",
   "refreshToken": undefined,
   "hospStatus": "정상",
   "hospRegStatus": "승인완료"
@@ -68,6 +70,19 @@ export default function HospitalCard() {
   const { postalCode, address1, address2 } = jsonData.address;
   const email = jsonData.email;
 
+  const convertFileToBase64 = (file: any) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    return new Promise((resolve: any) => {
+      if (reader) {
+        reader.onload = () => {
+        setImage(reader.result as string);
+        resolve();
+        };
+      }
+    });
+  };
+
   const onChangeName = (e: any) => {
     setName(e.target.value);
     // api가 없어서 실제 수정이 반영되지는 않음. 백에서 완성한 이후 추가 예정
@@ -85,7 +100,6 @@ export default function HospitalCard() {
     setPhoneNumber(e.target.value);
     console.log("면허번호 변경:", e.target.value);
   }
-
   const onChangeHospitalCapacity = (e: any) => {
     setHospitalCapacity(e.target.value);
     console.log("시간당 예약 가능 고객 수 변경:", e.target.value);
@@ -185,11 +199,16 @@ export default function HospitalCard() {
           <SubTitle>병원 사진</SubTitle>
           <div style={{ marginBottom: "0.5rem" }} />
           <div>
-            <img src={image} width="280px" alt="" />
-            <Button
-              style={{ marginLeft: "0.5rem" }}
-              onClick={buttonHandler}
-            >수정</Button>
+            <div>
+              <input type="file"
+                accept='image/jpg,impge/png,image/jpeg,image/gif'
+                name='profile_img'
+                onChange={(e: any) => {
+                  convertFileToBase64(e.target.files[0]);
+                }}
+              />
+            </div>
+            {image && <img src={image} width="280px" alt="" />}
           </div>
         </div>
         <div style={{ marginBottom: "0.5rem" }} />
