@@ -39,7 +39,7 @@ export interface HospitalInfo {
   holiday?: string[];
   hospitalCapacity?: number;
   tag?: object[];
-  keword?: string[];
+  keyword?: string[];
   image?: string;
   refreshToken?: string;
   hospStatus?: object;
