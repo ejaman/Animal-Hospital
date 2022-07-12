@@ -1,5 +1,5 @@
 import React from "react";
-import DaumPostcode from "react-daum-postcode";
+import DaumPostcode, { Address } from "react-daum-postcode";
 import Modal from "react-modal";
 
 const ModalStyle = {
@@ -18,7 +18,7 @@ const ModalStyle = {
 
 interface DaumPostProps {
   isOpen: boolean;
-  completeHandler: any;
+  completeHandler: (address: Address) => void;
 }
 
 const DaumPost: React.FC<DaumPostProps> = ({ isOpen, completeHandler }) => {

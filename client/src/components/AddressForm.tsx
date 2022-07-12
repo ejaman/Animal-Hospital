@@ -2,20 +2,24 @@ import React, { useState } from "react";
 import DaumPost from "./DaumPost";
 import { Container, InfoBtn, InfoInput, InputLabel, Divider } from "./InfoForm";
 
-function AddressForm({}) {
+interface AddressFormProps {
+  onComplete: (data: Data) => void;
+}
+export interface Data {
+  zonecode: string;
+  roadAddress: string;
+}
+
+function AddressForm({ onComplete }: AddressFormProps) {
   const [zipCode, setZipcode] = useState<string>("");
   const [roadAddress, setRoadAddress] = useState<string>("");
   const [detailAddress, setDetailAddress] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  interface Data {
-    zonecode: string;
-    roadAddress: string;
-  }
-
   const completeHandler = (data: Data) => {
     setZipcode(data.zonecode);
     setRoadAddress(data.roadAddress);
+    onComplete(data);
     setIsOpen(false);
   };
 

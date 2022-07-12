@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import AddressForm from "../../components/AddressForm";
+import AddressForm, { Data } from "../../components/AddressForm";
 import {
   MainContainer,
   Title,
@@ -15,7 +15,11 @@ import {
 function UserInfo() {
   const onhandleUpadate = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    console.log("click", event);
+    // console.log("click", event);
+  };
+  const onhandleAddressComplete = (data: Data) => {
+    // 회원가입 참조
+    console.log(data);
   };
 
   return (
@@ -39,7 +43,7 @@ function UserInfo() {
           <InputLabel>전회번호</InputLabel>
           <InfoInput value="010-1234-5678" />
         </Container>
-        <AddressForm />
+        <AddressForm onComplete={onhandleAddressComplete} />
         <div style={{ display: "flex" }}>
           <InfoBtn style={{ marginLeft: "auto" }} onClick={onhandleUpadate}>
             수정
