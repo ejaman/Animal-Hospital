@@ -1,4 +1,4 @@
-import {model} from 'mongoose';
+import mongoose, {model} from 'mongoose';
 import { UserSchema } from "../schemas/UserSchema";
 
 const User = model('users', UserSchema);
@@ -21,8 +21,12 @@ export interface UserInfo {
     userStatus ? : string
 }
 
+export interface UserData extends UserInfo{
+    _id : mongoose.Types.ObjectId
+}
+
 export class UserModel {
-    async findByEmail(email : string) : Promise<UserInfo | null> {
+    async findByEmail(email : string) : Promise<UserData | null> {
         const user = await User.findOne({email});
         return user;
     }
