@@ -1,9 +1,10 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import styled from 'styled-components';
 import DaumPostcode from 'react-daum-postcode';
 import 'antd/dist/antd.css';
 import { Input, Button } from 'antd';
 import Modal from 'react-modal';
+import { IAddr } from './RegisterForm';
 
 const AddressContainer = styled.div`
   display: grid;
@@ -17,20 +18,27 @@ const SearchAddr = styled(Button)`
   margin-top: 1rem;
 `;
 
+interface IGetData {
+  setAddress: (address: IAddr) => void
+}
 
-export default function Postcode() {
+
+export default function Postcode({setAddress}: IGetData) {
   const [postal, setPostal] = useState<string>('');
   const [address1, setAddress1] = useState<string>('');
   const [address2, setAddress2] = useState<string>('');
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  function handleComplete(data: any) {
-    console.log(data);
+  function handleAddrComplete(data: any) {
     setPostal(data.zonecode);
     setAddress1(data.roadAddress);
     setIsOpen(false);
   }
+
+  useEffect(() => {
+    setAddress({postalCode: postal, address1, address2})
+  }, [postal, address1, address2])
 
   // Modal 스타일
   const customStyles = {
@@ -58,7 +66,7 @@ export default function Postcode() {
         />
         <SearchAddr onClick={() => setIsOpen(true)}>주소 찾기</SearchAddr>
         <Modal isOpen={isOpen} ariaHideApp={false} style={customStyles} onRequestClose={() => setIsOpen(false)}>
-          <DaumPostcode onComplete={handleComplete} style={{height: '100%'}} />
+          <DaumPostcode onComplete={handleAddrComplete} style={{height: '100%'}} />
         </Modal>
         <Input
           placeholder="주소"
@@ -70,7 +78,9 @@ export default function Postcode() {
         <Input
           placeholder="상세주소"
           value={address2}
-          onChange={(e) => setAddress2(e.target.value)}
+          onChange={(e) => {
+            setAddress2(e.target.value);
+          }}
           style={{ marginTop: "0.5rem" }}
           required
         />

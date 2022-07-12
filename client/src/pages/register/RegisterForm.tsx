@@ -2,7 +2,8 @@ import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import 'antd/dist/antd.css';
 import { Input } from 'antd';
-// import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 import Postcode from './Postcode';
 import reg from "../../components/RegExp";
@@ -44,7 +45,24 @@ interface Props {
   isHospital: boolean,
 };
 
+interface IData {
+  username: string,
+  email: string,
+  password: string,
+  phone: string,
+  hospitalname?: string,
+  businessNumber?: string,
+  licenseNumber?: string,
+  address: IAddr,
+  role: string,
+  status: string,
+}
 
+export interface IAddr {
+  postalCode: string,
+  address1: string,
+  address2: string,
+}
 
 const RegisterForm: React.FC<Props> = ({isHospital}) => {
   const [username, setUsername] = useState<string>('');
@@ -54,20 +72,59 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
   const [phone, setPhone] = useState<string>('');
 
   const [hospitalname, setHospitalname] = useState<string>('');
-  const [CRN, setCRN] = useState<string>('');
-  const [license, setLicense] = useState<string>('');
+  const [businessNumber, setBusinessNumber] = useState<string>('');
+  const [licenseNumber, setLicenseNumber] = useState<string>('');
+
+  const [address, setAddress] = useState<IAddr>({postalCode: '', address1: '', address2: ''});
 
   const [isSamePwd, setIsSamePwd] = useState<boolean>(true);
   const [isEmail, setIsEmail] = useState<boolean>(true);
   const [isPwd, setIsPwd] = useState<boolean>(true);
   const [isPhone, setIsPhone] = useState<boolean>(true);
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  function handleSubmit(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  async function handleSubmit(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
 
-    // isSamePwd && isEmail && isPwd && navigate('/') // 펫 등록 페이지로 이동
+    if(!isEmail) return alert('이메일을 확인해주세요.');
+    if(!isPwd) return alert('비밀번호 형식을 확인해주세요.');
+    if(!isSamePwd) return alert('비밀번호를 다르게 입력했습니다.');
+    if(!isPhone) return alert('휴대폰 번호를 확인해주세요.');
+
+    const data: IData = isHospital ?
+      {
+        username,
+        email,
+        password,
+        phone,
+        role: 'hospital',
+        status: 'pending',
+        hospitalname,
+        businessNumber,
+        licenseNumber,
+        address
+      } :
+      {
+        username,
+        email,
+        password,
+        phone,
+        role: 'user',
+        status: 'complete',
+        address,
+      }
+
+      console.log(data);
+
+    try {
+      await axios.post('localhost:5100/api/register', data);
+      navigate('/') // 펫 등록 페이지로 이동
+    }
+    catch(e) {
+      console.log(e)
+    }
+
   }
 
   function handleChangeEmail(e: React.ChangeEvent<HTMLInputElement>) {
@@ -148,20 +205,22 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
           required
         />
         {!isPhone && <ErrorMessage>전화번호를 바르게 입력해주세요.</ErrorMessage>}
-        <Postcode />
+
+        <Postcode setAddress={(address: IAddr) => {setAddress(address)}} />
+
         {isHospital &&
           <div>
             <Input
             placeholder="사업자 등록번호를 입력해주세요"
-            value = {CRN}
-            onChange = {(e) => setCRN(e.target.value)}
+            value = {businessNumber}
+            onChange = {(e) => setBusinessNumber(e.target.value)}
             style={{ marginTop: "1rem" }}
             required
             />
             <Input
             placeholder="면허 번호를 입력해주세요"
-            value = {license}
-            onChange = {(e) => setLicense(e.target.value)}
+            value = {licenseNumber}
+            onChange = {(e) => setLicenseNumber(e.target.value)}
             style={{ marginTop: "1rem" }}
             required
             />
