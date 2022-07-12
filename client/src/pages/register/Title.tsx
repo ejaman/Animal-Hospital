@@ -2,14 +2,14 @@ import React from "react";
 import styled from "styled-components";
 
 const Line = styled.div`
-  margin: 20px 0;
+  margin: 10px 0 20px;
   border-bottom: solid 1px black;
 `
 
 export default function Title({title}: any) {
   return (
     <>
-      <h2>{title}</h2>
+      <h1>{title}</h1>
       <Line />
     </>
   )
