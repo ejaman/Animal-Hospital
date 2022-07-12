@@ -72,6 +72,17 @@ class UserService {
 
 
     }
+
+    // 개인정보 조회
+    async getUserData( userId : string) : Promise<UserData>{
+        const user = await this.userModel.findById(userId);
+
+        if(!user) {
+            throw new Error("가입 내역이 없습니다. 다시 한 번 확인해 주세요!.")
+        }
+
+        return user;
+    }
 }
 
 const userService = new UserService(userModel);

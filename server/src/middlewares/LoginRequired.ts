@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-function loginRequired (req : Request, res : Response, next: NextFunction) {
+async function loginRequired (req : Request, res : Response, next: NextFunction):Promise<void> {
 
     const userToken = req.headers['authorization']?.split(' ')[1];
 
@@ -19,8 +19,8 @@ function loginRequired (req : Request, res : Response, next: NextFunction) {
         const jwtDecoded = jwt.verify( userToken, secretKey) as JwtPayload;
         const userId = jwtDecoded.userId;
         
-        //로그인한 유저의 userId와 일치하는지 구현하기
-        
+        //로그인한 유저의 userId를 request객체의 속성으로 보내줌
+        req.currentUserId = userId;
         next()
 
         
@@ -34,3 +34,5 @@ function loginRequired (req : Request, res : Response, next: NextFunction) {
         return;
     }
 }
+
+export {loginRequired};

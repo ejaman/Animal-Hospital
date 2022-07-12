@@ -35,6 +35,11 @@ export class UserModel {
         const createdNewUser = await User.create(userInfo);
         return createdNewUser;
     }
+
+    async findById(userId : string) : Promise<UserData | null>{
+        const user = await User.findOne({_id:userId});
+        return user;
+    }
 }
 
 const userModel = new UserModel();

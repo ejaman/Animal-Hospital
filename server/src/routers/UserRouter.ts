@@ -3,7 +3,7 @@ import * as _ from 'lodash';  //npm install --save @types/lodash
 
 import { userService } from "../service";
 import {UserAddress} from '../db';
-
+import { loginRequired } from '../middlewares/LoginRequired';
 const userRouter = Router();
 
 
@@ -84,6 +84,15 @@ userRouter.post('/login', async(req : Request,res : Response, next : NextFunctio
 
 
 //일반회원 개인정보
-userRouter.get('/')
+userRouter.get('/user', loginRequired, async(req,res,next)=>{
+    try{
+        const userId = req.currentUserId;
+        const currentUserInfo = await userService.getUserData(userId);
+
+        res.status(200).json(currentUserInfo)
+    } catch(error) {
+        next(error);
+    }
+})
 
 export {userRouter};
