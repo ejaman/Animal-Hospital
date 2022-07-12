@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import is from '@sindresorhus/is';
+import * as _ from 'lodash';
 import { hospTagService } from '../services';
 import {} from '../middlewares';
 
@@ -29,7 +29,7 @@ hospTagRouter.get('/:hospTagId', async (req, res, next) => {
 hospTagRouter.post('/', async (req, res, next) => {
   try {
     // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
-    if (is.emptyObject(req.body)) {
+    if (_.isEmpty(req.body)) {
       throw new Error(
         'headers의 Content-Type을 application/json으로 설정해주세요'
       );
@@ -57,7 +57,7 @@ hospTagRouter.post('/', async (req, res, next) => {
 hospTagRouter.patch('/:hospTagId', async (req, res, next) => {
   try {
     // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
-    if (is.emptyObject(req.body)) {
+    if (_.isEmpty(req.body)) {
       throw new Error(
         'headers의 Content-Type을 application/json으로 설정해주세요'
       );
