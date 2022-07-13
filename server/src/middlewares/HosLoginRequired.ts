@@ -47,7 +47,11 @@ async function HosLoginRequired(
     if (verifyAccessToken == 'jwt expired') {
       const hospInfo: any = jwt_decode(hospAccessToken);
 
-      const { hospitalEmail, hospitalId } = hospInfo;
+      const { role, hospitalId } = hospInfo;
+
+      if (role !== 'hospital') {
+        throw Error('해당 접근 권한이 없습니다.');
+      }
 
       const hospital = await hospitalService.findHospitalById(hospitalId);
 
@@ -86,10 +90,14 @@ async function HosLoginRequired(
 
       //  access token 만료 X
     } else {
-      const { hospitalId } = jwt.verify(
+      const { hospitalId, role } = jwt.verify(
         hospAccessToken,
         secretKey
       ) as JwtPayload;
+
+      if (role !== 'hospital') {
+        throw Error('해당 접근 권한이 없습니다.');
+      }
 
       const hospital = await hospitalService.findHospitalById(hospitalId);
 
