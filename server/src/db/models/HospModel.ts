@@ -42,9 +42,21 @@ export interface HospitalInfo {
   keyword?: string[];
   image?: string;
   refreshToken?: string;
-  hospStatus?: object;
-  hospRegStatus?: object;
+  hospStatus?: mongoose.Types.ObjectId;
+  hospRegStatus?: mongoose.Types.ObjectId;
   _id: mongoose.Types.ObjectId;
+}
+
+interface ToUpdate {
+  hospitalId: mongoose.Types.ObjectId;
+  update: {
+    [key: string]: string | number;
+  };
+}
+
+export interface HospitalLoginResult {
+  accessToken: string;
+  hospitalname: string;
 }
 
 export class HospitalModel {
@@ -55,9 +67,29 @@ export class HospitalModel {
     return createdNewHospital;
   }
 
-  async findByName(name: string): Promise<HospitalInfo> {
-    const hospital = (await Hospital.findOne({ name })) as HospitalInfo;
+  async findByEmail(email: string): Promise<HospitalInfo> {
+    const hospital = (await Hospital.findOne({ email })) as HospitalInfo;
     return hospital;
+  }
+
+  async findById(_id: string): Promise<HospitalInfo> {
+    const hospital = (await Hospital.findById(_id)) as HospitalInfo;
+    return hospital;
+  }
+
+  async updateRefreshToken({
+    hospitalId,
+    update,
+  }: ToUpdate): Promise<HospitalInfo> {
+    const filter = { _id: hospitalId };
+    const option = { returnOriginal: false };
+
+    const updatedUser = (await Hospital.findOneAndUpdate(
+      filter,
+      update,
+      option
+    )) as HospitalInfo;
+    return updatedUser;
   }
 }
 

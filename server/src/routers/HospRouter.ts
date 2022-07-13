@@ -116,11 +116,47 @@ hospitalRouter.post('/register', async (req, res, next) => {
       licenseNumber,
     };
 
-    const newUser = await hospitalService.addUser(hospitalInfo);
+    const newHospital = await hospitalService.addUser(hospitalInfo);
 
     res
       .status(201)
-      .json({ message: '병원가입 내역 확인중입니다.', data: newUser });
+      .json({
+        message: '병원가입 내역 확인중입니다.',
+        data: { hospital: newHospital },
+      });
+  } catch (error) {
+    next(error);
+  }
+});
+
+hospitalRouter.post('/login', async function (req, res, next) {
+  try {
+    // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
+    if (_.isEmpty(req.body)) {
+      throw new Error(
+        'headers의 Content-Type을 application/json으로 설정해주세요'
+      );
+    }
+
+    const { email, password } = req.body;
+
+    // 위 데이터가 db에 있는지 확인하고,
+    // db 있을 시 로그인 성공 및, 토큰 받아오기
+    const hospitalToken = await hospitalService.getHospitalToken(
+      email,
+      password
+    );
+
+    const { accessToken, hospitalname } = hospitalToken;
+
+    res.cookie('user', accessToken, {
+      httpOnly: true,
+    });
+
+    res.status(201).json({
+      data: { hospitalName: hospitalname },
+      message: '로그인에 성공했습니다!',
+    });
   } catch (error) {
     next(error);
   }
