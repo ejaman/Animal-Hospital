@@ -24,9 +24,16 @@ app.use(cors({
 app.use(express.json());
 
 // Content-Type: application/x-www-form-urlencoded 형태의 데이터를 인식하고 핸들링할 수 있게 함.
+<<<<<<< Updated upstream
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+=======
+// app.use(express.urlencoded({ extended: false }));
+
+
+
+>>>>>>> Stashed changes
 app.use('/hostpitalStatus', hospStatusRouter);
 app.use('/hostpitalRegStatus', hospRegStatusRouter);
 app.use('/hostpitalTag', hospTagRouter);
