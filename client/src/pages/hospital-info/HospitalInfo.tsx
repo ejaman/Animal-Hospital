@@ -351,12 +351,53 @@ export default function HospitalCard() {
           </KeywordInput>
         </div>
         <div>
-          <SubTitle>영업시간</SubTitle>
-          <input
+          <SubTitle
+            style={{
+              marginBottom: "1rem"
+            }}
+          >영업시간</SubTitle>
+          <div
+            style={{ marginBottom: "0.5rem" }}
+          >
+            <Button id="Mon">월</Button>
+            <Button id="Tues">화</Button>
+            <Button id="Wed">수</Button>
+            <Button id="Thurs">목</Button>
+            <Button id="Fri">금</Button>
+            <Button id="Sat">토</Button>
+            <Button id="Sun">일</Button>
+          </div>
+          <div>
+            <Button id="h_00">00:00</Button>
+            <Button id="h_01">01:00</Button>
+            <Button id="h_02">02:00</Button>
+            <Button id="h_03">03:00</Button>
+            <Button id="h_04">04:00</Button>
+            <Button id="h_05">05:00</Button>
+            <Button id="h_06">06:00</Button>
+            <Button id="h_07">07:00</Button>
+            <Button id="h_08">08:00</Button>
+            <Button id="h_09">09:00</Button>
+            <Button id="h_10">10:00</Button>
+            <Button id="h_11">11:00</Button>
+            <Button id="h_12">12:00</Button>
+            <Button id="h_13">13:00</Button>
+            <Button id="h_14">14:00</Button>
+            <Button id="h_15">15:00</Button>
+            <Button id="h_16">16:00</Button>
+            <Button id="h_17">17:00</Button>
+            <Button id="h_18">18:00</Button>
+            <Button id="h_19">19:00</Button>
+            <Button id="h_20">20:00</Button>
+            <Button id="h_21">21:00</Button>
+            <Button id="h_22">22:00</Button>
+            <Button id="h_23">23:00</Button>
+          </div>
+          {/* <input
             style={{ marginBottom: "1rem", marginLeft: "0.5rem" }} 
             type="text"
             defaultValue={businessHours}
-          />
+          /> */}
         </div>
         <div>
           <SubTitle>시간당 예약가능 고객 수</SubTitle>
