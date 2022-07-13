@@ -11,7 +11,7 @@ const LoginTitle = styled.h3`
 
 // Login을 둘러싸고 있는 Wrapper
 const LoginWrapper = styled.div`
-  width: 340px;
+  width: 550px;
   position: absolute;
   left: 50%;
   top: 50%;
