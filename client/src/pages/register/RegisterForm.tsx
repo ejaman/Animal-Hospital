@@ -45,17 +45,22 @@ interface Props {
   isHospital: boolean,
 };
 
-interface IData {
-  userName: string,
+interface ICommonData {
   email: string,
   password: string,
   phoneNumber: string,
-  hospitalname?: string,
-  businessNumber?: string,
-  licenseNumber?: string,
   address: IAddr,
-  role: string,
-  userStatus: string,
+}
+
+interface IUserData extends ICommonData {
+  userName: string,
+}
+
+interface IHospData extends ICommonData {
+  name: string,
+  director: string,
+  businessNumber: string,
+  licenseNumber: string,
 }
 
 export interface IAddr {
@@ -98,33 +103,20 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
     if(isHospital && licenseNumber === '') return alert('면허 번호를 입력해주세요.');
     if(isHospital && businessNumber === '') return alert('사업자 번호를 입력해주세요.');
 
-
-    const data: IData = isHospital ?
-      {
-        userName,
-        email,
-        password,
-        phoneNumber: phone,
-        role: 'hospital',
-        userStatus: 'pending',
-        hospitalname,
-        businessNumber,
-        licenseNumber,
-        address
-      } :
-      {
-        userName,
-        email,
-        password,
-        phoneNumber: phone,
-        role: 'user',
-        userStatus: 'complete',
-        address,
-      }
-
       if(isHospital) {
+        const data: IHospData = {
+          name: hospitalname,
+          director: userName,
+          email,
+          password,
+          phoneNumber: phone,
+          businessNumber,
+          licenseNumber,
+          address
+        }
+
         try {
-          const result = await axios.post('http://localhost:5100/api/register', JSON.stringify(data), {
+          const result = await axios.post('http://localhost:5100/hostpital/register', JSON.stringify(data), {
             headers: {
               'Content-Type': 'application/json',
             },
@@ -138,6 +130,14 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
         }
       }
       else {
+        const data: IUserData = {
+          userName,
+          email,
+          password,
+          phoneNumber: phone,
+          address,
+        }
+
         try {
           const result = await axios.post('http://localhost:5100/api/register', JSON.stringify(data), {
             headers: {
