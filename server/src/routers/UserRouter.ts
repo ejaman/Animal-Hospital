@@ -1,11 +1,13 @@
 import {Router, Request, Response, NextFunction} from 'express';
 import * as _ from 'lodash';  //npm install --save @types/lodash
 
-import { userService } from "../service";
+import { userService } from "../services";
 import {UserAddress} from '../db';
-
+import { loginRequired } from '../middlewares/LoginRequired';
 const userRouter = Router();
 
+
+//회원가입
 userRouter.post('/register', async(req : Request,res : Response, next : NextFunction)=>{
     try{
 
@@ -57,7 +59,7 @@ userRouter.post('/register', async(req : Request,res : Response, next : NextFunc
     }
 })
 
-
+//로그인
 userRouter.post('/login', async(req : Request,res : Response, next : NextFunction)=>{
     try{
 
@@ -70,8 +72,8 @@ userRouter.post('/login', async(req : Request,res : Response, next : NextFunctio
 
         const userToken = await userService.getUserToken({email, password});
 
-        // console.log(userToken);
-        res.send(200).json(userToken); //userId, role, userStatus
+        console.log(userToken);
+        res.sendStatus(201).json(userToken); //userId, role, userStatus
     
 
     }
@@ -81,4 +83,95 @@ userRouter.post('/login', async(req : Request,res : Response, next : NextFunctio
 })
 
 
+//일반회원 개인정보
+userRouter.get('/user', loginRequired, async(req,res,next)=>{
+    try{
+        const userId = req.currentUserId;
+        const currentUserInfo = await userService.getUserData(userId);
+
+        res.status(200).json(currentUserInfo)
+    } catch(error) {
+        next(error);
+    }
+})
+
+//일반회원 개인정보 수정
+userRouter.patch('/users/:userEmail', loginRequired, async(req,res,next)=>{
+    try{
+        if(_.isEmpty(req.body)){
+            throw new Error(
+                'headers의 Content-Type을 application/json으로 설정해주세요'
+            )
+        }
+
+        //잘못된 접근 에러 처리
+        const userId = req.currentUserId;
+        const user = await userService.getUserData(userId)
+        const email = req.params.userEmail;
+
+        if (email === user.email){
+            
+        const userName : string = req.body.userName;
+        const currentPassword = req.body.currentPassword;
+        const password : string = req.body.newPassword;
+        const phoneNumber : string = req.body.phoneNumber;
+        const address : UserAddress = req.body.address;
+        const role : string = req.body.role;
+        // const {userName : string, password : string, phoneNumber : String, address, role}= req.body;
+   
+
+        if (!currentPassword) {
+            throw new Error (req.body.currentPassword)
+        }
+
+        const userInfoRequired = { email, currentPassword };
+
+        const toUpdate = {
+            ...(userName && { userName }),
+            ...(password && { password }),
+            ...(address && { address }),
+            ...(phoneNumber && { phoneNumber }),
+            ...(role && { role }),
+          };
+
+        const updatedUserInfo = await userService.setUser(
+            userInfoRequired,
+            toUpdate
+        );
+
+        res.status(200).json(updatedUserInfo)
+
+        } else {
+            throw new Error('잘못된 접근입니다. 로그인한 계정이 맞는지 확인해주세요.')
+        }
+
+        
+    } catch(error){
+        next(error)
+    }
+}) 
+
+//일반회원 개인정보 수정시 비밀번호 일치 확인 팝업 
+userRouter.post('/users/:userId/checkPW', loginRequired, (req,res,next)=>{
+    try{
+        if(_.isEmpty(req.body)){
+            throw new Error(
+                'headers의 Content-Type을 application/json으로 설정해주세요'
+            )
+        }
+
+        const userId = req.params.userId;
+        const password = req.body.password;
+
+        const isTrue =  userService.checkUserPassword;
+
+        return isTrue;
+
+
+
+    } catch (error){
+        next(error)
+    }
+
+})
 export {userRouter};

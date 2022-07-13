@@ -1,4 +1,4 @@
-import { model } from 'mongoose';
+import mongoose, { model } from 'mongoose';
 import { HospRegStatusSchema } from '../schemas/HospRegStatusSchema';
 
 const HospRegStatus = model('hospRegStatus', HospRegStatusSchema);

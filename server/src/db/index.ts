@@ -18,3 +18,4 @@ export * from './models/UserModel';
 export * from './models/HospStatusModel';
 export * from './models/HospRegStatusModel';
 export * from './models/HospTagModel';
+export * from './models/HospModel';
