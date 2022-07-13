@@ -124,11 +124,13 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
 
       if(isHospital) {
         try {
-          await axios.post('http://localhost:5100/api/register', JSON.stringify(data), {
+          const result = await axios.post('http://localhost:5100/api/register', JSON.stringify(data), {
             headers: {
               'Content-Type': 'application/json',
             },
           });
+          console.log(result);
+          
           navigate('/hospital-info'); // 병원 정보 페이지로 이동
         }
         catch(e) {
@@ -137,11 +139,12 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
       }
       else {
         try {
-          await axios.post('http://localhost:5100/api/register', JSON.stringify(data), {
+          const result = await axios.post('http://localhost:5100/api/register', JSON.stringify(data), {
             headers: {
               'Content-Type': 'application/json',
             }
           });
+          console.log(result);
           navigate('/pet-info'); // 펫 등록 페이지로 이동
         }
         catch(e) {
