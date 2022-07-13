@@ -52,7 +52,7 @@ userRouter.post('/register', async(req : Request,res : Response, next : NextFunc
             userStatus,
         })
 
-        res.sendStatus(201).json(newUser)
+        res.status(201).json(newUser)
 
     } catch (error) {
         next(error)
