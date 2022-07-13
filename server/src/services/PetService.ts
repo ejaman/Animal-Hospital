@@ -71,6 +71,25 @@ class PetService {
         return pet;
     }
 
+    //펫 정보 삭제
+    async deletePetData(petId : string) : Promise<{message : string}> {
+        
+        let pet = await this.petModel.findByPetId(petId);
+
+        if(!pet){
+            throw new Error("펫 정보를 찾을 수 없습니다. 다시 한번 확인해 주세요.")
+        }
+
+        const {deletedCount} = await this.petModel.deleteById(petId);
+
+        if(deletedCount ===0){
+            throw new Error("펫 정보 삭제에 실패했습니다")
+        }
+
+        return {message: `${petId} 펫 정보가 삭제되었습니다`}
+
+    }
+
 }
 
 

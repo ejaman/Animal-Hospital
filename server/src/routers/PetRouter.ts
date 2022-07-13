@@ -111,4 +111,17 @@ petRouter.patch('/update', loginRequired, async(req,res,next)=>{
 
 })
 
+
+//펫 정보 삭제
+petRouter.delete('/delete', async(req,res,next)=>{
+    try{
+        const {petId} = req.body;
+        const deleteResult = await petService.deletePetData(petId);
+        res.status(200).json(deleteResult);
+
+    }catch(error){
+        next(error)
+    }
+})
+
 export {petRouter}
