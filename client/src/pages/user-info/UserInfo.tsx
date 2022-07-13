@@ -16,19 +16,19 @@ import {
 
 type UserInfoType = {
   userName: string;
-  address: string;
+  address: {
+    postalCode: string;
+    address1: string;
+    address2: string;
+  };
   email: string;
   password: string;
   phoneNumber: string;
 };
+const token = localStorage.getItem("token");
 
 function UserInfo() {
-  // 받아온 정보를 저장하는 state
-  const [userInfo, setUserInfo] = useState<UserInfoType>();
-
-  // 처음 한 번만 정보를 받아오도록
   useEffect(() => {
-    const token = localStorage.getItem("token");
     axios
       .get("http://localhost:5100/api/user", {
         headers: {
@@ -37,18 +37,21 @@ function UserInfo() {
       })
       .then((res) => setUserInfo(res.data));
   }, []);
-  console.log("user information: ", userInfo);
-  // destructuring?
+
+  // 받아온 정보를 저장하는 state
+  const [userInfo, setUserInfo] = useState<UserInfoType>();
+  const address = userInfo?.address;
+  console.log(userInfo);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
-    console.log(event.target.value);
-
-    // const data = {
-    //   // ...UserInfo.defaultProps,
-    //   [event.currentTarget.name]: event.currentTarget.value,
-    // };
-    // console.log(data);
+    const data = {
+      ...userInfo,
+      [event.currentTarget.name]: event.currentTarget.value,
+    };
+    console.log(data);
+    // address 부분 조지기
+    // setUserInfo(data);
   };
 
   const onhandleUpadate = async (event: React.MouseEvent<HTMLElement>) => {
@@ -62,46 +65,50 @@ function UserInfo() {
         <Container>
           <InputLabel>실명</InputLabel>
           <InfoInput
-            name="name"
+            name="userName"
             onChange={onChange}
-            value={userInfo?.userName}
+            value={userInfo?.userName || ""}
           />
         </Container>
         <Container>
           <InputLabel>이메일 주소</InputLabel>
-          <InfoInput value={userInfo?.email} disabled />
+          <InfoInput name="email" value={userInfo?.email || ""} disabled />
         </Container>
-        <Container>
-          <InputLabel>비밀번호</InputLabel>
-          <InfoInput name="password" onChange={onChange} value="***" disabled />
-          <InfoInput
-            name="password"
-            onChange={onChange}
-            value="비밀번호 확인"
-          />
-          <InfoBtn>확인</InfoBtn>
-        </Container>
+
         <Container>
           <InputLabel>전회번호</InputLabel>
           <InfoInput
             name="phoneNumber"
             onChange={onChange}
-            value={userInfo?.phoneNumber}
+            value={userInfo?.phoneNumber || ""}
           />
         </Container>
 
         <Container>
-          <InputLabel>주소 이거 확인 ㄲ</InputLabel>
+          <InputLabel>주소</InputLabel>
           <InfoInput
-            name="postalNumber"
+            name="postalCode"
             onChange={onChange}
-            value={userInfo?.address}
+            value={address?.postalCode || ""}
           />
           <InfoBtn>주소찾기</InfoBtn>
           <Divider>
-            {/* <InfoInput name="address1" onChange={onChange} value={address1} />
-            <InfoInput name="address2" onChange={onChange} value={address2} /> */}
+            <InfoInput
+              name="address1"
+              onChange={onChange}
+              value={address?.address1 || ""}
+            />
+            <InfoInput
+              name="address2"
+              onChange={onChange}
+              value={address?.address2 || ""}
+            />
           </Divider>
+        </Container>
+        <Container>
+          <InputLabel>비밀번호</InputLabel>
+          <InfoInput name="password" placeholder="새 비밀번호" />
+          <InfoInput name="password" placeholder="현재 비밀번호" />
         </Container>
 
         <div style={{ display: "flex" }}>
