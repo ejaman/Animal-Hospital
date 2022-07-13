@@ -8,7 +8,7 @@ import {
   hospitalModel,
   HospitalModel,
 } from '../db';
-import { hospRegStatusService } from './index';
+import { hospRegStatusService, hospStatusService } from './index';
 
 class HospitalService {
   constructor(private hospitalModel: HospitalModel) {}
@@ -75,6 +75,14 @@ class HospitalService {
     const { name: hospRegStatusName } = hospRegStatus;
     if (hospRegStatusName !== '승인완료') {
       throw new Error(`${hospRegStatusName}`);
+    }
+
+    // 회원상태 확인
+    const hospStatusId = hospital.hospStatus?.toString() as string;
+    const hospStatus = await hospStatusService.findById(hospStatusId);
+    const { name: hospStatusName } = hospStatus;
+    if (hospStatusName !== '정상') {
+      throw new Error(`${hospStatusName}`);
     }
 
     const hospitalEmail = hospital.email;
