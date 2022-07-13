@@ -5,12 +5,14 @@ import {faGithub} from '@fortawesome/free-brands-svg-icons';
 
 const Container = styled.div`
   width: 100%;
-  height: 200px;
+  height: 190px;
   background-color: black;
   color: white;
   padding: 30px 0;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  position: absolute;
+  bottom: 0;
 
   @media screen and (max-width: 780px) {
     display: flex;
@@ -90,8 +92,8 @@ export default function Footer() {
       </InfoContainer>
       <EtcContainer>
         <Contact>CONTACT</Contact>
-        <Member>주소: 서울 성수 낙낙 2층</Member>
-        <Member>전화번호: 02-1234-1234</Member>
+        <Member>서울 성수 낙낙 2층</Member>
+        <Member>DM으로 문의 부탁드립니다🙏</Member>
       </EtcContainer>
     </Container>
   )
