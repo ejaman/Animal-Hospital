@@ -50,8 +50,21 @@ export interface HospitalInfo {
 export interface ToUpdate {
   hospitalId: mongoose.Types.ObjectId;
   update: {
-    [key: string]: string | number;
+    [key: string]:
+      | string
+      | number
+      | Address
+      | addressCoordinate
+      | number[]
+      | string[]
+      | object[]
+      | mongoose.Types.ObjectId;
   };
+}
+
+export interface HospitalInfoRequired {
+  hospitalId: string;
+  currentPassword: string;
 }
 
 export interface HospitalLoginResult {
@@ -90,6 +103,18 @@ export class HospitalModel {
       option
     )) as HospitalInfo;
     return updatedUser;
+  }
+
+  async update({ hospitalId, update }: ToUpdate): Promise<HospitalInfo> {
+    const filter = { _id: hospitalId };
+    const option = { returnOriginal: false };
+
+    const updatedHospital = (await Hospital.findOneAndUpdate(
+      filter,
+      update,
+      option
+    )) as HospitalInfo;
+    return updatedHospital;
   }
 }
 

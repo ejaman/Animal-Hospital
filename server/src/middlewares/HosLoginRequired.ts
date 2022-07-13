@@ -3,7 +3,11 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import jwt_decode from 'jwt-decode';
 import { hospitalService } from '../services';
 
-async function authJwt(req: Request, res: Response, next: NextFunction) {
+async function HosLoginRequired(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   // request 헤더로부터 authorization bearer 토큰을 받음.
   // const userAccessToken = req.headers['authorization']?.split(' ')[1];
 
@@ -136,4 +140,4 @@ function verifyToken(token: string): string | JwtPayload {
   return result;
 }
 
-export { authJwt };
+export { HosLoginRequired };
