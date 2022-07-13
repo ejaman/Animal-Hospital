@@ -46,16 +46,16 @@ interface Props {
 };
 
 interface IData {
-  username: string,
+  userName: string,
   email: string,
   password: string,
-  phone: string,
+  phoneNumber: string,
   hospitalname?: string,
   businessNumber?: string,
   licenseNumber?: string,
   address: IAddr,
   role: string,
-  status: string,
+  userStatus: string,
 }
 
 export interface IAddr {
@@ -65,7 +65,7 @@ export interface IAddr {
 }
 
 const RegisterForm: React.FC<Props> = ({isHospital}) => {
-  const [username, setUsername] = useState<string>('');
+  const [userName, setUserName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [checkPwd, setCheckPwd] = useState<string>('');
@@ -87,44 +87,67 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
   async function handleSubmit(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
 
-    if(!isEmail) return alert('이메일을 확인해주세요.');
-    if(!isPwd) return alert('비밀번호 형식을 확인해주세요.');
-    if(!isSamePwd) return alert('비밀번호를 다르게 입력했습니다.');
-    if(!isPhone) return alert('휴대폰 번호를 확인해주세요.');
+    if(userName ==='') return alert('이름을 입력해주세요.');
+    if(!isEmail || email==='') return alert('이메일을 확인해주세요.');
+    if(!isPwd || password === '') return alert('비밀번호 형식을 확인해주세요.');
+    if(!isSamePwd || checkPwd === '') return alert('비밀번호를 다르게 입력했습니다.');
+    if(!isPhone || phone === '') return alert('전화번호를 확인해주세요.');
+    if(address.postalCode === '') return alert('주소를 입력해주세요.');
+
+    if(isHospital && hospitalname === '') return alert('병원 이름을 입력해주세요.');
+    if(isHospital && licenseNumber === '') return alert('면허 번호를 입력해주세요.');
+    if(isHospital && businessNumber === '') return alert('사업자 번호를 입력해주세요.');
+
 
     const data: IData = isHospital ?
       {
-        username,
+        userName,
         email,
         password,
-        phone,
+        phoneNumber: phone,
         role: 'hospital',
-        status: 'pending',
+        userStatus: 'pending',
         hospitalname,
         businessNumber,
         licenseNumber,
         address
       } :
       {
-        username,
+        userName,
         email,
         password,
-        phone,
+        phoneNumber: phone,
         role: 'user',
-        status: 'complete',
+        userStatus: 'complete',
         address,
       }
 
-      console.log(data);
-
-    try {
-      await axios.post('localhost:5100/api/register', data);
-      navigate('/') // 펫 등록 페이지로 이동
-    }
-    catch(e) {
-      console.log(e)
-    }
-
+      if(isHospital) {
+        try {
+          await axios.post('http://localhost:5100/api/register', JSON.stringify(data), {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          navigate('/hospital-info'); // 병원 정보 페이지로 이동
+        }
+        catch(e) {
+          console.log(e);
+        }
+      }
+      else {
+        try {
+          await axios.post('http://localhost:5100/api/register', JSON.stringify(data), {
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+          navigate('/pet-info'); // 펫 등록 페이지로 이동
+        }
+        catch(e) {
+          console.log(e);
+        }
+      }
   }
 
   function handleChangeEmail(e: React.ChangeEvent<HTMLInputElement>) {
@@ -161,22 +184,19 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
           value = {hospitalname}
           onChange = {(e) => setHospitalname(e.target.value)}
           style={{ marginTop: "1rem" }}
-          required
         />
         }
         <Input
           placeholder="이름을 입력해주세요"
-          value = {username}
-          onChange = {(e) => setUsername(e.target.value)}
+          value = {userName}
+          onChange = {(e) => setUserName(e.target.value)}
           style={{ marginTop: "1rem" }}
-          required
         />
         <Input
           placeholder="이메일을 입력해주세요"
           value = {email}
           onChange = {handleChangeEmail}
           style={{ marginTop: "1rem" }}
-          required
         />
         {!isEmail && <ErrorMessage>이메일 형식이 올바르지 않습니다.</ErrorMessage>}
         <Input
@@ -185,7 +205,6 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
           value = {password}
           onChange = {handleChangePwd}
           style={{ marginTop: "1rem" }}
-          required
         />
         {!isPwd && <ErrorMessage>비밀번호는 영문, 숫자, 특수문자 조합으로 8자 이상 입력해주세요.</ErrorMessage>}
         <Input
@@ -194,7 +213,6 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
           value = {checkPwd}
           onChange = {e => setCheckPwd(e.target.value)}
           style={{ marginTop: "1rem" }}
-          required
         />
         {!isSamePwd && <ErrorMessage>비밀번호와 일치하지 않습니다.</ErrorMessage>}
         <Input
@@ -202,7 +220,6 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
           value = {phone}
           onChange = {(e) => setPhone(e.target.value)}
           style={{ marginTop: "1rem" }}
-          required
         />
         {!isPhone && <ErrorMessage>전화번호를 바르게 입력해주세요.</ErrorMessage>}
 
@@ -215,14 +232,14 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
             value = {businessNumber}
             onChange = {(e) => setBusinessNumber(e.target.value)}
             style={{ marginTop: "1rem" }}
-            required
+
             />
             <Input
             placeholder="면허 번호를 입력해주세요"
             value = {licenseNumber}
             onChange = {(e) => setLicenseNumber(e.target.value)}
             style={{ marginTop: "1rem" }}
-            required
+
             />
           </div>
         }
