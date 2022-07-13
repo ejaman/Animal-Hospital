@@ -11,6 +11,13 @@ const Container = styled.div`
   padding: 30px 0;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+
+  @media screen and (max-width: 780px) {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    padding: 20px 0 0 0;
+  }
 `;
 
 const Team = styled.h2`
@@ -29,6 +36,11 @@ const LinkBtn = styled.a`
   display: flex;
   justify-content: center;
   margin-top: 30px;
+
+  @media screen and (max-width: 780px) {
+    margin-bottom: 30px;
+    margin-top: 20px;
+  }
 `;
 
 const InfoContainer = styled.div`
@@ -49,11 +61,15 @@ const Year = styled.p`
 `;
 
 const EtcContainer = styled.div`
-  
+
 `
 
 const Contact = styled(Role)`
   margin-bottom: 30px;
+
+  @media screen and (max-width: 780px) {
+    margin-top: 20px;
+  }
 `
 
 export default function Footer() {
