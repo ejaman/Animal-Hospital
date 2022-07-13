@@ -26,8 +26,8 @@ export interface PetData extends PetInfo {
    
 }
 
-interface ToUpdate {
-    email : string,
+export interface PetToUpdate {
+    petId : string,
     update : {
         [key : string] : string | number;
     }
@@ -45,9 +45,14 @@ export class PetModel {
         return owner;
     }
 
-    async update({email, update}: ToUpdate)
-: Promise<PetInfo | null>{
-    const filter = {email : email};
+    async findByPetId(petId : string) : Promise<PetData | null>{
+        const pet = await Pet.findOne({_id : petId});
+        return pet;
+    }
+
+    async update({petId, update}: PetToUpdate)
+: Promise<PetData | null>{
+    const filter = {_id : petId};
     const option = {returnOriginal : false};
     const updatedPet = await Pet.findOneAndUpdate(filter, update, option);
 

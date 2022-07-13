@@ -1,7 +1,8 @@
-import { PetData, PetInfo, petModel, PetModel } from "../db";
+import { PetData, PetInfo, petModel, PetModel,  } from "../db";
 
-interface PetOwner {
-    owner : string
+interface PetInfoRequired {
+    owner : string,
+    petId : string
 }
 class PetService {
     constructor(
@@ -16,22 +17,30 @@ class PetService {
 
     }
 
-    // //펫 정보 수정
-    // async setPet(
-    //     petOwner: PetOwner,
-    //     toUpdate : Partial<PetInfo>
-    //     ) : Promise<PetData> {
+    //펫 정보 수정
+    async setPet(
+        petInfoRequired : PetInfoRequired,
+        toUpdate : Partial<PetInfo>
+        ) : Promise<PetData | null> {
 
-    //     try {
-    //         const {owner} = petOwner;
-    //         if (!owner){
-    //             throw new Error("로그인한 펫 주인이 맞는지 확인해주세요.")
-    //         }
-    //     }
-    //     }
+        
+        const {owner, petId} = petInfoRequired;
+        if (!owner){
+            throw new Error("로그인한 펫 주인이 맞는지 확인해주세요.")
+        } else if(!petId) {
+            throw new Error("정보를 수정하려는 pet을 골라주세요.")
+        }
+
+        let pet = await this.petModel.findByPetId(petId);
+
+        pet = await this.petModel.update({petId, update : toUpdate});
+
+        return pet;
+       
+        }
 
 
-    // 펫 정보 조회 
+    // 펫 정보(사용자의 펫 전체) 조회 
     async getUserPetData ( ownerId : string) : Promise<PetData[]> {
 
         const pets = await this.petModel.findById(ownerId);
@@ -48,6 +57,18 @@ class PetService {
 
         
 
+    }
+
+    //개별 펫 정보 조회
+    async getPetData ( petId : string) : Promise<PetData> {
+
+        const pet = await this.petModel.findByPetId(petId);
+
+        if(!pet){
+            throw new Error("조회되는 펫 정보가 없습니다.")
+        }
+
+        return pet;
     }
 
 }

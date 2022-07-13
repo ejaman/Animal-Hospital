@@ -73,7 +73,36 @@ petRouter.patch('/update', loginRequired, async(req,res,next)=>{
             )
         }
     
-    // 수정 권한이 있는 사용자 확인??
+    //수정권한있는 사용자 확인 필요?
+        const currentOwner = req.currentUserId;
+
+        const {petId, owner, species, breed, name, age, sex, weight,medicalHistory, vaccination, neutralized, image}  = req.body;
+
+        const pet = await petService.getPetData(petId)
+
+        if(owner === currentOwner) {
+
+            const petInfoRequired = {owner, petId};
+
+            const toUpdate = {
+                ...(species && {species}),
+                ...(breed && {breed}),
+                ...(name && {name}),
+                ...(age && {age}),
+                ...(sex && {sex}),
+                ...(weight && {weight}),
+                ...(medicalHistory && {medicalHistory}),
+                ...(vaccination && {vaccination}),
+                ...(neutralized && {neutralized}),
+                ...(image && {image})
+            }
+
+            const updatedPetInfo = await petService.setPet( petInfoRequired, toUpdate);
+
+            res.status(200).json(updatedPetInfo)
+        } else {
+            throw new Error("잘못된 접근입니다. 펫 주인이 맞는지 확인해주세요.")
+        }
 
 
     }catch(error){
