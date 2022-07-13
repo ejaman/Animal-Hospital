@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {
+  ToUpdate,
   HospitalLoginResult,
   HospitalInfo,
   HospitalRegisterData,
@@ -100,15 +101,16 @@ class HospitalService {
         hospitalEmail: hospitalEmail,
         hospitalname: hospitalname,
         hospitalId: hospitalIdToString,
+        role: 'hospital',
       },
       secretKey,
       {
-        expiresIn: '1h',
+        expiresIn: '60s',
       }
     );
 
     const refreshToken = jwt.sign({}, secretKey, {
-      expiresIn: '24h',
+      expiresIn: '90s',
     });
 
     console.log(refreshToken);
@@ -119,6 +121,28 @@ class HospitalService {
     });
 
     return { accessToken, hospitalname };
+  }
+
+  async findHospitalById(hospitalId: string): Promise<HospitalInfo> {
+    // 객체 destructuring
+
+    const hospital = await this.hospitalModel.findById(hospitalId);
+
+    return hospital;
+  }
+
+  async updateRefreshToken({
+    hospitalId,
+    update,
+  }: ToUpdate): Promise<HospitalInfo> {
+    const filter = { _id: hospitalId };
+    const option = { returnOriginal: false };
+
+    const updatedUser = await this.hospitalModel.updateRefreshToken({
+      hospitalId: hospitalId,
+      update,
+    });
+    return updatedUser;
   }
 }
 

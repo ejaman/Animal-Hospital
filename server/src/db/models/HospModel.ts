@@ -47,7 +47,7 @@ export interface HospitalInfo {
   _id: mongoose.Types.ObjectId;
 }
 
-interface ToUpdate {
+export interface ToUpdate {
   hospitalId: mongoose.Types.ObjectId;
   update: {
     [key: string]: string | number;
