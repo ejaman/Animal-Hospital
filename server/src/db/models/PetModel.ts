@@ -5,6 +5,7 @@ import { UserSchema } from "../schemas/UserSchema";
 const Pet = model('pets', PetSchema);
 
 export interface PetInfo {
+    owner : string,
     species : string,
     breed : string,
     name : string,
@@ -20,7 +21,8 @@ export interface PetInfo {
 
 //PetData면 되지 않는가? owner와 연동 확인후 수정하기
 export interface PetData extends PetInfo {
-    _id : Types.ObjectId
+    _id : Types.ObjectId,
+    
    
 }
 
@@ -35,6 +37,12 @@ export class PetModel {
     async create(petInfo : PetInfo) : Promise<PetData> {
         const createdNewPet = await Pet.create(petInfo);
         return createdNewPet;
+    }
+
+
+    async findById(ownerId : string) : Promise<PetData[]>{
+        const owner = await Pet.find({owner: ownerId})
+        return owner;
     }
 
     async update({email, update}: ToUpdate)

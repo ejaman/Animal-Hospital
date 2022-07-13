@@ -2,6 +2,10 @@ import {Schema, Types} from 'mongoose';
 
 
 const PetSchema = new Schema({
+    owner : {
+        type : String,
+        required : true
+    },
     
     species : 
     {

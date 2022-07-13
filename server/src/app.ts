@@ -2,10 +2,11 @@ import cors from 'cors';
 import express from 'express';
 import { errorLogger, errorHandler } from './middlewares';
 import {
+    userRouter,
+    petRouter,
   hospStatusRouter,
   hospRegStatusRouter,
   hospTagRouter,
-  userRouter,
   hospitalRouter,
 } from './routers';
 
@@ -31,6 +32,9 @@ app.use('/hostpitalRegStatus', hospRegStatusRouter);
 app.use('/hostpitalTag', hospTagRouter);
 app.use('/hostpital', hospitalRouter);
 app.use('/api', userRouter);
+app.use('/pet', petRouter)
+
+
 // 미들웨어 (에러를 error.log 파일에 기록 및, 에러를 프론트엔드에 전달)
 app.use(errorLogger);
 app.use(errorHandler);
