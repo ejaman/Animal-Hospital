@@ -3,7 +3,7 @@ import * as _ from 'lodash'; //npm install --save @types/lodash
 
 import { userService } from '../services';
 import { UserAddress } from '../db';
-import { loginRequired } from '../middlewares/LoginRequired';
+import { loginRequired, checkStatus } from '../middlewares';
 import { adminOnly } from '../middlewares';
 const userRouter = Router();
 
@@ -67,7 +67,7 @@ userRouter.post(
 
 //로그인
 userRouter.post(
-  '/login',
+  '/login',checkStatus,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (_.isEmpty(req.body)) {
@@ -81,7 +81,7 @@ userRouter.post(
 
       const userToken = await userService.getUserToken({ email, password });
 
-      console.log(userToken);
+      
       res.status(201).json({ userToken }); //userId, role, userStatus
     } catch (error) {
       next(error);
@@ -128,11 +128,14 @@ userRouter.patch('/users/:userEmail', loginRequired, async (req, res, next) => {
         throw new Error(req.body.currentPassword);
       }
 
-      const regixPW =
+      if(password) {
+        const regixPW =
         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,20}/;
       if (!regixPW.test(password)) {
         throw new Error('비밀번호 규칙을 다시 한 번 확인해주세요.');
       }
+      }
+    
 
       const userInfoRequired = { email, currentPassword };
 
@@ -168,6 +171,25 @@ userRouter.get('/userlist', adminOnly, async (req,res,next)=>{
     } catch (error) {
         next(error)
     }
+})
+
+// 일반 회원 탈퇴 
+userRouter.patch('/expiration', loginRequired, async(req,res,next)=>{
+  try {
+    
+    const userStatus = req.userStatus;
+    const userId = req.currentUserId;
+
+    const statusInfoRequired = {userId, userStatus};
+
+    const updatedStatus = await userService.setStatus(statusInfoRequired);
+
+    res.status(200).json(updatedStatus);
+
+
+  } catch (error) {
+    next(error)
+  }
 })
 
 export { userRouter };

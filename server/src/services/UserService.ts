@@ -1,4 +1,4 @@
-import {userModel, UserModel, UserInfo, UserData} from '../db'
+import {userModel, UserModel, UserInfo, UserData, StatusInfoRequired} from '../db'
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -164,6 +164,15 @@ class UserService {
         const users = await this.userModel.findAll();
         return users;
     }
+
+    async setStatus(statusInfoRequired : StatusInfoRequired) : Promise<string | undefined>{
+        const {userId, userStatus} = statusInfoRequired;
+        const user = await this.userModel.findById(userId)
+        const newStatus = await this.userModel.updateStatus(statusInfoRequired)
+        console.log(newStatus)
+        return newStatus;
+    }
+
 }
 
 const userService = new UserService(userModel);
