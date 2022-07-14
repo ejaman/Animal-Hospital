@@ -7,21 +7,15 @@ import {
   StatusContainer,
   Select,
 } from "./style";
-function HpCard() {
+function UserCard() {
   return (
     <InfoCard>
       <TextContainer>
-        <Title>병원</Title>
-        <InfoText>병원명</InfoText>
-
+        <Title>일반회원</Title>
+        <InfoText>유저이름</InfoText>
         <InfoText>이메일</InfoText>
+
         <StatusContainer>
-          <Select>
-            <option>가입승인</option>
-            <option>확인중</option>
-            <option>취소</option>
-            <option>불허</option>
-          </Select>
           <Select>
             <option>회원</option>
             <option>탈퇴회원</option>
@@ -32,4 +26,4 @@ function HpCard() {
   );
 }
 
-export default HpCard;
+export default UserCard;
