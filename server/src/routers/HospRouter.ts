@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import * as _ from 'lodash';
 import { hospitalService } from '../services';
-import { HosLoginRequired } from '../middlewares';
+import { HospLoginRequired } from '../middlewares';
 import { upload } from '../utils';
+import mongoose, { model } from 'mongoose';
 
 const hospitalRouter = Router();
 
@@ -163,7 +164,7 @@ hospitalRouter.post('/login', async function (req, res, next) {
 
 hospitalRouter.patch(
   '/',
-  HosLoginRequired,
+  HospLoginRequired,
   upload.single('image'),
   async (req, res, next) => {
     try {
@@ -231,6 +232,51 @@ hospitalRouter.patch(
         ...(tag && { tag }),
         ...(keyword && { keyword }),
         ...(image && { image }),
+      };
+
+      // 사용자 정보를 업데이트함.
+      const updatedUserInfo = await hospitalService.setHospitalInfo(
+        hospitalInfoRequired,
+        toUpdate
+      );
+
+      res.status(200).json(updatedUserInfo);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+hospitalRouter.patch(
+  '/hospital-status',
+  HospLoginRequired,
+  async (req, res, next) => {
+    try {
+      if (_.isEmpty(req.body)) {
+        throw new Error(
+          'headers의 Content-Type을 application/json으로 설정해주세요'
+        );
+      }
+
+      // body data 로부터 업데이트할 사용자 정보를 추출함.
+
+      const { currentPassword } = req.body;
+
+      // body data로부터, 확인용으로 사용할 현재 비밀번호를 추출함.
+
+      // currentPassword 없을 시, 진행 불가
+      if (!currentPassword) {
+        throw new Error('탈퇴할려면, 현재의 비밀번호가 필요합니다.');
+      }
+
+      const hospitalId = req.currentHospId;
+
+      const hospitalInfoRequired = { hospitalId, currentPassword };
+
+      // 위 데이터가 undefined가 아니라면, 즉, 프론트에서 업데이트를 위해
+      // 보내주었다면, 업데이트용 객체에 삽입함.
+      const toUpdate = {
+        hospStatus: new mongoose.Types.ObjectId('62cbe26a0a094d23799511f3'),
       };
 
       // 사용자 정보를 업데이트함.
