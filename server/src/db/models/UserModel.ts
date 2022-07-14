@@ -55,6 +55,11 @@ export class UserModel {
 
         return updatedUser;
     }
+
+    async findAll() : Promise<UserData[]>{
+        const users = await User.find({});
+        return users;
+    }
 }
 
 const userModel = new UserModel();
