@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-// import HospitalCard from "../hospital-info/HospitalInfo";
 
 const ListContainer = styled.div`
   max-width: 700px;
