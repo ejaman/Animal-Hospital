@@ -1,13 +1,15 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {
+  HospitalInfoRequired,
+  ToUpdate,
   HospitalLoginResult,
   HospitalInfo,
   HospitalRegisterData,
   hospitalModel,
   HospitalModel,
 } from '../db';
-import { hospRegStatusService } from './index';
+import { hospRegStatusService, hospStatusService } from './index';
 
 class HospitalService {
   constructor(private hospitalModel: HospitalModel) {}
@@ -76,6 +78,14 @@ class HospitalService {
       throw new Error(`${hospRegStatusName}`);
     }
 
+    // 회원상태 확인
+    const hospStatusId = hospital.hospStatus?.toString() as string;
+    const hospStatus = await hospStatusService.findById(hospStatusId);
+    const { name: hospStatusName } = hospStatus;
+    if (hospStatusName !== '정상') {
+      throw new Error(`${hospStatusName}`);
+    }
+
     const hospitalEmail = hospital.email;
     const hospitalname = hospital.name;
     const correctPasswordHash = hospital.password;
@@ -100,15 +110,16 @@ class HospitalService {
         hospitalEmail: hospitalEmail,
         hospitalname: hospitalname,
         hospitalId: hospitalIdToString,
+        role: 'hospital',
       },
       secretKey,
       {
-        expiresIn: '1h',
+        expiresIn: '60s',
       }
     );
 
     const refreshToken = jwt.sign({}, secretKey, {
-      expiresIn: '24h',
+      expiresIn: '90s',
     });
 
     console.log(refreshToken);
@@ -119,6 +130,75 @@ class HospitalService {
     });
 
     return { accessToken, hospitalname };
+  }
+
+  async findHospitalById(hospitalId: string): Promise<HospitalInfo> {
+    // 객체 destructuring
+
+    const hospital = await this.hospitalModel.findById(hospitalId);
+
+    return hospital;
+  }
+
+  async updateRefreshToken({
+    hospitalId,
+    update,
+  }: ToUpdate): Promise<HospitalInfo> {
+    const filter = { _id: hospitalId };
+    const option = { returnOriginal: false };
+
+    const updatedUser = await this.hospitalModel.updateRefreshToken({
+      hospitalId: hospitalId,
+      update,
+    });
+    return updatedUser;
+  }
+
+  async setHospitalInfo(
+    hospitalInfoRequired: HospitalInfoRequired,
+    toUpdate: Partial<HospitalInfo>
+  ): Promise<HospitalInfo> {
+    // 객체 destructuring
+    const { hospitalId, currentPassword } = hospitalInfoRequired;
+
+    // 우선 해당 id의 유저가 db에 있는지 확인
+    let hospital = await this.hospitalModel.findById(hospitalId);
+
+    // db에서 찾지 못한 경우, 에러 메시지 반환
+    if (!hospital) {
+      throw new Error('가입 내역이 없습니다. 다시 한 번 확인해 주세요.');
+    }
+
+    // 비밀번호 일치 여부 확인
+    const correctPasswordHash = hospital.password;
+    const isPasswordCorrect = await bcrypt.compare(
+      currentPassword,
+      correctPasswordHash
+    );
+
+    if (!isPasswordCorrect) {
+      throw new Error(
+        '현재 비밀번호가 일치하지 않습니다. 다시 한 번 확인해 주세요.'
+      );
+    }
+
+    // 이제 업데이트 시작
+
+    // 비밀번호도 변경하는 경우에는 해쉬화 해주어야 함.
+    const { password } = toUpdate;
+
+    if (password) {
+      const newPasswordHash = await bcrypt.hash(password!, 10);
+      toUpdate.password = newPasswordHash;
+    }
+
+    // 업데이트 진행
+    hospital = await this.hospitalModel.update({
+      hospitalId: hospital._id,
+      update: toUpdate,
+    });
+
+    return hospital;
   }
 }
 
