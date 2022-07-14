@@ -12,7 +12,7 @@ import {
   UserInput,
 } from './LoginStyle';
 
-import axios from 'axios';
+import { CustomAxiosPost } from '../../common/CustomAxios';
 
 type LoginState = {
   email: string;
@@ -43,15 +43,7 @@ function LoginLayout() {
     // 만일 병원 유저가 체크가 안되어있다면
     if (!isCheckUser) {
       try {
-        const result = await axios.post(
-          'http://localhost:5100/api/login',
-          JSON.stringify(logins),
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
+        const result = await CustomAxiosPost.post('/api/login', logins);
         const token: string = result.data.userToken.token;
         // 만일 토큰이 존재하면 로그인에 성공한거니까 access 토큰을 storage에 저장한후에 로그인 성공 메시지 남기고 페이지 이동
         if (token) {
@@ -65,14 +57,9 @@ function LoginLayout() {
       }
     } else {
       try {
-        const hospitalUser = await axios.post(
-          'http://localhost:5100/hostpital/login',
-          JSON.stringify(logins),
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
+        const hospitalUser = await CustomAxiosPost.post(
+          '/hospital/login',
+          logins
         );
         const hospitalName = hospitalUser.data.data.hospitalName;
         alert(`${hospitalName}`);
