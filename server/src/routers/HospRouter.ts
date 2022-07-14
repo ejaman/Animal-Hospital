@@ -118,12 +118,10 @@ hospitalRouter.post('/register', async (req, res, next) => {
 
     const newHospital = await hospitalService.addUser(hospitalInfo);
 
-    res
-      .status(201)
-      .json({
-        message: '병원가입 내역 확인중입니다.',
-        data: { hospital: newHospital },
-      });
+    res.status(201).json({
+      message: '병원가입 내역 확인중입니다.',
+      data: { hospital: newHospital },
+    });
   } catch (error) {
     next(error);
   }
@@ -154,7 +152,7 @@ hospitalRouter.post('/login', async function (req, res, next) {
     });
 
     res.status(201).json({
-      data: { hospitalName: hospitalname },
+      data: { hospitalName: hospitalname, role: 'hospital' },
       message: '로그인에 성공했습니다!',
     });
   } catch (error) {
