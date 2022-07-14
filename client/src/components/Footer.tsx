@@ -4,21 +4,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faGithub} from '@fortawesome/free-brands-svg-icons';
 
 const Container = styled.div`
-  width: 100%;
   height: 190px;
   background-color: black;
   color: white;
   padding: 30px 0;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  position: absolute;
-  bottom: 0;
 
   @media screen and (max-width: 780px) {
     display: flex;
     flex-direction: column;
-    height: auto;
-    padding: 20px 0 0 0;
+    height: 260px;
+    padding-top: 20px;
   }
 `;
 
