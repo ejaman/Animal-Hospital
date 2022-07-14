@@ -87,7 +87,7 @@ function UserInfo() {
       ...userInfo,
       address: addr,
       currentPassword: currentPassword,
-      password: newPassword,
+      newPassword: newPassword,
     };
     console.log(data);
     axios
