@@ -15,6 +15,7 @@ db.on('error', (error) =>
 );
 
 export * from './models/UserModel';
+export * from './models/PetModel';
 export * from './models/HospStatusModel';
 export * from './models/HospRegStatusModel';
 export * from './models/HospTagModel';
