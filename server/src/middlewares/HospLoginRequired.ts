@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import jwt_decode from 'jwt-decode';
 import { hospitalService } from '../services';
 
-async function HosLoginRequired(
+async function HospLoginRequired(
   req: Request,
   res: Response,
   next: NextFunction
@@ -148,4 +148,4 @@ function verifyToken(token: string): string | JwtPayload {
   return result;
 }
 
-export { HosLoginRequired };
+export { HospLoginRequired };
