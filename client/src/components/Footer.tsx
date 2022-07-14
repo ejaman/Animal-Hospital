@@ -32,6 +32,10 @@ const Member = styled.p`
   margin-bottom: 30px;
   font-size: 16px;
   text-align: center;
+  
+  @media screen and (max-width: 780px) {
+    margin-bottom: 15px;
+  }
 `;
 
 const LinkBtn = styled.a`
@@ -40,13 +44,9 @@ const LinkBtn = styled.a`
   margin-top: 30px;
 
   @media screen and (max-width: 780px) {
-    margin-bottom: 30px;
+    margin-bottom: 16px;
     margin-top: 20px;
   }
-`;
-
-const InfoContainer = styled.div`
-
 `;
 
 const Role = styled.h2`
@@ -62,15 +62,17 @@ const Year = styled.p`
   margin-top: 8px;
 `;
 
-const EtcContainer = styled.div`
-
-`
-
 const Contact = styled(Role)`
   margin-bottom: 30px;
 
   @media screen and (max-width: 780px) {
     margin-top: 20px;
+    margin-bottom: 16px;
+  }
+`
+const EtcContainer = styled.div`
+  @media screen and (max-width: 780px) {
+    display: none;
   }
 `
 
@@ -84,12 +86,12 @@ export default function Footer() {
           <FontAwesomeIcon icon={faGithub} size='3x' color='white' />
         </LinkBtn>
       </div>
-      <InfoContainer>
+      <div>
         <Role>BACK</Role>
         <Member>권재구 권필주</Member>
         <Role>FRONT</Role>
         <Member>김다운 김호진 박민수 이지민</Member>
-      </InfoContainer>
+      </div>
       <EtcContainer>
         <Contact>CONTACT</Contact>
         <Member>서울 성수 낙낙 2층</Member>
