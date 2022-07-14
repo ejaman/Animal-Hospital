@@ -128,6 +128,12 @@ userRouter.patch('/users/:userEmail', loginRequired, async (req, res, next) => {
         throw new Error(req.body.currentPassword);
       }
 
+      const regixPW =
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,20}/;
+      if (!regixPW.test(password)) {
+        throw new Error('비밀번호 규칙을 다시 한 번 확인해주세요.');
+      }
+
       const userInfoRequired = { email, currentPassword };
 
       const toUpdate = {

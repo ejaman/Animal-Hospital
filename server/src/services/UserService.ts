@@ -116,9 +116,9 @@ class UserService {
 
             if(password){
                 const newPasswordHash = await bcrypt.hash(password, 10);
-                toUpdate.password = newPasswordHash
+                toUpdate.password = newPasswordHash;
             }
-
+            
             user = await this.userModel.update({
                 email,
                 update :toUpdate
