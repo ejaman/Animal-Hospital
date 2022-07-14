@@ -106,14 +106,16 @@ const ProfileBtn = styled.div<IIdx>`
 `;
 
 export default function Header() {
-  // const [isLogin, setIsLogin] = useState<boolean>(localStorage.getItem('token') ? true : false);
-  const [isLogin, setIsLogin] = useState<boolean>(true);
-  const [profile, setProfile] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<boolean>(localStorage.getItem('token') ? true : false);
+  // const [isLogin, setIsLogin] = useState<boolean>(true); // 로그인 되었다고 가정한 가데이터
+  const [profile, setProfile] = useState<boolean>(false); // 계정 아이콘 클릭 여부 체크
 
+  // 마이페이지 클릭 시 role에 맞춰서 마이페이지 이동
   function handleNavigateMypage() {
 
   }
 
+  // 로그아웃 클릭 시 로그아웃
   function handleLogout() {
     localStorage.setItem('token', '');
     setIsLogin(false);
