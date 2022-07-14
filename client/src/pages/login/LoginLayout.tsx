@@ -40,27 +40,45 @@ function LoginLayout() {
 
   const handleLoginChecked = async (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-
-    try {
-      const result = await axios.post(
-        'http://localhost:5100/api/login',
-        JSON.stringify(logins),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+    // 만일 병원 유저가 체크가 안되어있다면
+    if (!isCheckUser) {
+      try {
+        const result = await axios.post(
+          'http://localhost:5100/api/login',
+          JSON.stringify(logins),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        const token: string = result.data.userToken.token;
+        // 만일 토큰이 존재하면 로그인에 성공한거니까 access 토큰을 storage에 저장한후에 로그인 성공 메시지 남기고 페이지 이동
+        if (token) {
+          localStorage.stetItem('token', token);
+          alert('로그인 성공하셨습니다.');
+          window.location.href = '/';
         }
-      );
-      const token: string = result.data.userToken.token;
-      // 만일 토큰이 존재하면 로그인에 성공한거니까 access 토큰을 storage에 저장한후에 로그인 성공 메시지 남기고 페이지 이동
-      if (token) {
-        localStorage.setItem('token', token);
-        alert('로그인 성공하셨습니다.');
-        window.location.href = '/';
+      } catch (e) {
+        console.log(e);
+        alert('아이디 또는 비밀번호 오류입니다.');
       }
-    } catch (e) {
-      console.log(e);
-      alert('아이디 또는 비밀번호 오류입니다.');
+    } else {
+      try {
+        const hospitalUser = await axios.post(
+          'http://localhost:5100/hostpital/login',
+          JSON.stringify(logins),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        const hospitalName = hospitalUser.data.data.hospitalName;
+        alert(`${hospitalName}`);
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 

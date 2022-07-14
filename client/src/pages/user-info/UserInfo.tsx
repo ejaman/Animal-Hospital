@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
+import DaumPostcode from "react-daum-postcode";
+import Modal from "react-modal";
 import axios from "axios";
-
+import { UserInfoType, Data, Address } from "./Interface";
 import {
   MainContainer,
   Title,
@@ -13,21 +15,20 @@ import {
   DeactiveBtn,
   Divider,
 } from "../../components/InfoForm";
+import { ModalStyle } from "../../components/ModalStyle";
 
-type UserInfoType = {
-  userName: string;
-  address: {
-    postalCode: string;
-    address1: string;
-    address2: string;
-  };
-  email: string;
-  password: string;
-  phoneNumber: string;
-};
 const token = localStorage.getItem("token");
-
 function UserInfo() {
+  // 받아온 정보를 저장하는 state
+  const [userInfo, setUserInfo] = useState<UserInfoType>();
+  // address 관련
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [addr, setAddr] = useState<Address>();
+  // 비밀번호 관련
+  const pwRef = useRef<HTMLInputElement>(null);
+  const newPwRef = useRef<HTMLInputElement>(null);
+
+  // 처음 한 번만 서버 통신
   useEffect(() => {
     axios
       .get("http://localhost:5100/api/user", {
@@ -35,13 +36,11 @@ function UserInfo() {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((res) => setUserInfo(res.data));
+      .then((res) => {
+        setUserInfo(res.data);
+        setAddr(res.data.address);
+      });
   }, []);
-
-  // 받아온 정보를 저장하는 state
-  const [userInfo, setUserInfo] = useState<UserInfoType>();
-  const address = userInfo?.address;
-  console.log(userInfo);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -49,13 +48,42 @@ function UserInfo() {
       ...userInfo,
       [event.currentTarget.name]: event.currentTarget.value,
     };
-    console.log(data);
-    // address 부분 조지기
-    // setUserInfo(data);
+    setUserInfo(data);
+  };
+
+  const onOpenClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    setIsOpen(!isOpen);
+  };
+
+  const completeHandler = (data: Data) => {
+    setIsOpen(false);
+    const ex = {
+      ...userInfo?.address,
+      postalCode: data.zonecode,
+      address1: data.roadAddress,
+    };
+    setAddr(ex);
+  };
+
+  // interface AddressType {
+  //   postalCode: string;
+  //   address1: string;
+  //   address2: string;
+  // }
+  // const { postalCode, address1, address2 }: AddressType = userInfo?.address; // undefined?
+  //const address = userInfo?.address; // destructuring?
+
+  const onAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    setAddr({ ...addr, [event.currentTarget.name]: event.currentTarget.value });
   };
 
   const onhandleUpadate = async (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
+    const data = { ...userInfo, address: addr };
+    console.log(data);
+    // axios.patch(`http://localhost:5100/api/users/${userInfo?.email}`);
   };
 
   return (
@@ -83,25 +111,23 @@ function UserInfo() {
             value={userInfo?.phoneNumber || ""}
           />
         </Container>
-
         <Container>
           <InputLabel>주소</InputLabel>
           <InfoInput
             name="postalCode"
-            onChange={onChange}
-            value={address?.postalCode || ""}
+            value={addr?.postalCode || ""}
+            disabled
           />
-          <InfoBtn>주소찾기</InfoBtn>
+          <InfoBtn onClick={onOpenClick}>주소찾기</InfoBtn>
+          <Modal isOpen={isOpen} ariaHideApp={false} style={ModalStyle}>
+            <DaumPostcode onComplete={completeHandler} />
+          </Modal>
           <Divider>
-            <InfoInput
-              name="address1"
-              onChange={onChange}
-              value={address?.address1 || ""}
-            />
+            <InfoInput name="address1" value={addr?.address1 || ""} disabled />
             <InfoInput
               name="address2"
-              onChange={onChange}
-              value={address?.address2 || ""}
+              onChange={onAddressChange}
+              value={addr?.address2 || ""}
             />
           </Divider>
         </Container>
