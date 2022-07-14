@@ -22,8 +22,6 @@ interface DaumPostProps {
 }
 
 const DaumPost: React.FC<DaumPostProps> = ({ isOpen, completeHandler }) => {
-  console.log(completeHandler);
-
   return (
     <Modal isOpen={isOpen} ariaHideApp={false} style={ModalStyle}>
       <DaumPostcode onComplete={completeHandler} />
