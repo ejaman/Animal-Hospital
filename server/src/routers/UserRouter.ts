@@ -81,7 +81,8 @@ userRouter.post(
       const userToken = await userService.getUserToken({ email, password });
 
       console.log(userToken);
-      res.status(201).json({ userToken }); //userId, role, userStatus
+      // res.status(201).json({ userToken }); //userId, role, userStatus
+      res.json({ userToken }); //userId, role, userStatus
     } catch (error) {
       next(error);
     }
