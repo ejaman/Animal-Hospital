@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import styled from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {Link} from 'react-router-dom';
@@ -14,27 +14,34 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faEarlybirds } from '@fortawesome/free-brands-svg-icons';
 
-const Line = styled.div`
-  border-bottom: 3px solid ${props => props.theme.palette.gray};
-  width: 100%;
-  opacity: 0;
-`;
+// const Line = styled.div`
+//   border-bottom: 3px solid ${props => props.theme.palette.gray};
+//   width: 100%;
+//   opacity: 0;
+// `;
 
-const TagWrapper = styled(Link)`
+interface ITagValue {
+  tag: number;
+  idx: number;
+}
+
+const TagWrapper = styled(Link)<ITagValue>`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: ${props => props.theme.palette.gray};
+  color: ${props => props.idx === props.tag ? 'black' : props.theme.palette.gray};
   transition: 0.2s all ease-in-out;
   cursor: pointer;
+  border-bottom: 3px solid ${props => props.idx === props.tag ? 'black' : 'white'};
 
   &:hover {
     color: black;
-    
-    ${Line} {
-      opacity: 1;
-    }
+    border-bottom: 3px solid ${props => props.theme.palette.gray};
+  }
+
+  &:focus {
+    border-bottom: 3px solid black;
   }
 `;
 
@@ -86,14 +93,22 @@ export default function Tags() {
     },
   ];
 
+  const [tag, setTag] = useState<number>(-1);
+
   return (
     <>
-        {data.map((category) => {
+        {data.map((category, idx) => {
           return (
-            <TagWrapper to='#'>
+            <TagWrapper
+              key={idx}
+              idx={idx}
+              to='#'
+              onClick={() => setTag(idx)}
+              tag={tag}
+            >
               {category.image}
               <TagName>{category.tag}</TagName>
-              <Line />
+              {/* <Line /> */}
             </TagWrapper>
           )
         })}

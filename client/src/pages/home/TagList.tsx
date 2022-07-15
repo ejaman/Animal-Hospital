@@ -10,7 +10,7 @@ const TagContainer = styled.div`
 `;
 
 export default function TagList() {
-  const [category, setCategory] = useState<string>('');
+
 
   return (
     <>

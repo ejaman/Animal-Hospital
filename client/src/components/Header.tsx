@@ -78,8 +78,8 @@ const ProfileBtnbox = styled.div<IProfile>`
   width: 100px;
   height: 70px;
   position: absolute;
-  top: 50px;
-  right: -16px;
+  top: 45px;
+  right: -20px;
   border-radius: 10px;
 `;
 
