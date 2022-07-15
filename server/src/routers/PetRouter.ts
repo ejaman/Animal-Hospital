@@ -2,13 +2,13 @@ import {Router, Request, Response, NextFunction} from 'express';
 import * as _ from 'lodash'; 
 import { PetInfo } from '../db';
 import { loginRequired } from '../middlewares/LoginRequired';
-import { userService } from '../services';
 import {petService} from '../services/PetService';
+import {upload} from '../utils'
 
 const petRouter = Router();
 
 // 펫 정보 등록
-petRouter.post('/register', loginRequired, async(req : Request, res : Response, next: NextFunction)=>{
+petRouter.post('/register', upload.single('image'), loginRequired, async(req : Request, res : Response, next: NextFunction)=>{
 
     try {
         if(_.isEmpty(req.body)){
@@ -16,7 +16,15 @@ petRouter.post('/register', loginRequired, async(req : Request, res : Response, 
         }
     
         const owner = req.currentUserId;
-        const {species, breed, name, age, sex, weight, medicalHistory, vaccination, neutralized, image} : PetInfo = req.body;
+        const {species, breed, name, age, sex, weight, medicalHistory, vaccination, neutralized} : PetInfo = req.body;
+
+        let image = '';
+        if(req.file){
+            image = (req.file as Express.MulterS3.File).location;
+        }
+
+        console.log(image)
+
     
         if(!species || !breed || !name || !age || !sex || !weight || !medicalHistory) {
             throw new Error("필수 정보가 모두 입력되었는지 확인해주세요.")
