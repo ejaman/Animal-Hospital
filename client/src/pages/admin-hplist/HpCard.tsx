@@ -6,16 +6,22 @@ import {
   InfoText,
   StatusContainer,
   Select,
-} from "./style";
-function UserCard() {
+} from "../../components/Liststyle";
+function HpCard() {
   return (
     <InfoCard>
       <TextContainer>
-        <Title>일반회원</Title>
-        <InfoText>유저이름</InfoText>
-        <InfoText>이메일</InfoText>
+        <Title>병원</Title>
+        <InfoText>병원명</InfoText>
 
+        <InfoText>이메일</InfoText>
         <StatusContainer>
+          <Select>
+            <option>가입승인</option>
+            <option>확인중</option>
+            <option>취소</option>
+            <option>불허</option>
+          </Select>
           <Select>
             <option>회원</option>
             <option>탈퇴회원</option>
@@ -26,4 +32,4 @@ function UserCard() {
   );
 }
 
-export default UserCard;
+export default HpCard;

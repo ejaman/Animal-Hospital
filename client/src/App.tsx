@@ -10,13 +10,16 @@ import HospitalMypage from "./pages/hospital-mypage/HospitalMypage";
 import HospitalInfo from "./pages/hospital-info/HospitalInfo";
 import AdminMypage from "./pages/admin-mypage/AdminMypage";
 import Home from "./pages/home/Home";
-import AdminList from "./pages/admin-list/AdminList";
+import AdminUserList from "./pages/admin-userlist/AdminUserList";
+import Detail from "./pages/detail/Detail";
+import AdminHospitalList from "./pages/admin-hplist/AdminHospitalList";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="detail" element={<Detail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/user-mypage" element={<UserMypage />} />
@@ -25,7 +28,8 @@ function App() {
         <Route path="/hospital-mypage" element={<HospitalMypage />} />
         <Route path="/hospital-info" element={<HospitalInfo />} />
         <Route path="/admin-mypage" element={<AdminMypage />} />
-        <Route path="/admin-userlist" element={<AdminList />} />
+        <Route path="/admin-userlist" element={<AdminUserList />} />
+        <Route path="/admin-hplist" element={<AdminHospitalList />} />a
       </Routes>
     </BrowserRouter>
   );
