@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import styled from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {Link} from 'react-router-dom';
@@ -13,12 +13,7 @@ import {
   faXRay
 } from '@fortawesome/free-solid-svg-icons';
 import { faEarlybirds } from '@fortawesome/free-brands-svg-icons';
-
-// const Line = styled.div`
-//   border-bottom: 3px solid ${props => props.theme.palette.gray};
-//   width: 100%;
-//   opacity: 0;
-// `;
+import { CustomAxiosGet } from '../../common/CustomAxios';
 
 interface ITagValue {
   tag: number;
@@ -54,7 +49,7 @@ const TagName = styled.p`
 
 export default function Tags() {
   // 가데이터
-  const data = [
+  const tagData = [
     {
       tag: '24시간',
       image: <FontAwesomeIcon icon={faEarlybirds} size='3x' />
@@ -93,11 +88,22 @@ export default function Tags() {
     },
   ];
 
-  const [tag, setTag] = useState<number>(-1);
+  // const [tagData, setTagData] = useState<any>([]); // 태그 데이터 모음
+  const [tag, setTag] = useState<number>(-1); // 클릭 된 태그의 인덱스
+
+  // useEffect(() => {
+  //   async function getData() {
+  //     const res = await CustomAxiosGet.get('/hostpitalTag/list');
+  //     setTagData(res);
+  //   }
+  //   getData();
+  //   console.log(tagData);
+  // }, [])
+
 
   return (
     <>
-        {data.map((category, idx) => {
+        {tagData.map((category:any, idx:number) => {
           return (
             <TagWrapper
               key={idx}
@@ -108,7 +114,6 @@ export default function Tags() {
             >
               {category.image}
               <TagName>{category.tag}</TagName>
-              {/* <Line /> */}
             </TagWrapper>
           )
         })}
