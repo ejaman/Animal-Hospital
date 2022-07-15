@@ -66,14 +66,6 @@ function UserInfo() {
     setAddr(ex);
   };
 
-  // interface AddressType {
-  //   postalCode: string;
-  //   address1: string;
-  //   address2: string;
-  // }
-  // const { postalCode, address1, address2 }: AddressType = userInfo?.address; // undefined?
-  //const address = userInfo?.address; // destructuring?
-
   const onAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setAddr({ ...addr, [event.currentTarget.name]: event.currentTarget.value });
