@@ -8,7 +8,7 @@ import {upload} from '../utils'
 const petRouter = Router();
 
 // 펫 정보 등록
-petRouter.post('/register', upload.single('image'), loginRequired, async(req : Request, res : Response, next: NextFunction)=>{
+petRouter.post('/register', loginRequired, upload.single('image'), async(req : Request, res : Response, next: NextFunction)=>{
 
     try {
         if(_.isEmpty(req.body)){
@@ -22,9 +22,6 @@ petRouter.post('/register', upload.single('image'), loginRequired, async(req : R
         if(req.file){
             image = (req.file as Express.MulterS3.File).location;
         }
-
-        console.log(image)
-
     
         if(!species || !breed || !name || !age || !sex || !weight || !medicalHistory) {
             throw new Error("필수 정보가 모두 입력되었는지 확인해주세요.")
