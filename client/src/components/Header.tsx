@@ -117,7 +117,7 @@ export default function Header() {
 
   // 로그아웃 클릭 시 로그아웃
   function handleLogout() {
-    localStorage.setItem('token', '');
+    localStorage.removeItem('token');
     setIsLogin(false);
     setProfile(false);
   }
