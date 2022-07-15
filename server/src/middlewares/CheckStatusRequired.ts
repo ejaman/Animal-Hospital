@@ -1,4 +1,3 @@
-import { User } from 'aws-sdk/clients/budgets';
 import { Request, Response, NextFunction } from 'express';
 import { userModel } from '../db';
 
