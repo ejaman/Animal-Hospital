@@ -84,48 +84,9 @@ export default function HospitalInfo() {
       ...hospitalServiceInfo,
       [e.currentTarget.name]: e.currentTarget.value
     }
-    // setHospitalInfo(hospitalData);
-    // setHospitalServiceInfo(hospitalServiceData);
+    setHospitalInfo(hospitalData);
+    setHospitalServiceInfo(hospitalServiceData);
   };
-
-
-  // const onChangeName = (e: any) => {
-  //   setName(e.target.value);
-  //   // api 추가 예정
-  //   console.log("이름 변경:", e.target.value);
-  // }
-  // const onChangeDirector = (e: any) => {
-  //   setDirector(e.target.value);
-  //   console.log("대표자명 변경:", e.target.value);
-  // }
-  // const onChangePhoneNumber = (e: any) => {
-  //   setPhoneNumber(e.target.value);
-  //   console.log("연락처 변경:", e.target.value);
-  // }
-  // const onChangeLicenseNumber = (e: any) => {
-  //   setPhoneNumber(e.target.value);
-  //   console.log("면허번호 변경:", e.target.value);
-  // }
-  // const onChangeHospitalCapacity = (e: any) => {
-  //   setHospitalCapacity(e.target.value);
-  //   console.log("시간당 예약 가능 고객 수 변경:", e.target.value);
-  // }
-  // const onChangeBusinessNumber = (e: any) => {
-  //   setBusinessNumber(e.target.value);
-  //   console.log("사업자 등록번호 변경:", e.target.value);
-  // }
-  // const onChangeServiceName = (e: any) => {
-  //   setServiceName(e.target.value);
-  //   console.log("서비스명 변경:", serviceName);
-  // }
-  // const onChangeServicePrice = (e: any) => {
-  //   setServicePrice(e.target.value);
-  //   console.log("서비스 가격 변경:", servicePrice);
-  // }
-  // const onChangeServiceDesc = (e: any) => {
-  //   setServiceDesc(e.target.value);
-  //   console.log("서비스 설명 변경:", serviceDesc);
-  // }
 
   const onKeyUp = useCallback(
     (e: any) => {
@@ -167,16 +128,17 @@ export default function HospitalInfo() {
     },
     [keyword, newKeyword, $HashWrapInner, $HashWrapOuter, $keywordNumWarning]
   )
+  
+  /* 보낼 서비스 데이터 */
+  let serviceList:Object[] = [];
 
-  const onServiceSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  // React.FormEvent<HTMLFormElement>
+  const onServiceSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    // const f = document.hospitalInfoForm;
-
-    // if () {
-
-    // } else {
-    //   alert("모든 항목을 입력해주세요");
-    // }
+    console.log("서비스 추가 버튼 클릭");
+    console.log("추가된 서비스:", hospitalServiceInfo);
+    // serviceList = [...serviceList, hospitalServiceInfo];
+    // console.log("serviceList:", serviceList);
   }
 
   const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -214,14 +176,14 @@ export default function HospitalInfo() {
       "keyword": ["소동물 전문"],
       // "image": "https://o-oa.com/wp-content/uploads/2020/05/LJS_01.jpg",
       "image": ""
-    })
-    setHospitalServiceInfo({
-      "serviceName": "",
-      "servicePrice": 0,
-      "serviceDesc": "",
-      "serviceCapacity": 0
-    })
-
+    });
+    setHospitalServiceInfo(
+    {
+      "serviceName": "중성화수술",
+      "servicePrice": 200000,
+      "serviceDesc": "지이이잉석둑",
+      "serviceCapacity": 1
+    });
   }, []);
 
   return (
@@ -231,15 +193,11 @@ export default function HospitalInfo() {
       </div>
       <div
         style={{
-          // display: "grid",
-          // justifyContent: 'center',
-          // alignItems: 'center',
           borderStyle: "solid",
           borderColor: `${theme.palette.orange}`,
           borderWidth: "10px",
           borderRadius: "5%",
-          padding: "1rem 2rem 1rem 2rem",
-          // maxWidth: "960px"
+          padding: "1rem 2rem 1rem 2rem"
         }}
       >
         <Row>
@@ -440,6 +398,11 @@ export default function HospitalInfo() {
                       onChange={onChange}
                     />
                   </Row>
+                  <Row>
+                    <Button onClick={() => {
+                      console.log(hospitalInfo)
+                    }}>개발자 확인 버튼</Button>
+                  </Row>
                 </Col>
               </Row>
             </Form>
@@ -458,12 +421,13 @@ export default function HospitalInfo() {
                 <div>
                   <label>서비스명</label>
                   <input
-                    className="serviceName"
+                    name="serviceName"
                     onChange={onChange}
                     style={{
                       marginLeft: "0.5rem",
                       marginBottom: "0.5rem"
                     }}
+                    
                   />
                 </div>
               </Row>
@@ -484,7 +448,7 @@ export default function HospitalInfo() {
                 <div>
                   <label>서비스 설명</label>
                   <input
-                    name="serviceDetail"
+                    name="serviceDesc"
                     onChange={onChange}
                     style={{
                       marginLeft: "0.5rem",
@@ -510,11 +474,21 @@ export default function HospitalInfo() {
               <Button
                 style={{
                   marginLeft: "0.5rem",
-                  marginBottom: "1rem",
+                  marginBottom: "1.5rem",
                   margin: "auto"
                 }}
-                onSubmit={onServiceSubmit}
+                onClick={onServiceSubmit}
               >추가</Button>
+              </Row>
+              <Row>
+                <SubTitle
+                  style={{
+                    marginBottom: "1rem",
+                    margin: "auto",
+                    fontWeight: "bold"
+                  }}
+                >제공중인 서비스 목록</SubTitle>
+
               </Row>
             </Form>
           </Col>
