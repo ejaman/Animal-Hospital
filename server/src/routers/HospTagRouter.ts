@@ -2,6 +2,7 @@ import { Router } from 'express';
 import * as _ from 'lodash';
 import { hospTagService } from '../services';
 import {} from '../middlewares';
+import { upload } from '../utils';
 
 const hospTagRouter = Router();
 
@@ -26,16 +27,21 @@ hospTagRouter.get('/:hospTagId', async (req, res, next) => {
   }
 });
 
-hospTagRouter.post('/', async (req, res, next) => {
+hospTagRouter.post('/', upload.single('image'), async (req, res, next) => {
   try {
     // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
-    if (_.isEmpty(req.body)) {
-      throw new Error(
-        'headers의 Content-Type을 application/json으로 설정해주세요'
-      );
+    let image = '';
+    if (req.file) {
+      image = (req.file as Express.MulterS3.File).location;
+    } else {
+      if (_.isEmpty(req.body)) {
+        throw new Error(
+          'headers의 Content-Type을 application/json으로 설정해주세요'
+        );
+      }
     }
 
-    const { name, image } = req.body;
+    const { name } = req.body;
 
     if (!name) {
       throw new Error('이름은 필수로 입력하셔야 합니다.');
@@ -54,32 +60,41 @@ hospTagRouter.post('/', async (req, res, next) => {
   }
 });
 
-hospTagRouter.patch('/:hospTagId', async (req, res, next) => {
-  try {
-    // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
-    if (_.isEmpty(req.body)) {
-      throw new Error(
-        'headers의 Content-Type을 application/json으로 설정해주세요'
-      );
+hospTagRouter.patch(
+  '/:hospTagId',
+  upload.single('image'),
+  async (req, res, next) => {
+    try {
+      // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
+      let image = '';
+      if (req.file) {
+        image = (req.file as Express.MulterS3.File).location;
+      } else {
+        if (_.isEmpty(req.body)) {
+          throw new Error(
+            'headers의 Content-Type을 application/json으로 설정해주세요'
+          );
+        }
+      }
+      const { hospTagId } = req.params;
+      const { name } = req.body;
+
+      const update = {
+        ...(name && { name }),
+        ...(image && { image }),
+      };
+
+      const updateHospTag = await hospTagService.update({
+        hospTagId,
+        update,
+      });
+
+      res.status(201).json({ updateHospTag, message: '수정되었습니다.' });
+    } catch (error) {
+      next(error);
     }
-    const { hospTagId } = req.params;
-    const { name, image } = req.body;
-
-    const update = {
-      ...(name && { name }),
-      ...(image && { image }),
-    };
-
-    const updateHospTag = await hospTagService.update({
-      hospTagId,
-      update,
-    });
-
-    res.status(201).json({ updateHospTag, message: '수정되었습니다.' });
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 hospTagRouter.delete('/:hospTagId', async (req, res, next) => {
   try {
