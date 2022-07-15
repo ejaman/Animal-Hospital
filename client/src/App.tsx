@@ -11,7 +11,6 @@ import HospitalInfo from './pages/hospital-info/HospitalInfo';
 import AdminMypage from './pages/admin-mypage/AdminMypage';
 import Home from './pages/home/Home';
 
-
 function App() {
   return <BrowserRouter>
     <Routes>
