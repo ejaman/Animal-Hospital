@@ -165,14 +165,16 @@ hospitalRouter.post('/login', async function (req, res, next) {
 hospitalRouter.patch(
   '/',
   HospLoginRequired,
-  upload.single('image'),
+  upload.array('image'),
   async (req, res, next) => {
     try {
       // content-type 을 application/json 로 프론트에서
       // 설정 안 하고 요청하면, body가 비어 있게 됨.
-      let image = '';
-      if (req.file) {
-        image = (req.file as Express.MulterS3.File).location;
+      let image: string[] = [];
+      if (req.files) {
+        const images = req.files as Express.MulterS3.File[];
+        image = images.map((img) => img.location);
+        console.log(image);
       } else {
         if (_.isEmpty(req.body)) {
           throw new Error(

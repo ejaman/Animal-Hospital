@@ -78,7 +78,7 @@ const HospitalSchema = new Schema(
       required: false,
     },
     image: {
-      type: String,
+      type: [String],
       required: false,
     },
     refreshToken: {
