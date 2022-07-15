@@ -6,6 +6,7 @@ import {faGithub} from '@fortawesome/free-brands-svg-icons';
 const Container = styled.div`
   background-color: black;
   color: white;
+  margin-top: 40px;
   padding: 30px 0;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
