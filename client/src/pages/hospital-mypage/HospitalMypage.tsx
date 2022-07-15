@@ -1,5 +1,6 @@
 import React from "react";
-import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+
 import {
   Container,
   Card,
@@ -11,6 +12,7 @@ import {
 } from "../../components/MypageCardBtn";
 
 function HospitalMypage() {
+  const navigate = useNavigate();
   return (
     <div style={{ maxWidth: "700px", margin: "2rem auto" }}>
       <MypageHeader>
@@ -18,16 +20,24 @@ function HospitalMypage() {
         <HeaderDescription>마이페이지에 오신걸 환영합니다.</HeaderDescription>
       </MypageHeader>
       <Container>
-        <Card>
+        <Card
+          onClick={() => {
+            navigate("/hospital-info");
+          }}
+        >
           <i className="fa-solid fa-users fa-xl"></i>
           <CardTitle>내 병원 정보</CardTitle>
           <CardDescription>병원 정보를 열람하고 관리합니다.</CardDescription>
         </Card>
-        <Card>
+        <Card
+          onClick={() => {
+            navigate("/hospital-reservation");
+          }}
+        >
           <i className="fa-solid fa-book fa-xl"></i>
-          <CardTitle>모든 예약 내역</CardTitle>
+          <CardTitle>병원 예약 내역</CardTitle>
           <CardDescription>
-            전체 예약 내역을 확인하고 관리합니다.
+            내 병원의 예약 내역을 확인하고 관리합니다.
           </CardDescription>
         </Card>
       </Container>

@@ -25,6 +25,11 @@ export const InfoCard = styled.div`
 export const TextContainer = styled.div`
   display: flex;
   align-items: center;
+  text-align: center;
+`;
+export const Header = styled(TextContainer)`
+  margin-top: 2rem;
+  font-weight: bold;
 `;
 export const InfoText = styled.div`
   display: block;
