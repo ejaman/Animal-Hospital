@@ -1,4 +1,3 @@
-import { User } from 'aws-sdk/clients/budgets';
 import { Request, Response, NextFunction } from 'express';
 import { userModel } from '../db';
 
@@ -14,7 +13,7 @@ async function checkStatus (req : Request, res : Response, next: NextFunction):P
             req.userStatus = userStatus;
             req.currentUserId = user?._id.toString()!;
             next()
-        } else if(userStatus === "pending"){
+        } else if(userStatus === "pending"){ //현재 pending 상태 회원있어 추가한 코드. 추후 삭제 에정
             next()
         }
     } catch(error) {
