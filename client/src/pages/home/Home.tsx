@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
+import TagList from './TagList';
 
 const Wrapper = styled.div`
   display: flex;
@@ -21,6 +22,7 @@ export default function home() {
       <Wrapper>
         <ContentWrapper>
           <Header />
+          <TagList />
         </ContentWrapper>
       </Wrapper>
       <Footer />

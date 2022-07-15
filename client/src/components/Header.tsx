@@ -18,6 +18,7 @@ const HeaderContainer = styled.div`
 
 const Line = styled.div`
   border-bottom: 1.7px solid ${props => props.theme.palette.lightgray};
+  margin-bottom: 40px;
 `;
 
 const LogoContainer = styled.div`

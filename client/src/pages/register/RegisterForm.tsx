@@ -124,11 +124,9 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
             },
           });
           console.log(result);
-          
-          navigate('/hospital-info'); // 병원 정보 페이지로 이동
         }
         catch(e) {
-          console.log(e);
+          return console.log(e);
         }
       }
       else {
@@ -149,12 +147,13 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
             }
           });
           console.log(result);
-          navigate('/pet-info'); // 펫 등록 페이지로 이동
         }
         catch(e) {
-          console.log(e);
+          return console.log(e);
         }
       }
+
+      navigate('/login');
   }
 
   function handleChangeEmail(e: React.ChangeEvent<HTMLInputElement>) {
