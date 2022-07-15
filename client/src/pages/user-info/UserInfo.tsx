@@ -79,7 +79,7 @@ function UserInfo() {
     setAddr({ ...addr, [event.currentTarget.name]: event.currentTarget.value });
   };
 
-  const onhandleUpadate = async (event: React.MouseEvent<HTMLElement>) => {
+  const onhandleUpdate = async (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     const currentPassword = currentPwRef.current?.value;
     const newPassword = newPwRef.current?.value;
@@ -118,7 +118,7 @@ function UserInfo() {
         </Container>
 
         <Container>
-          <InputLabel>전회번호</InputLabel>
+          <InputLabel>전화번호</InputLabel>
           <InfoInput
             name="phoneNumber"
             onChange={onChange}
@@ -152,7 +152,7 @@ function UserInfo() {
         </Container>
 
         <div style={{ display: "flex" }}>
-          <InfoBtn style={{ marginLeft: "auto" }} onClick={onhandleUpadate}>
+          <InfoBtn style={{ marginLeft: "auto" }} onClick={onhandleUpdate}>
             수정
           </InfoBtn>
         </div>
