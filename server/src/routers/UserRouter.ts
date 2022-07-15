@@ -3,7 +3,7 @@ import * as _ from 'lodash'; //npm install --save @types/lodash
 
 import { userService } from '../services';
 import { UserAddress } from '../db';
-import { loginRequired, checkStatus } from '../middlewares';
+import { loginRequired} from '../middlewares';
 import { adminOnly } from '../middlewares';
 const userRouter = Router();
 
