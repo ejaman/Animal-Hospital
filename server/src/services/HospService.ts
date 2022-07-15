@@ -82,7 +82,7 @@ class HospitalService {
     const hospRegStatusId = hospital.hospRegStatus?.toString() as string;
     const hospRegStatus = await hospRegStatusService.findById(hospRegStatusId);
     const { name: hospRegStatusName } = hospRegStatus;
-    if (hospRegStatusName !== '승인완료') {
+    if (hospRegStatusId !== '62cc3c6432b6e445bc83920b') {
       throw new Error(`${hospRegStatusName}`);
     }
 
@@ -90,7 +90,10 @@ class HospitalService {
     const hospStatusId = hospital.hospStatus?.toString() as string;
     const hospStatus = await hospStatusService.findById(hospStatusId);
     const { name: hospStatusName } = hospStatus;
-    if (hospStatusName !== '정상') {
+    if (
+      hospStatusId !== '62ccf2f039864cbe2c2dccf4' &&
+      hospStatusId !== '62d18a00c41f60c4768ddc53'
+    ) {
       throw new Error(`${hospStatusName}`);
     }
 
