@@ -1,6 +1,10 @@
 import { Router } from 'express';
 import * as _ from 'lodash';
-import { hospitalService, hospServiceService } from '../services';
+import {
+  hospitalService,
+  hospServiceService,
+  hospStatusService,
+} from '../services';
 import { HospLoginRequired, onlyHospOwner } from '../middlewares';
 import { upload } from '../utils';
 import mongoose, { model } from 'mongoose';
@@ -166,6 +170,7 @@ hospitalRouter.post('/login', async function (req, res, next) {
   }
 });
 
+//일반 병원 정보 수정
 hospitalRouter.patch(
   '/',
   HospLoginRequired,
@@ -256,8 +261,124 @@ hospitalRouter.patch(
   }
 );
 
+//병원 추가 정보 입력
 hospitalRouter.patch(
-  '/hospital-status',
+  '/additional-info',
+  HospLoginRequired,
+  upload.array('image'),
+  async (req, res, next) => {
+    try {
+      // content-type 을 application/json 로 프론트에서
+      // 설정 안 하고 요청하면, body가 비어 있게 됨.
+      let image: string[] = [];
+      if (req.files) {
+        const images = req.files as Express.MulterS3.File[];
+        image = images.map((img) => img.location);
+        console.log(image);
+      } else {
+        if (_.isEmpty(req.body)) {
+          throw new Error(
+            'headers의 Content-Type을 application/json으로 설정해주세요'
+          );
+        }
+      }
+
+      // body data 로부터 업데이트할 사용자 정보를 추출함.
+
+      const {
+        name,
+        director,
+        password,
+        address,
+        phoneNumber,
+        businessNumber,
+        businessHours,
+        holiday,
+        hospitalCapacity,
+        tag,
+        keyword,
+      } = req.body;
+
+      if (
+        !(
+          image &&
+          businessHours &&
+          holiday &&
+          hospitalCapacity &&
+          tag &&
+          keyword
+        )
+      ) {
+        throw new Error('기입하지 않은 정보가 있습니다. 다시 확인해주세요');
+      }
+
+      if (password) {
+        let regexPassword =
+          /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,20}$/;
+        if (!regexPassword.test(password)) {
+          throw new Error('비밀번호 형식이 올바르지 않습니다.');
+        }
+      }
+
+      // body data로부터, 확인용으로 사용할 현재 비밀번호를 추출함.
+      const currentPassword = req.body.currentPassword;
+
+      // currentPassword 없을 시, 진행 불가
+      if (!currentPassword) {
+        throw new Error('정보를 변경하려면, 현재의 비밀번호가 필요합니다.');
+      }
+
+      const hospitalId = req.currentHospId;
+
+      const hospitalInfoRequired = { hospitalId, currentPassword };
+
+      // 위 데이터가 undefined가 아니라면, 즉, 프론트에서 업데이트를 위해
+      // 보내주었다면, 업데이트용 객체에 삽입함.
+      const hospStatus = new mongoose.Types.ObjectId(
+        '62ccf2f039864cbe2c2dccf4'
+      );
+      const hospStatusInfo = await hospStatusService.findById(
+        '62ccf2f039864cbe2c2dccf4'
+      );
+
+      const toUpdate = {
+        ...(name && { name }),
+        ...(director && { director }),
+        ...(password && { password }),
+        ...(address && { address }),
+        ...(phoneNumber && { phoneNumber }),
+        ...(businessHours && { businessHours }),
+        ...(businessNumber && { businessNumber }),
+        ...(holiday && { holiday }),
+        ...(hospitalCapacity && { hospitalCapacity }),
+        ...(tag && { tag }),
+        ...(keyword && { keyword }),
+        ...(image && { image }),
+        ...(hospStatus && { hospStatus }),
+      };
+
+      // 사용자 정보를 업데이트함.
+      const updatedHospInfo = await hospitalService.setHospitalInfo(
+        hospitalInfoRequired,
+        toUpdate
+      );
+
+      res.status(200).json({
+        data: {
+          updatedHospInfo: updatedHospInfo,
+          hospStatus: hospStatusInfo.name,
+        },
+        message: '수정되었습니다.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// 병원회원 탈퇴
+hospitalRouter.patch(
+  '/withdrawal',
   HospLoginRequired,
   async (req, res, next) => {
     try {
