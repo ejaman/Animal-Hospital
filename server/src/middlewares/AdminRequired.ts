@@ -22,7 +22,7 @@ function adminOnly(req : Request, res: Response, next : NextFunction) {
         console.log('role from admin middleware: ', role)
 
         if(role !== 'admin'){
-            console.log('서비스 사용 요청이 있지만관리자가 아닙니다')
+            console.log('서비스 사용 요청이 있지만 관리자가 아닙니다')
             res.status(403).json({
                 resuslt : "forbidden-approach",
                 reason : "관리자만 사용할 수 있는 서비스입니다"
