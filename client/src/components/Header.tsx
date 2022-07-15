@@ -18,6 +18,7 @@ const HeaderContainer = styled.div`
 
 const Line = styled.div`
   border-bottom: 1.7px solid ${props => props.theme.palette.lightgray};
+  margin-bottom: 40px;
 `;
 
 const LogoContainer = styled.div`
@@ -77,8 +78,8 @@ const ProfileBtnbox = styled.div<IProfile>`
   width: 100px;
   height: 70px;
   position: absolute;
-  top: 50px;
-  right: -16px;
+  top: 45px;
+  right: -20px;
   border-radius: 10px;
 `;
 

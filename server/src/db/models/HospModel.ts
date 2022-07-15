@@ -40,7 +40,7 @@ export interface HospitalInfo {
   hospitalCapacity?: number;
   tag?: object[];
   keyword?: string[];
-  image?: string;
+  image?: string[];
   refreshToken?: string;
   hospStatus?: mongoose.Types.ObjectId;
   hospRegStatus?: mongoose.Types.ObjectId;

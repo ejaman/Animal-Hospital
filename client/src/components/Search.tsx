@@ -103,7 +103,7 @@ export default function Search() {
           onChange={(e) => setSearch(e.target.value)}
         />
         <SearchIcon icon={faMagnifyingGlass} size='2x' />
-        {keyItems.length !== 0 &&
+        {(keyItems.length !== 0 && search.length !== 0) &&
           <AutoSearchContainer>
             <AutoSearchWrap>
               {keyItems.map((item: string) => {

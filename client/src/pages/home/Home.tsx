@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
+import MainCard from '../../components/main/MainCard';
+import TagList from './TagList';
 
 const Wrapper = styled.div`
   display: flex;
@@ -21,9 +23,11 @@ export default function home() {
       <Wrapper>
         <ContentWrapper>
           <Header />
+          <TagList />
+          <MainCard />
         </ContentWrapper>
+        <Footer />
       </Wrapper>
-      <Footer />
     </>
   )
 }
