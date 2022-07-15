@@ -8,33 +8,35 @@ import axios from "axios";
 
 const { Title } = Typography;
 
-// 임시 데이터 (api 추가 후 삭제 예정)
-const jsonData = {
-  "name": "이이진진수수 동동물물병병원원",
-  "email": "sarangS2hospital@gmail.com",
-  "director": "이진수",
-  "password": "12345",
-  "address": {
-    "postalCode": "13477",
-    "address1": "경기 성남시 분당구 판교공원로5길 15",
-    "address2": "이진수 동물병원"
-  },
-  "phoneNumber": "010-0000-0000",
-  "businessHours": "24시간",
-  "businessNumber": "XXXXXXXXX",
-  "licenseNumber": "XXXXXXXXX",
-  "holiday": [""],
-  "hospitalCapacity": 3,
-  "tag": [],
-  "keyword": ["소동물 전문"],
-  // "image": "https://o-oa.com/wp-content/uploads/2020/05/LJS_01.jpg",
-  "image": "",
-  "refreshToken": undefined,
-  "hospStatus": "정상",
-  "hospRegStatus": "승인완료"
+/* interface */
+interface HospitalInfoType {
+  name: string;
+  email: string;
+  director?: string;
+  password: string;
+  address?: {
+    postalCode: string;
+    address1: string;
+    address2: string;
+  };
+  phoneNumber?: string;
+  businessHours?: string;
+  businessNumber?: string;
+  licenseNumber?: string;
+  holiday?: [string];
+  hospitalCapacity?: number;
+  tag?: string;
+  keyword?: [string];
+  image?: string;
+}
+interface hospitalServiceInfoType {
+  serviceName: string;
+  servicePrice: number;
+  serviceDesc: string;
+  serviceCapacity: number;
 }
 
-export default function HospitalCard() {
+export default function HospitalInfo() {
   /* axios api */
   // const [datas, setDatas] = useState<[]>([]);
   // // 병원 api 생기면 주석 풀고 나머지 작성 예정
@@ -60,37 +62,25 @@ export default function HospitalCard() {
   const $HashWrapInner = document.createElement('div');
   $HashWrapInner.className = 'HashWrapInner';
   const $keywordNumWarning = document.querySelector('.keywordNumWarning');
-  const $serviceName = document.querySelector('.serviceName');
-  const $servicePrice = document.querySelector('.servicePrice');
-  const $serviceDetail = document.querySelector('.serviceDetail');
 
   /* states */
-  const [name, setName] = useState(jsonData.name);
-  const [director, setDirector] = useState(jsonData.director);
-  const [phoneNumber, setPhoneNumber] = useState(jsonData.phoneNumber);
-  const [businessHours, setBusinessHours] = useState(jsonData.businessHours);
-  const [businessNumber, setBusinessNumber] = useState(jsonData.businessNumber);
-  const [licenseNumber, setLicenseNumber] = useState(jsonData.licenseNumber);
-  const [holiday, setHoliday] = useState(jsonData.holiday);
-  const [hospitalCapacity, setHospitalCapacity] = useState(jsonData.hospitalCapacity);
-  const [tag, setTag] = useState(jsonData.tag);
-  const [keyword, setKeyword] = useState(jsonData.keyword);
-  // type: <string[] | []>([])
+  const [hospitalInfo, setHospitalInfo] = useState<HospitalInfoType>();
+  const [hospitalServiceInfo, setHospitalServiceInfo] = useState<hospitalServiceInfoType>();
+  const [image, setImage] = useState('');
+  const [keyword, setKeyword] = useState(['']);
   const [newKeyword, setNewKeyword] = useState('');
-  const [image, setImage] = useState(jsonData.image);
-  // refreshToken 추가 예정?
-  const [hospStatus, setHospStatus] = useState(jsonData.hospStatus);
-  const [hospRegStatus, setHospRegStatus] = useState(jsonData.hospRegStatus);
-  const [address, setAddress] = useState();
+  // const [serviceName, setServiceName] = useState("");
+  // const [servicePrice, setServicePrice] = useState(-999);
+  // const [serviceDesc, setServiceDesc] = useState("");
+  // const [serviceCapacity, setServiceCapacity] = useState(-999);
 
   /* values */
   const timeList = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
   
-  const { postalCode, address1, address2 } = jsonData.address;
-  const email = jsonData.email;
+  // const { postalCode, address1, address2 } = jsonData.address;
+  // const email = jsonData.email;
 
   /* constants */
-  const INITIAL_KEYWORDS = keyword;
   const AVAILABLE_KEYWORD_LENGTH = 10;
   const AVAILABLE_KEYWORD_COUNTS = 3;
   
@@ -109,39 +99,57 @@ export default function HospitalCard() {
   };
 
   /* onChange handlers */
-  const onChangeName = (e: any) => {
-    setName(e.target.value);
-    // api 추가 예정
-    console.log("이름 변경:", e.target.value);
-  }
-  const onChangeDirector = (e: any) => {
-    setDirector(e.target.value);
-    console.log("대표자명 변경:", e.target.value);
-  }
-  const onChangePhoneNumber = (e: any) => {
-    setPhoneNumber(e.target.value);
-    console.log("연락처 변경:", e.target.value);
-  }
-  const onChangeLicenseNumber = (e: any) => {
-    setPhoneNumber(e.target.value);
-    console.log("면허번호 변경:", e.target.value);
-  }
-  const onChangeHospitalCapacity = (e: any) => {
-    setHospitalCapacity(e.target.value);
-    console.log("시간당 예약 가능 고객 수 변경:", e.target.value);
-  }
-  const onChangeBusinessNumber = (e: any) => {
-    setBusinessNumber(e.target.value);
-    console.log("사업자 등록번호 변경:", e.target.value);
-  }
-  // e.state.value
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const hospitalData = {
+      ...hospitalInfo,
+      [e.currentTarget.name]: e.currentTarget.value
+    };
+    const hospitalServiceData = {
+      ...hospitalServiceInfo,
+      [e.currentTarget.name]: e.currentTarget.value
+    }
+    // setHospitalInfo(hospitalData);
+    // setHospitalServiceInfo(hospitalServiceData);
+  };
 
-  // const renderKeywords = () => {
-  //   const $HashWrapOuter = document.querySelector('.HashWrapOuter')
-  //   const $HashWrapInner = document.createElement('div')
-  //   $HashWrapInner.className = 'HashWrapInner'
-  //   $HashWrapInner.innerHTML = '#' + e.target.value;
-  //   $HashWrapOuter?.appendChild($HashWrapInner);
+
+  // const onChangeName = (e: any) => {
+  //   setName(e.target.value);
+  //   // api 추가 예정
+  //   console.log("이름 변경:", e.target.value);
+  // }
+  // const onChangeDirector = (e: any) => {
+  //   setDirector(e.target.value);
+  //   console.log("대표자명 변경:", e.target.value);
+  // }
+  // const onChangePhoneNumber = (e: any) => {
+  //   setPhoneNumber(e.target.value);
+  //   console.log("연락처 변경:", e.target.value);
+  // }
+  // const onChangeLicenseNumber = (e: any) => {
+  //   setPhoneNumber(e.target.value);
+  //   console.log("면허번호 변경:", e.target.value);
+  // }
+  // const onChangeHospitalCapacity = (e: any) => {
+  //   setHospitalCapacity(e.target.value);
+  //   console.log("시간당 예약 가능 고객 수 변경:", e.target.value);
+  // }
+  // const onChangeBusinessNumber = (e: any) => {
+  //   setBusinessNumber(e.target.value);
+  //   console.log("사업자 등록번호 변경:", e.target.value);
+  // }
+  // const onChangeServiceName = (e: any) => {
+  //   setServiceName(e.target.value);
+  //   console.log("서비스명 변경:", serviceName);
+  // }
+  // const onChangeServicePrice = (e: any) => {
+  //   setServicePrice(e.target.value);
+  //   console.log("서비스 가격 변경:", servicePrice);
+  // }
+  // const onChangeServiceDesc = (e: any) => {
+  //   setServiceDesc(e.target.value);
+  //   console.log("서비스 설명 변경:", serviceDesc);
   // }
 
   const onKeyUp = useCallback(
@@ -155,7 +163,7 @@ export default function HospitalCard() {
         $HashWrapOuter?.removeChild($HashWrapInner)
         console.log($HashWrapInner.innerHTML)
         console.log("newKeyword:", newKeyword)
-        setKeyword(keyword.filter((newKeyword) => newKeyword))
+        setKeyword(keyword.filter((newKeyword: any) => newKeyword))
       })
 
       /* enter's key code: 13 */
@@ -185,14 +193,15 @@ export default function HospitalCard() {
     [keyword, newKeyword, $HashWrapInner, $HashWrapOuter, $keywordNumWarning]
   )
 
-  const addService = () => {
-    if ($serviceName && $servicePrice && $serviceDetail) {
-      alert("서비스 추가");
-      const serviceList = [$serviceName, $servicePrice, $serviceDetail];
-      console.log(serviceList);
-    } else {
-      alert("모든 항목을 입력해주세요");
-    }
+  const onServiceSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // const f = document.hospitalInfoForm;
+
+    // if () {
+
+    // } else {
+    //   alert("모든 항목을 입력해주세요");
+    // }
   }
 
   const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -206,6 +215,39 @@ export default function HospitalCard() {
     event.preventDefault();
     alert('병원 회원 탈퇴 버튼이 클릭되었습니다(확인용)')
   }
+
+
+  useEffect(() => {
+    // 임시 데이터 (api 추가 후 삭제 예정)
+    setHospitalInfo({
+      "name": "이이진진수수 동동물물병병원원",
+      "email": "sarangS2hospital@gmail.com",
+      "director": "이진수",
+      "password": "12345",
+      "address": {
+        "postalCode": "13477",
+        "address1": "경기 성남시 분당구 판교공원로5길 15",
+        "address2": "이진수 동물병원"
+      },
+      "phoneNumber": "010-0000-0000",
+      "businessHours": "24",
+      "businessNumber": "546521354",
+      "licenseNumber": "XXXXXXXXX",
+      "holiday": [""],
+      "hospitalCapacity": 3,
+      "tag": "",
+      "keyword": ["소동물 전문"],
+      // "image": "https://o-oa.com/wp-content/uploads/2020/05/LJS_01.jpg",
+      "image": ""
+    })
+    setHospitalServiceInfo({
+      "serviceName": "",
+      "servicePrice": 0,
+      "serviceDesc": "",
+      "serviceCapacity": 0
+    })
+
+  }, []);
 
   return (
     <div style={{ margin: "0 2rem 2rem 2rem" }}>
@@ -227,30 +269,40 @@ export default function HospitalCard() {
       >
         <Row>
           <Col span={12}>
-            <Form>
+            <Form name="hospitalInfoForm">
               <Row>
                 <SubTitle>병원명</SubTitle>
                 <input
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }} type="text"
-                  defaultValue={name}
-                  onChange={onChangeName}
+                  name="name"
+                  style={{
+                    marginBottom: "1rem",
+                    marginLeft: "0.5rem"
+                  }}
+                  type="text"
+                  defaultValue={hospitalInfo?.name || ""}
+                  onChange={onChange}
                 />
               </Row>
               <Row>
                 <SubTitle>이름</SubTitle>
                 <input
+                  name="director"
                   style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
                   type="text"
-                  defaultValue={director}
-                  onChange={onChangeDirector}
+                  defaultValue={hospitalInfo?.director || ""}
+                  onChange={onChange}
                 />
               </Row>
               <Row>
                 <SubTitle>이메일</SubTitle>
-                <input style={{
-                  marginBottom: "1rem", marginLeft: "0.5rem" }}
+                <input
+                  name="email"
+                  style={{
+                    marginBottom: "1rem",
+                    marginLeft: "0.5rem"
+                  }}
                   type="text"
-                  value={email}
+                  defaultValue={hospitalInfo?.email}
                   autoComplete="username"
                   disabled
                 />
@@ -258,6 +310,7 @@ export default function HospitalCard() {
               <Row>
                 <SubTitle>비밀번호</SubTitle>
                 <input
+                  name="password"
                   style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
                   type="password"
                   autoComplete="current-password"
@@ -272,28 +325,31 @@ export default function HospitalCard() {
               <Row>
                 <SubTitle>병원 연락처</SubTitle>
                 <input
+                  name="phoneNumber"
                   style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
                   type="text"
-                  defaultValue={phoneNumber}
-                  onChange={onChangePhoneNumber}
+                  defaultValue={hospitalInfo?.phoneNumber || ""}
+                  onChange={onChange}
                 />
               </Row>
               <Row>
                 <SubTitle>사업자 등록번호</SubTitle>
                 <input
+                  name="businessNumber"
                   style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
                   type="text"
-                  defaultValue={businessNumber}
-                  onChange={onChangeBusinessNumber}
+                  defaultValue={hospitalInfo?.businessNumber || ""}
+                  onChange={onChange}
                 />
               </Row>
               <Row>
                 <SubTitle>면허번호</SubTitle>
                 <input
+                  name="licenseNumber"
                   style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
                   type="text"
-                  defaultValue={licenseNumber}
-                  onChange={onChangeLicenseNumber}
+                  defaultValue={hospitalInfo?.licenseNumber || ""}
+                  onChange={onChange}
                 />
               </Row>
               <Row>
@@ -319,28 +375,32 @@ export default function HospitalCard() {
               <Row>
                 <SubTitle>주소</SubTitle>
                 <input
+                  name="postalCode"
                   style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
                   type="text"
-                  defaultValue={postalCode}
+                  defaultValue={hospitalInfo?.address?.postalCode || ""}
                 />
                 <input
+                  name="address1"
                   style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
                   type="text"
-                  defaultValue={address1}
+                  defaultValue={hospitalInfo?.address?.address1}
                 />
                 <input
+                  name="address2"
                   style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
                   type="text"
-                  defaultValue={address2}
+                  defaultValue={hospitalInfo?.address?.address2}
                 />
                 <Button style={{ marginLeft: "0.5rem" }}>수정</Button>
               </Row>
               <Row>
                 <SubTitle>카테고리</SubTitle>
                 <input
+                  name="tag"
                   style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
                   type="text"
-                  defaultValue={tag}
+                  defaultValue={hospitalInfo?.tag || ""}
                 />
               </Row>
               <Row>
@@ -362,6 +422,7 @@ export default function HospitalCard() {
                     )
                   })} */}
                   <input
+                    name="keyword"
                     className="HashInput"
                     type="text"
                     onKeyUp={onKeyUp}
@@ -397,10 +458,11 @@ export default function HospitalCard() {
                   <Row style={{ marginTop: "1rem" }}>
                     <SubTitle>시간당 예약가능 고객 수</SubTitle>
                     <input
+                      name="hospitalCapacity"
                       style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
                       type="text"
-                      defaultValue={hospitalCapacity}
-                      onChange={onChangeHospitalCapacity}
+                      defaultValue={hospitalInfo?.hospitalCapacity || 0}
+                      onChange={onChange}
                     />
                   </Row>
                 </Col>
@@ -422,6 +484,7 @@ export default function HospitalCard() {
                   <label>서비스명</label>
                   <input
                     className="serviceName"
+                    onChange={onChange}
                     style={{
                       marginLeft: "0.5rem",
                       marginBottom: "0.5rem"
@@ -433,7 +496,8 @@ export default function HospitalCard() {
                 <div>
                   <label>서비스 가격</label>
                   <input
-                    className="servicePrice"
+                    name="servicePrice"
+                    onChange={onChange}
                     style={{
                       marginLeft: "0.5rem",
                       marginBottom: "0.5rem"
@@ -445,7 +509,21 @@ export default function HospitalCard() {
                 <div>
                   <label>서비스 설명</label>
                   <input
-                    className="serviceDetail"
+                    name="serviceDetail"
+                    onChange={onChange}
+                    style={{
+                      marginLeft: "0.5rem",
+                      marginBottom: "0.5rem"
+                    }}
+                  />
+                </div>
+              </Row>
+              <Row>
+                <div>
+                  <label>서비스 동시 수용가능인원수</label>
+                  <input
+                    name="serviceCapacity"
+                    onChange={onChange}
                     style={{
                       marginLeft: "0.5rem",
                       marginBottom: "0.5rem"
@@ -460,7 +538,7 @@ export default function HospitalCard() {
                   marginBottom: "1rem",
                   margin: "auto"
                 }}
-                onSubmit={addService}
+                onSubmit={onServiceSubmit}
               >추가</Button>
               </Row>
             </Form>
