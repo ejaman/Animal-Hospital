@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import * as _ from 'lodash';
-import { hospitalService } from '../services';
-import { HospLoginRequired } from '../middlewares';
+import { hospitalService, hospServiceService } from '../services';
+import { HospLoginRequired, onlyHospOwner } from '../middlewares';
 import { upload } from '../utils';
 import mongoose, { model } from 'mongoose';
 
@@ -235,12 +235,15 @@ hospitalRouter.patch(
       };
 
       // 사용자 정보를 업데이트함.
-      const updatedUserInfo = await hospitalService.setHospitalInfo(
+      const updatedHospInfo = await hospitalService.setHospitalInfo(
         hospitalInfoRequired,
         toUpdate
       );
 
-      res.status(200).json(updatedUserInfo);
+      res.status(200).json({
+        data: { updatedHospInfo: updatedHospInfo },
+        message: '수정되었습니다.',
+      });
     } catch (error) {
       next(error);
     }
@@ -280,12 +283,144 @@ hospitalRouter.patch(
       };
 
       // 사용자 정보를 업데이트함.
-      const updatedUserInfo = await hospitalService.setHospitalInfo(
+      const deleteHospInfo = await hospitalService.setHospitalInfo(
         hospitalInfoRequired,
         toUpdate
       );
 
-      res.status(200).json(updatedUserInfo);
+      res.status(200).json({
+        data: { deleteHospInfo: deleteHospInfo },
+        message: '탈퇴하였습니다.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+hospitalRouter.get('/:hospitalName/Services', async (req, res, next) => {
+  try {
+    const { hospitalName } = req.params;
+    const hospital = await hospitalService.findHospitalByName(hospitalName);
+
+    if (!hospital) {
+      throw new Error('찾고자 하는 병원이 없습니다.');
+    }
+
+    const hospitalId = hospital._id;
+
+    const hospServices = await hospServiceService.findAll(hospitalId);
+    res.status(200).json({ data: { hospServices: hospServices }, message: '' });
+  } catch (error) {
+    next(error);
+  }
+});
+
+hospitalRouter.get(
+  '/:hospitalName/Services/:hospServiceId',
+  async (req, res, next) => {
+    try {
+      const { hospServiceId, hospitalName } = req.params;
+
+      const hospital = await hospitalService.findHospitalByName(hospitalName);
+
+      if (!hospital) {
+        throw new Error('찾고자 하는 병원이 없습니다.');
+      }
+
+      const hospService = await hospServiceService.findById(hospServiceId);
+      res.status(200).json({ data: { hospService: hospService }, message: '' });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+hospitalRouter.post(
+  '/:hospitalName/Service',
+  HospLoginRequired,
+  onlyHospOwner,
+  async (req, res, next) => {
+    try {
+      // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
+      if (_.isEmpty(req.body)) {
+        throw new Error(
+          'headers의 Content-Type을 application/json으로 설정해주세요'
+        );
+      }
+
+      const { name, price, serviceCapacity, desc } = req.body;
+
+      const createHospServiceData = {
+        name: name,
+        price: price,
+        serviceCapacity: serviceCapacity,
+        desc: desc,
+        hospital: req.currentHospObjectId,
+      };
+      const newhospService = await hospServiceService.create(
+        createHospServiceData
+      );
+      res.status(201).json({
+        data: { hospitalService: newhospService },
+        message: '생성되었습니다.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+hospitalRouter.patch(
+  '/:hospitalName/Services/:hospServiceId',
+  HospLoginRequired,
+  onlyHospOwner,
+  async (req, res, next) => {
+    try {
+      // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
+      if (_.isEmpty(req.body)) {
+        throw new Error(
+          'headers의 Content-Type을 application/json으로 설정해주세요'
+        );
+      }
+      const { hospServiceId } = req.params;
+      const { name, price, serviceCapacity, desc } = req.body;
+
+      const toUpdate = {
+        ...(name && { name }),
+        ...(price && { price }),
+        ...(serviceCapacity && { serviceCapacity }),
+        ...(desc && { desc }),
+      };
+
+      console.log(toUpdate);
+
+      const updateHospService = await hospServiceService.update({
+        hospServiceId,
+        update: toUpdate,
+      });
+
+      res.status(201).json({
+        data: { hospitalService: updateHospService },
+        message: '수정되었습니다.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+hospitalRouter.delete(
+  '/:hospitalName/Services/:hospServiceId',
+  HospLoginRequired,
+  onlyHospOwner,
+  async (req, res, next) => {
+    try {
+      const { hospServiceId } = req.params;
+      const deleteHospService = await hospServiceService.deleteById(
+        hospServiceId
+      );
+      res.status(201).json({ data: {}, message: deleteHospService });
     } catch (error) {
       next(error);
     }
