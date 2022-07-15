@@ -147,14 +147,18 @@ hospitalRouter.post('/login', async function (req, res, next) {
       password
     );
 
-    const { accessToken, hospitalname } = hospitalToken;
+    const { accessToken, hospitalname, hospitalState } = hospitalToken;
 
     res.cookie('user', accessToken, {
       httpOnly: true,
     });
 
     res.status(201).json({
-      data: { hospitalName: hospitalname, role: 'hospital' },
+      data: {
+        hospitalName: hospitalname,
+        role: 'hospital',
+        hospitalState: hospitalState,
+      },
       message: '로그인에 성공했습니다!',
     });
   } catch (error) {

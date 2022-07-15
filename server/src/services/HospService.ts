@@ -137,7 +137,7 @@ class HospitalService {
       update: { refreshToken: refreshToken },
     });
 
-    return { accessToken, hospitalname };
+    return { accessToken, hospitalname, hospitalState: hospStatusName };
   }
 
   async findHospitalById(hospitalId: string): Promise<HospitalInfo> {

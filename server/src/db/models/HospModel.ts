@@ -70,6 +70,7 @@ export interface HospitalInfoRequired {
 export interface HospitalLoginResult {
   accessToken: string;
   hospitalname: string;
+  hospitalState: string;
 }
 
 export class HospitalModel {
