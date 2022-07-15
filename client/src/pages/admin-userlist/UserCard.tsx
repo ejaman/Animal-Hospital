@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   InfoCard,
   TextContainer,
@@ -7,18 +7,23 @@ import {
   StatusContainer,
   Select,
 } from "../../components/Liststyle";
-function UserCard() {
+function UserCard({ data }: any) {
+  const [status, setStatus] = useState<string>(data?.userStatus);
+  const onhandleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setStatus(event.target.value);
+  };
   return (
     <InfoCard>
       <TextContainer>
-        <Title>일반회원</Title>
-        <InfoText>유저이름</InfoText>
-        <InfoText>이메일</InfoText>
+        <Title>{data?.role}</Title>
+        <InfoText>{data?.userName}</InfoText>
+        <InfoText>{data?.email}</InfoText>
 
         <StatusContainer>
-          <Select>
-            <option>회원</option>
-            <option>탈퇴회원</option>
+          <Select value={status} onChange={onhandleChange}>
+            {/* 수정해야함 */}
+            <option value="회원">회원</option>
+            <option value="탈퇴회원">탈퇴회원</option>
           </Select>
         </StatusContainer>
       </TextContainer>
