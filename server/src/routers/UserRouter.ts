@@ -67,7 +67,7 @@ userRouter.post(
 
 //로그인
 userRouter.post(
-  '/login',checkStatus,
+  '/login',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (_.isEmpty(req.body)) {
@@ -76,8 +76,14 @@ userRouter.post(
         );
       }
 
-      const email: string = req.body.email;
-      const password: string = req.body.password;
+      const {email, password} = req.body;
+     
+      const isExpired = await userService.blockExpiredUser(email);
+
+      if(isExpired){
+        throw new Error("탈퇴한 사용자입니다.")
+        return;
+      }
 
       const userToken = await userService.getUserToken({ email, password });
 

@@ -38,8 +38,11 @@ export interface StatusInfoRequired {
     userStatus : string
 }
 export class UserModel {
-    async findByEmail(email : string) : Promise<UserData | null> {
+    async findByEmail(email : string) : Promise<UserData> {
         const user = await User.findOne({email});
+        if(!user){
+            throw new Error("email 정보가 없습니다");
+        } 
         return user;
     }
 
@@ -48,16 +51,21 @@ export class UserModel {
         return createdNewUser;
     }
 
-    async findById(userId : string) : Promise<UserData | null>{
+    async findById(userId : string) : Promise<UserData>{
         const user = await User.findOne({_id:userId});
+        if(!user){
+            throw new Error("정보를 찾을 수 없습니다");
+        }
         return user;
     }
 
-    async update({email, update} : ToUpdate) : Promise<UserData | null>{
+    async update({email, update} : ToUpdate) : Promise<UserData>{
         const filter = {email : email};
         const option = {returnOriginal : false};
         const updatedUser = await User.findOneAndUpdate(filter, update, option);
-
+        if(!updatedUser){
+            throw new Error("유저 상태를 찾을 수 없습니다")
+        }
         return updatedUser;
     }
 
@@ -66,12 +74,16 @@ export class UserModel {
         return users;
     }
 
-    async updateStatus({userId, userStatus} : StatusInfoRequired) : Promise<string | undefined> {
+    async updateStatus({userId} : StatusInfoRequired) : Promise<string> {
         const filter = {_id : userId};
         const option = {returnOriginal : false};
         const updatedUser = await User.findOneAndUpdate(filter, {userStatus : 'expired'}, option);
         console.log(updatedUser);
-        const updatedStatus = updatedUser?.userStatus;
+
+        if(!updatedUser){
+            throw new Error("유저 상태를 찾을 수 없습니다")
+        }
+        const updatedStatus = updatedUser.userStatus;
         return updatedStatus;
     }
 }

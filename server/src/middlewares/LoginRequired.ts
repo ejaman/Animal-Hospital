@@ -14,6 +14,8 @@ async function loginRequired (req : Request, res : Response, next: NextFunction)
         return;
     }
 
+    
+
     try {
         const secretKey = process.env.JWT_SECRET_KEY || 'secret-key';
         const jwtDecoded = jwt.verify( userToken, secretKey) as JwtPayload;
