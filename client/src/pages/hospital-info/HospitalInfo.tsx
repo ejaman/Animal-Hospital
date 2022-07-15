@@ -56,10 +56,13 @@ export default function HospitalCard() {
   // office hour: validation 시 e.target.value를 바로 비교하면 밀리지 않게 바로바로 비교 가능
 
   /* elements */
-  const $HashWrapOuter = document.querySelector('.HashWrapOuter')
-  const $HashWrapInner = document.createElement('div')
-  $HashWrapInner.className = 'HashWrapInner'
+  const $HashWrapOuter = document.querySelector('.HashWrapOuter');
+  const $HashWrapInner = document.createElement('div');
+  $HashWrapInner.className = 'HashWrapInner';
   const $keywordNumWarning = document.querySelector('.keywordNumWarning');
+  const $serviceName = document.querySelector('.serviceName');
+  const $servicePrice = document.querySelector('.servicePrice');
+  const $serviceDetail = document.querySelector('.serviceDetail');
 
   /* states */
   const [name, setName] = useState(jsonData.name);
@@ -182,6 +185,16 @@ export default function HospitalCard() {
     [keyword, newKeyword, $HashWrapInner, $HashWrapOuter, $keywordNumWarning]
   )
 
+  const addService = () => {
+    if ($serviceName && $servicePrice && $serviceDetail) {
+      alert("서비스 추가");
+      const serviceList = [$serviceName, $servicePrice, $serviceDetail];
+      console.log(serviceList);
+    } else {
+      alert("모든 항목을 입력해주세요");
+    }
+  }
+
   const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     alert(
@@ -195,11 +208,11 @@ export default function HospitalCard() {
   }
 
   return (
-    <div>
+    <div style={{ margin: "0 2rem 2rem 2rem" }}>
       <div className="ant-typography">
         <Title>병원 정보</Title>
       </div>
-      <Form
+      <div
         style={{
           // display: "grid",
           // justifyContent: 'center',
@@ -208,211 +221,258 @@ export default function HospitalCard() {
           borderColor: `${theme.palette.orange}`,
           borderWidth: "10px",
           borderRadius: "5%",
-          margin: "0 2rem 2rem 2rem",
           padding: "1rem 2rem 1rem 2rem",
           // maxWidth: "960px"
         }}
       >
         <Row>
           <Col span={12}>
-            <Row>
-              <SubTitle>병원명</SubTitle>
-              <input
-                style={{ marginBottom: "1rem", marginLeft: "0.5rem" }} type="text"
-                defaultValue={name}
-                onChange={onChangeName}
-              />
-            </Row>
-            <Row>
-              <SubTitle>이름</SubTitle>
-              <input
-                style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                type="text"
-                defaultValue={director}
-                onChange={onChangeDirector}
-              />
-            </Row>
-            <Row>
-              <SubTitle>이메일</SubTitle>
-              <input style={{
-                marginBottom: "1rem", marginLeft: "0.5rem" }}
-                type="text"
-                value={email}
-                autoComplete="username"
-                disabled
-              />
-            </Row>
-            <Row>
-              <SubTitle>비밀번호</SubTitle>
-              <input
-                style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                type="password"
-                autoComplete="current-password"
-                defaultValue=""
-                disabled
-              />
-              <Button
-                  style={{ marginLeft: "0.5rem" }}
-                  onClick={buttonHandler}
-                >변경</Button>
-            </Row>
-            <Row>
-              <SubTitle>병원 연락처</SubTitle>
-              <input
-                style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                type="text"
-                defaultValue={phoneNumber}
-                onChange={onChangePhoneNumber}
-              />
-            </Row>
-            <Row>
-              <SubTitle>사업자 등록번호</SubTitle>
-              <input
-                style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                type="text"
-                defaultValue={businessNumber}
-                onChange={onChangeBusinessNumber}
-              />
-            </Row>
-            <Row>
-              <SubTitle>면허번호</SubTitle>
-              <input
-                style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                type="text"
-                defaultValue={licenseNumber}
-                onChange={onChangeLicenseNumber}
-              />
-            </Row>
-            <Row>
-              <SubTitle>병원 사진</SubTitle>
-              <div style={{ marginBottom: "0.5rem" }} />
-              <div style={{ marginBottom: "0.5rem" }}>
-                <UploadFileLabel htmlFor="uploadFile">업로드</UploadFileLabel>
-                <UploadFileInput type="file"
-                  id="uploadFile"
-                  accept='image/jpg,image/png,image/jpeg,image/gif'
-                  name='profile_img'
-                  onChange={(e: any) => {
-                    convertFileToBase64(e.target.files[0]);
-                    console.log(e.target.files);
-                  }}
-                />
-              </div>
-              <div>
-                {image && <img src={image} width="280px" alt="" />}
-              </div>
-            </Row>
-            <div style={{ marginBottom: "0.5rem" }} />
-            <Row>
-              <SubTitle>주소</SubTitle>
-              <input
-                style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                type="text"
-                defaultValue={postalCode}
-              />
-              <input
-                style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                type="text"
-                defaultValue={address1}
-              />
-              <input
-                style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                type="text"
-                defaultValue={address2}
-              />
-              <Button style={{ marginLeft: "0.5rem" }}>수정</Button>
-            </Row>
-            <Row>
-              <SubTitle>카테고리</SubTitle>
-              <input
-                style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                type="text"
-                defaultValue={tag}
-              />
-            </Row>
-            <Row>
-              <SubTitle>키워드</SubTitle>
-              <span
-                style={{
-                  marginLeft: "1rem",
-                  color: `${$keywordNumWarning?.textContent === "키워드가 정상적으로 등록되었습니다." ? theme.palette.blue : theme.palette.peach}`
-                }}
-                className="keywordNumWarning"
-              ></span>
-              <KeywordInput>
-                <div className="HashWrapOuter"></div>
-                {/* {INITIAL_KEYWORDS.map((item, index) => {
-                  $HashWrapInner.innerHTML = '#' + item;
-                  $HashWrapOuter?.appendChild($HashWrapInner);
-                  return (
-                    <span key={index}></span>
-                  )
-                })} */}
+            <Form>
+              <Row>
+                <SubTitle>병원명</SubTitle>
                 <input
-                  className="HashInput"
-                  type="text"
-                  onKeyUp={onKeyUp}
-                  placeholder="키워드 입력"
+                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }} type="text"
+                  defaultValue={name}
+                  onChange={onChangeName}
                 />
-              </KeywordInput>
-            </Row>
-            <Row>
-              <Col>
+              </Row>
+              <Row>
+                <SubTitle>이름</SubTitle>
+                <input
+                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
+                  type="text"
+                  defaultValue={director}
+                  onChange={onChangeDirector}
+                />
+              </Row>
+              <Row>
+                <SubTitle>이메일</SubTitle>
+                <input style={{
+                  marginBottom: "1rem", marginLeft: "0.5rem" }}
+                  type="text"
+                  value={email}
+                  autoComplete="username"
+                  disabled
+                />
+              </Row>
+              <Row>
+                <SubTitle>비밀번호</SubTitle>
+                <input
+                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
+                  type="password"
+                  autoComplete="current-password"
+                  defaultValue=""
+                  disabled
+                />
+                <Button
+                    style={{ marginLeft: "0.5rem" }}
+                    onClick={buttonHandler}
+                  >변경</Button>
+              </Row>
+              <Row>
+                <SubTitle>병원 연락처</SubTitle>
+                <input
+                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
+                  type="text"
+                  defaultValue={phoneNumber}
+                  onChange={onChangePhoneNumber}
+                />
+              </Row>
+              <Row>
+                <SubTitle>사업자 등록번호</SubTitle>
+                <input
+                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
+                  type="text"
+                  defaultValue={businessNumber}
+                  onChange={onChangeBusinessNumber}
+                />
+              </Row>
+              <Row>
+                <SubTitle>면허번호</SubTitle>
+                <input
+                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
+                  type="text"
+                  defaultValue={licenseNumber}
+                  onChange={onChangeLicenseNumber}
+                />
+              </Row>
+              <Row>
+                <SubTitle>병원 사진</SubTitle>
+                <div style={{ marginBottom: "0.5rem" }} />
+                <div style={{ marginBottom: "0.5rem" }}>
+                  <UploadFileLabel htmlFor="uploadFile">업로드</UploadFileLabel>
+                  <UploadFileInput type="file"
+                    id="uploadFile"
+                    accept='image/jpg,image/png,image/jpeg,image/gif'
+                    name='profile_img'
+                    onChange={(e: any) => {
+                      convertFileToBase64(e.target.files[0]);
+                      console.log(e.target.files);
+                    }}
+                  />
+                </div>
+                <div>
+                  {image && <img src={image} width="280px" alt="" />}
+                </div>
+              </Row>
+              <div style={{ marginBottom: "0.5rem" }} />
+              <Row>
+                <SubTitle>주소</SubTitle>
+                <input
+                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
+                  type="text"
+                  defaultValue={postalCode}
+                />
+                <input
+                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
+                  type="text"
+                  defaultValue={address1}
+                />
+                <input
+                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
+                  type="text"
+                  defaultValue={address2}
+                />
+                <Button style={{ marginLeft: "0.5rem" }}>수정</Button>
+              </Row>
+              <Row>
+                <SubTitle>카테고리</SubTitle>
+                <input
+                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
+                  type="text"
+                  defaultValue={tag}
+                />
+              </Row>
+              <Row>
+                <SubTitle>키워드</SubTitle>
+                <span
+                  style={{
+                    marginLeft: "1rem",
+                    color: `${$keywordNumWarning?.textContent === "키워드가 정상적으로 등록되었습니다." ? theme.palette.blue : theme.palette.peach}`
+                  }}
+                  className="keywordNumWarning"
+                ></span>
+                <KeywordInput>
+                  <div className="HashWrapOuter"></div>
+                  {/* {INITIAL_KEYWORDS.map((item, index) => {
+                    $HashWrapInner.innerHTML = '#' + item;
+                    $HashWrapOuter?.appendChild($HashWrapInner);
+                    return (
+                      <span key={index}></span>
+                    )
+                  })} */}
+                  <input
+                    className="HashInput"
+                    type="text"
+                    onKeyUp={onKeyUp}
+                    placeholder="키워드 입력"
+                  />
+                </KeywordInput>
+              </Row>
+              <Row>
+                <Col>
+                  <SubTitle
+                    style={{
+                      marginBottom: "1rem"
+                    }}
+                  >영업시간</SubTitle>
+                  <Row>휴무일 선택</Row>
+                  <Row
+                    style={{ marginBottom: "0.5rem" }}
+                  >
+                    <Button id="Mon">월</Button>
+                    <Button id="Tues">화</Button>
+                    <Button id="Wed">수</Button>
+                    <Button id="Thurs">목</Button>
+                    <Button id="Fri">금</Button>
+                    <Button id="Sat">토</Button>
+                    <Button id="Sun">일</Button>
+                  </Row>
+                  <Row>시간 선택</Row>
+                  <Row>
+                    {timeList.map((time) => (
+                      <Button id={time} key={time}>{time}:00</Button>
+                    ))}
+                  </Row>
+                  <Row style={{ marginTop: "1rem" }}>
+                    <SubTitle>시간당 예약가능 고객 수</SubTitle>
+                    <input
+                      style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
+                      type="text"
+                      defaultValue={hospitalCapacity}
+                      onChange={onChangeHospitalCapacity}
+                    />
+                  </Row>
+                </Col>
+              </Row>
+            </Form>
+          </Col>
+          <Col>
+            <Form>
+              <Row>
                 <SubTitle
                   style={{
-                    marginBottom: "1rem"
+                    margin: "auto",
+                    fontWeight: "bold"
                   }}
-                >영업시간</SubTitle>
-                <Row>휴무일 선택</Row>
-                <Row
-                  style={{ marginBottom: "0.5rem" }}
-                >
-                  <Button id="Mon">월</Button>
-                  <Button id="Tues">화</Button>
-                  <Button id="Wed">수</Button>
-                  <Button id="Thurs">목</Button>
-                  <Button id="Fri">금</Button>
-                  <Button id="Sat">토</Button>
-                  <Button id="Sun">일</Button>
-                </Row>
-                <Row>시간 선택</Row>
-                <Row>
-                  {timeList.map((time) => (
-                    <Button id={time}>{time}:00</Button>
-                  ))}
-                </Row>
-                <Row style={{ marginTop: "1rem" }}>
-                  <SubTitle>시간당 예약가능 고객 수</SubTitle>
+                >서비스 추가</SubTitle>
+              </Row>
+              <Row>
+                <div>
+                  <label>서비스명</label>
                   <input
-                    style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                    type="text"
-                    defaultValue={hospitalCapacity}
-                    onChange={onChangeHospitalCapacity}
+                    className="serviceName"
+                    style={{
+                      marginLeft: "0.5rem",
+                      marginBottom: "0.5rem"
+                    }}
                   />
-                </Row>
-              </Col>
-            </Row>
-          </Col>
-          <Col span={12}>
-            <Row>
-              <SubTitle>서비스</SubTitle>
-              <div>
-                <input style={{ marginLeft: "0.5rem"}} />
-                <Button style={{
+                </div>
+              </Row>
+              <Row>
+                <div>
+                  <label>서비스 가격</label>
+                  <input
+                    className="servicePrice"
+                    style={{
+                      marginLeft: "0.5rem",
+                      marginBottom: "0.5rem"
+                    }}
+                  />
+                </div>
+              </Row>
+              <Row>
+                <div>
+                  <label>서비스 설명</label>
+                  <input
+                    className="serviceDetail"
+                    style={{
+                      marginLeft: "0.5rem",
+                      marginBottom: "0.5rem"
+                    }}
+                  />
+                </div>
+              </Row>
+              <Row>
+              <Button
+                style={{
                   marginLeft: "0.5rem",
-                  marginBottom: "1rem"
-                }}>추가</Button>
-              </div>
-            </Row>
+                  marginBottom: "1rem",
+                  margin: "auto"
+                }}
+                onSubmit={addService}
+              >추가</Button>
+              </Row>
+            </Form>
           </Col>
         </Row>
-        <Row className="">
+      </div>
+      <Row>
           <Button
-            style={{ marginLeft: "1rem" }}
+            style={{ marginTop: "1rem", marginLeft: "1rem" }}
             onClick={withdrawButtonHandler}
           >탈퇴</Button>
-        </Row>
-      </Form>
+      </Row>
     </div>
   );
 }
