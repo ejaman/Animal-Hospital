@@ -9,12 +9,12 @@ import PetInfo from './pages/pet-info/PetInfo';
 import HospitalMypage from './pages/hospital-mypage/HospitalMypage';
 import HospitalInfo from './pages/hospital-info/HospitalInfo';
 import AdminMypage from './pages/admin-mypage/AdminMypage';
-
+import Home from './pages/home/Home';
 
 function App() {
   return <BrowserRouter>
     <Routes>
-      {/* <Route path='/' element={< />} />  */}
+      <Route path='/' element={<Home />} /> 
       <Route path='/login' element={<Login/>} />
       <Route path='/register' element={<Register />} />
       <Route path='/user-mypage' element={<UserMypage />} />

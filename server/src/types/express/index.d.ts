@@ -4,5 +4,6 @@ declare namespace Express {
     currentHospId: string;
     currentHospObjectId: mongoose.Types.ObjectId;
     currentHospName: string;
+    userStatus:string;
   }
 }
