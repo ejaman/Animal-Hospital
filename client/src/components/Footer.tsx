@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faGithub} from '@fortawesome/free-brands-svg-icons';
 
 const Container = styled.div`
-  height: 190px;
   background-color: black;
   color: white;
   padding: 30px 0;
@@ -14,8 +13,7 @@ const Container = styled.div`
   @media screen and (max-width: 780px) {
     display: flex;
     flex-direction: column;
-    height: 260px;
-    padding-top: 20px;
+    padding: 20px 0 10px;
   }
 `;
 
