@@ -7,10 +7,11 @@ import {
   ListContainer,
   Header,
 } from "../../components/Liststyle";
+import { UserInfoType } from "../user-info/Interface";
 
 const token = localStorage.getItem("token");
 function AdminUserList() {
-  const [datas, setDatas] = useState<any[]>([]);
+  const [datas, setDatas] = useState<UserInfoType[]>([]);
   useEffect(() => {
     axios
       .get("http://localhost:5100/api/userlist", {
