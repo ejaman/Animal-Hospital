@@ -31,16 +31,19 @@ petRouter.post('/register', loginRequired, upload.single('image'), async(req : R
         }
     
         const owner = req.currentUserId;
+
         const {species, breed, name, age, sex, weight, medicalHistory, vaccination, neutralized}  = req.body as PetInfoPostRequest;  
 
         let image = '';
         if(req.file){
             image = (req.file as Express.MulterS3.File).location;
         }
+
         
         const requiredParams = ['species', 'breed','name','age','sex','weight','medicalHistory']
 
         if (!requiredParams.every(param => req.body[param])) {
+
             throw new Error("필수 정보가 모두 입력되었는지 확인해주세요.")
         }
            
