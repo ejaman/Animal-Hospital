@@ -7,6 +7,21 @@ import {upload} from '../utils'
 
 const petRouter = Router();
 
+interface PetInfoPostRequest {
+    owner : string,
+    species : string,
+    breed : string,
+    name : string,
+    age :  number,   
+    sex : string,
+    weight : number,
+    medicalHistory : string,
+    vaccination? : string,
+    neutralized? : string,
+    image? : string
+
+}
+
 // 펫 정보 등록
 petRouter.post('/register', loginRequired, upload.single('image'), async(req : Request, res : Response, next: NextFunction)=>{
 
@@ -16,17 +31,22 @@ petRouter.post('/register', loginRequired, upload.single('image'), async(req : R
         }
     
         const owner = req.currentUserId;
-        const {species, breed, name, age, sex, weight, medicalHistory, vaccination, neutralized} : PetInfo = req.body;
+
+        const {species, breed, name, age, sex, weight, medicalHistory, vaccination, neutralized}  = req.body as PetInfoPostRequest;  
 
         let image = '';
         if(req.file){
             image = (req.file as Express.MulterS3.File).location;
         }
-    
-        if(!species || !breed || !name || !age || !sex || !weight || !medicalHistory) {
+
+        
+        const requiredParams = ['species', 'breed','name','age','sex','weight','medicalHistory']
+
+        if (!requiredParams.every(param => req.body[param])) {
+
             throw new Error("필수 정보가 모두 입력되었는지 확인해주세요.")
         }
-    
+           
         const newPet = await petService.addPet({
             owner,
             species,
@@ -52,9 +72,9 @@ petRouter.post('/register', loginRequired, upload.single('image'), async(req : R
 // 펫 정보 조회
 petRouter.get('/mypets', loginRequired, async(req : Request, res : Response, next: NextFunction)=>{
     try {
-        const userId = req.currentUserId;
-        const token = req.headers.authorization;
-        console.log(token);
+        const userId = req.currentUserId; //
+        // const token = req.headers.authorization;
+        // console.log(token);
 
         if(!userId){
             throw new Error("로그인 한 사용자가 아닙니다. 자신의 펫 정보 조회인지 확인해주세요")
