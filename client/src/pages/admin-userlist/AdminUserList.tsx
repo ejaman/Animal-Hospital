@@ -19,17 +19,10 @@ function AdminUserList() {
         },
       })
       .then((res) => {
-        console.log(res.data[1]);
+        console.log(res.data);
         setDatas(res.data);
       });
   }, []);
-
-  // const res = await axios.get("http://localhost:5100/api/userlist", {
-  //   headers: {
-  //     Authorization: `Bearer ${token}`,
-  //   },
-  // });
-  // const data = res.data;
 
   return (
     <ListContainer>
