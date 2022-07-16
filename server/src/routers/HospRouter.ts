@@ -429,4 +429,28 @@ hospitalRouter.delete(
   }
 );
 
+hospitalRouter.get('/:hospitalName/detail', async (req, res, next) => {
+  try {
+    const { hospitalName } = req.params;
+
+    const hospInfo = await hospitalService.findHospitalByName(hospitalName);
+
+    const { name, address, businessHours, holiday, tag, keyword, image } =
+      hospInfo;
+
+    const hospDetailInfo = {
+      name,
+      address,
+      businessHours,
+      holiday,
+      tag,
+      keyword,
+      image,
+    };
+    res.status(200).json({ data: {}, message: hospDetailInfo });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export { hospitalRouter };
