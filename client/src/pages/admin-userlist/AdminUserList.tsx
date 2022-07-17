@@ -7,10 +7,11 @@ import {
   ListContainer,
   Header,
 } from "../../components/Liststyle";
+import { UserInfoType } from "../user-info/Interface";
 
 const token = localStorage.getItem("token");
 function AdminUserList() {
-  const [datas, setDatas] = useState<any[]>([]);
+  const [datas, setDatas] = useState<UserInfoType[]>([]);
   useEffect(() => {
     axios
       .get("http://localhost:5100/api/userlist", {
@@ -19,17 +20,10 @@ function AdminUserList() {
         },
       })
       .then((res) => {
-        console.log(res.data[1]);
+        console.log(res.data);
         setDatas(res.data);
       });
   }, []);
-
-  // const res = await axios.get("http://localhost:5100/api/userlist", {
-  //   headers: {
-  //     Authorization: `Bearer ${token}`,
-  //   },
-  // });
-  // const data = res.data;
 
   return (
     <ListContainer>
