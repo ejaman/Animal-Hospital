@@ -16,7 +16,7 @@ import { faEarlybirds } from '@fortawesome/free-brands-svg-icons';
 import { CustomAxiosGet } from '../../common/CustomAxios';
 
 const TagImg = styled.img`
-  width: 50px;
+  width: 40px;
   transition: 0.2s all ease-in-out;
 `;
 interface ITagValue {
