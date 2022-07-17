@@ -3,10 +3,11 @@ import axios from "axios";
 import PetCard from "./PetCard";
 import { MainContainer, AddBtn } from "./PetInfoStyle";
 import AddPet from "./AddPet";
+import { PetInfoType } from "./PetInfoInterface";
 
 const token = localStorage.getItem("token");
 function PetInformation() {
-  const [pets, setPets] = useState();
+  const [pets, setPets] = useState<PetInfoType[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(true);
   // 처음 한 번만 서버 통신
   useEffect(() => {
@@ -17,6 +18,7 @@ function PetInformation() {
         },
       })
       .then((res) => {
+        setPets(res.data);
         console.log(res.data);
       });
   }, []);
@@ -27,7 +29,9 @@ function PetInformation() {
         <i className="fa-solid fa-plus fa-xl"></i>
       </AddBtn>
       {isOpen && <AddPet />}
-      <PetCard />
+      {pets.map((pet) => (
+        <PetCard pet={pet} />
+      ))}
     </MainContainer>
   );
 }

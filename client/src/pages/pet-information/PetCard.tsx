@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { PetInfoType } from "./PetInfoInterface";
 import {
   PetCardContainer,
   DeleteBtn,
@@ -15,7 +16,7 @@ import {
   PetImg,
   Contents,
 } from "./PetInfoStyle";
-function PetCard() {
+function PetCard({ pet }: any) {
   const [select, setSelect] = useState("F");
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,13 +33,13 @@ function PetCard() {
           <PetImg src="https://media.istockphoto.com/photos/crazy-looking-black-and-white-border-collie-dog-say-looking-intently-picture-id1213516345?k=20&m=1213516345&s=612x612&w=0&h=_XUSwcrXe5HjI2QEby0ex6Tl1fB_YJUzUU8o2cUt0YA=" />
         </ImgContainer>
         <InfoContainer>
-          <NameInput value="Name" />
+          <NameInput value={pet.name} />
           <Contents>
-            <InfoInput value="species" />
-            <InfoInput value="breed" />
+            <InfoInput value={pet.species} />
+            <InfoInput value={pet.breed} />
           </Contents>
-          <InfoInput value="age" />
-          <InfoInput value="weight" />
+          <InfoInput value={pet.age} />
+          <InfoInput value={pet.weight} />
           <Contents>
             <Item>
               <RadioText>성별</RadioText>
@@ -108,8 +109,8 @@ function PetCard() {
               </Item>
             </RadioContainer>
           </Contents>
-          <InfoTextarea value="medicalHistorys" />
-          <InfoTextarea value="vaccination" />
+          <InfoTextarea value={pet.medicalHistorys} />
+          <InfoTextarea value={pet.vaccination} />
           {/* <Btn>
         <i className="fa-solid fa-paw"></i>
       </Btn> */}
