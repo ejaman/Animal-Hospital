@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { PetInfoType } from "./PetInfoInterface";
 import {
   PetCardContainer,
@@ -16,16 +17,32 @@ import {
   PetImg,
   Contents,
 } from "./PetInfoStyle";
+const token = localStorage.getItem("token");
 function PetCard({ pet }: any) {
   const [select, setSelect] = useState("F");
+  const onhandleDelete = (event: React.MouseEvent<HTMLElement>) => {
+    const petId = { petId: pet._id };
+    console.log(petId);
 
+    axios
+      .delete("http://localhost:5100/pet/delete", {
+        data: { petId: pet._id },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        // rerender해야힘
+      });
+  };
   const handleSelectChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSelect(value);
   };
   return (
     <PetCardContainer>
-      <DeleteBtn>
+      <DeleteBtn onClick={onhandleDelete}>
         <i className="fa-solid fa-circle-minus fa-xl"></i>
       </DeleteBtn>
       <Contents>

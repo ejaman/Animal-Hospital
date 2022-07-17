@@ -8,6 +8,7 @@ export interface PetInfoType {
   sex: string;
   weight: number;
   medicalHistory: string;
+  // 필수?
   vaccination?: string;
   neutralized?: string;
 }

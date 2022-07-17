@@ -25,10 +25,11 @@ function PetInformation() {
   return (
     <MainContainer>
       <h1>pet info</h1>
-      <AddBtn>
+      <AddBtn onClick={() => setIsOpen(!isOpen)}>
         <i className="fa-solid fa-plus fa-xl"></i>
       </AddBtn>
       {isOpen && <AddPet />}
+      썸넬이 필요함
       {pets.map((pet) => (
         <PetCard pet={pet} />
       ))}
