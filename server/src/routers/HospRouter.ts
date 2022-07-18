@@ -616,7 +616,7 @@ hospitalRouter.get('/list/main', async (req, res, next) => {
       searchOptions
     );
 
-    const users = await hospitalService.getHospitals(
+    const hospitals = await hospitalService.getHospitals(
       page,
       perPage,
       searchOptions
@@ -627,11 +627,11 @@ hospitalRouter.get('/list/main', async (req, res, next) => {
     res.status(200).json({
       data: {
         searchOptions: searchOptions,
-        users: users,
+        hospitals: hospitals,
         page: page,
         perPage: perPage,
         totalPage: totalPage,
-        totalUsers: totalHospitals,
+        totalHospitals: totalHospitals,
       },
       message: '',
     });

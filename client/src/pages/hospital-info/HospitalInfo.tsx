@@ -84,8 +84,8 @@ export default function HospitalInfo() {
       ...hospitalServiceInfo,
       [e.currentTarget.name]: e.currentTarget.value
     }
-    setHospitalInfo(hospitalData);
-    setHospitalServiceInfo(hospitalServiceData);
+    // setHospitalInfo(hospitalData);
+    // setHospitalServiceInfo(hospitalServiceData);
   };
 
   const onKeyUp = useCallback(
