@@ -74,11 +74,13 @@ function LoginLayout() {
           hospitalName,
           hospitalState,
         });
+        if (hospitalState === '추가정보 미기입') {
+          alert('추가정보를 기입해주세요.');
+          navigate('/hospital-info');
+          return;
+        }
         alert(`로그인에 성공하였습니다.`);
         navigate('/');
-        if (hospitalState === '추가 정보 미기입') {
-          navigate('/hospital-info');
-        }
       } catch (e: any) {
         const errorMsg = e.response.data.message;
         // errorMsg가 확인중일때는 아래와 같은 경고창을 띄워준다.
