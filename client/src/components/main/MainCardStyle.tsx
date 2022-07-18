@@ -1,9 +1,12 @@
 import styled from 'styled-components';
 
 const MainCardWrapper = styled.div`
-  display: flex;
+  /* display: flex;
   flex-wrap: wrap;
-  padding: 0 80px 0 80px;
+  padding: 0 80px 0 80px; */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 324px);
+  justify-content: center;
 `;
 
 const MainCardContainer = styled.div`
