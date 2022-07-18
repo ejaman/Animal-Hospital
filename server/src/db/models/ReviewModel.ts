@@ -23,6 +23,7 @@ export class ReviewModel {
 
   async findByHospitalId(hospitalId : string): Promise<ReviewData[]> {
     const review = await Review.find({targetHospital : hospitalId});
+    console.log("hospitalId from review model : ", hospitalId )
     if(!review){
         throw new Error('해당 병원에 대한 리뷰가 없습니다.')
     }

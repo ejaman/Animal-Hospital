@@ -41,26 +41,40 @@ export async function postReviewCTR(
   }
 }
 
+//각 병원페이지에서의 자기 리뷰 조회
 export async function getReviewCTR (req: Request,
     res: Response,
     next: NextFunction
   ) {
     try {
-        if (_.isEmpty(req.body)) {
-            throw new Error(
-              "body가 비어있거나 header의 Content-Type이 'application/json'인지 확인해주세요"
-            );
-          }
+       
+         const {hospitalId} = req.body;
         
-        
-
-              
-        
+         const hospitalReview = await reviewService.getReviewsByHospital(hospitalId); 
+         res.status(200).json(hospitalReview);    
 
     } catch (error) {
         next(error)
     }
 
+  }
+
+  //개인 사용자의 자기 작성 리뷰 조회
+  export async function getMyReviewCTR (req : Request, res : Response, next : NextFunction) {
+    try {
+      const userId = req.currentUserId;
+      const userRole = req.userRole;
+      
+      if(userRole === "basic-user"){
+        const reviews = await reviewService.getReviewsByUser(userId);
+        res.status(200).json(reviews)
+
+      } else {
+        res.status(400).json({message : "리뷰 조회 권한이 없습니다."})
+      }
+    } catch (error) {
+      next(error);
+    }
   }
 
   export async function updateReviewCTR (req: Request,

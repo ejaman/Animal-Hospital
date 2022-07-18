@@ -17,7 +17,7 @@ class ReviewService {
     }
 
     //병원 회원의 자기 병원에 대한 모든 리뷰 조회
-    async getReviewsByHospital(hospitalId : string) : Promise<ReviewInfo[]>{
+    async getReviewsByHospital(hospitalId : string) : Promise<ReviewData[]>{
         const reviews = await this.reviewModel.findByHospitalId(hospitalId);
         return reviews;
     }
