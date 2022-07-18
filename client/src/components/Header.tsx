@@ -97,6 +97,12 @@ const ProfileBtn = styled.div<IIdx>`
   border-top-right-radius: ${props => props.num === 'first' && '10px'};
   border-bottom-right-radius: ${props => props.num === 'last' && '10px'};
   border-bottom-left-radius: ${props => props.num === 'last' && '10px'};
+  /* ${props => props.num === 'first' &&
+    css `
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    `
+  } */
   font-size: 14px;
   font-weight: 700;
   color: black;
@@ -107,7 +113,7 @@ const ProfileBtn = styled.div<IIdx>`
 `;
 
 export default function Header() {
-  const [isLogin, setIsLogin] = useState<boolean>(localStorage.getItem('token') ? true : false);
+  const [isLogin, setIsLogin] = useState<boolean>(!!localStorage.getItem('token'));
   // const [isLogin, setIsLogin] = useState<boolean>(true); // 로그인 되었다고 가정한 가데이터
   const [profile, setProfile] = useState<boolean>(false); // 계정 아이콘 클릭 여부 체크
 
@@ -132,8 +138,10 @@ export default function Header() {
           </LogoContainer>
           <Search />
           <BtnContainer>
-            {!isLogin && <LoginBtn to='/login'>로그인</LoginBtn>}
-            {isLogin && <Profile icon={faCircleUser} size='3x' onClick={() => setProfile((cur => !cur))} />}
+            {!isLogin ?
+              <LoginBtn to='/login'>로그인</LoginBtn> :
+              <Profile icon={faCircleUser} size='3x' onClick={() => setProfile((cur => !cur))} />
+            }
             {profile &&
               <ProfileBtnbox profile={profile}>
                 <Link to='/user-mypage'>
