@@ -77,6 +77,22 @@ export async function getReviewCTR (req: Request,
     }
   }
 
+  //관리자의 전체 리뷰 조회
+  export async function getAllReviewsCTR (req : Request, res : Response, next : NextFunction) {
+    try {
+      const userRole = req.userRole;
+      if(userRole === 'admin') {
+        const reviews = await reviewService.getAllReviews();
+        res.status(200).json(reviews);
+      } else {
+        res.status(400).json({message : "조회 권한이 없습니다."})
+      }
+      } catch (error) {
+        next(error)
+      }
+    }
+  
+
   export async function updateReviewCTR (req: Request,
     res: Response,
     next: NextFunction

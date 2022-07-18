@@ -22,6 +22,13 @@ class ReviewService {
         return reviews;
     }
 
+    //관리자의 모든 리뷰 조회
+    async getAllReviews():Promise<ReviewInfo[]>{
+        const reviews = await this.reviewModel.findAll();
+        return reviews;
+
+    }
+
     //일반 회원의 리뷰 수정
     async updateReview(userId : string, toUpdate : Partial<ReviewInfo>) : Promise<ReviewData>{
         let review = await this.reviewModel.findById(userId);
