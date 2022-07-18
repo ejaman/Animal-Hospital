@@ -8,6 +8,7 @@ import {
   Header,
 } from "../../components/Liststyle";
 import { UserInfoType } from "../user-info/Interface";
+import SearchBar from "./SearchBar";
 
 const token = localStorage.getItem("token");
 function AdminUserList() {
@@ -27,18 +28,13 @@ function AdminUserList() {
 
   return (
     <ListContainer>
-      <div>검색창 만들기</div>
+      <SearchBar datas={datas} />
       <Header>
         <InfoText>역할</InfoText>
         <InfoText>이름</InfoText>
         <InfoText>아이디</InfoText>
         <InfoText>상태</InfoText>
       </Header>
-
-      {datas.map((data) => (
-        <UserCard data={data} />
-      ))}
-      {/* <UserCard /> */}
     </ListContainer>
   );
 }
