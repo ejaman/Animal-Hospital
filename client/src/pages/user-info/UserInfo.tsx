@@ -20,10 +20,20 @@ import { ModalStyle } from "../../components/ModalStyle";
 const token = localStorage.getItem("token");
 function UserInfo() {
   // 받아온 정보를 저장하는 state
-  const [userInfo, setUserInfo] = useState<UserInfoType>();
+  const [userInfo, setUserInfo] = useState<UserInfoType>({
+    userName: "",
+    address: { postalCode: "", address1: "", address2: "" },
+    email: "",
+    password: "",
+    phoneNumber: "",
+  });
   // address 관련
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [addr, setAddr] = useState<Address>();
+  const [addr, setAddr] = useState<Address>({
+    postalCode: "",
+    address1: "",
+    address2: "",
+  });
   // 비밀번호 관련
   const currentPwRef = useRef<HTMLInputElement>(null);
   const newPwRef = useRef<HTMLInputElement>(null);
@@ -66,20 +76,12 @@ function UserInfo() {
     setAddr(ex);
   };
 
-  // interface AddressType {
-  //   postalCode: string;
-  //   address1: string;
-  //   address2: string;
-  // }
-  // const { postalCode, address1, address2 }: AddressType = userInfo?.address; // undefined?
-  //const address = userInfo?.address; // destructuring?
-
   const onAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setAddr({ ...addr, [event.currentTarget.name]: event.currentTarget.value });
   };
 
-  const onhandleUpadate = async (event: React.MouseEvent<HTMLElement>) => {
+  const onhandleUpdate = async (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     const currentPassword = currentPwRef.current?.value;
     const newPassword = newPwRef.current?.value;
@@ -89,7 +91,6 @@ function UserInfo() {
       currentPassword: currentPassword,
       newPassword: newPassword,
     };
-    console.log(data);
     axios
       .patch(`http://localhost:5100/api/users/${userInfo?.email}`, data, {
         headers: {
@@ -109,39 +110,35 @@ function UserInfo() {
           <InfoInput
             name="userName"
             onChange={onChange}
-            value={userInfo?.userName || ""}
+            value={userInfo.userName}
           />
         </Container>
         <Container>
           <InputLabel>이메일 주소</InputLabel>
-          <InfoInput name="email" value={userInfo?.email || ""} disabled />
+          <InfoInput name="email" value={userInfo.email} disabled />
         </Container>
 
         <Container>
-          <InputLabel>전회번호</InputLabel>
+          <InputLabel>전화번호</InputLabel>
           <InfoInput
             name="phoneNumber"
             onChange={onChange}
-            value={userInfo?.phoneNumber || ""}
+            value={userInfo.phoneNumber}
           />
         </Container>
         <Container>
           <InputLabel>주소</InputLabel>
-          <InfoInput
-            name="postalCode"
-            value={addr?.postalCode || ""}
-            disabled
-          />
+          <InfoInput name="postalCode" value={addr.postalCode || ""} disabled />
           <InfoBtn onClick={onOpenClick}>주소찾기</InfoBtn>
           <Modal isOpen={isOpen} ariaHideApp={false} style={ModalStyle}>
             <DaumPostcode onComplete={completeHandler} />
           </Modal>
           <Divider>
-            <InfoInput name="address1" value={addr?.address1 || ""} disabled />
+            <InfoInput name="address1" value={addr.address1 || ""} disabled />
             <InfoInput
               name="address2"
               onChange={onAddressChange}
-              value={addr?.address2 || ""}
+              value={addr.address2 || ""}
             />
           </Divider>
         </Container>
@@ -152,7 +149,7 @@ function UserInfo() {
         </Container>
 
         <div style={{ display: "flex" }}>
-          <InfoBtn style={{ marginLeft: "auto" }} onClick={onhandleUpadate}>
+          <InfoBtn style={{ marginLeft: "auto" }} onClick={onhandleUpdate}>
             수정
           </InfoBtn>
         </div>

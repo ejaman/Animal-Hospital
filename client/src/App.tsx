@@ -13,6 +13,7 @@ import Home from "./pages/home/Home";
 import AdminUserList from "./pages/admin-userlist/AdminUserList";
 import Detail from "./pages/detail/Detail";
 import AdminHospitalList from "./pages/admin-hplist/AdminHospitalList";
+import PetInformation from "./pages/pet-information/PetInformation";
 
 import LayoutSearch from "./components/LayoutSearch";
 import LayoutMypage from "./components/LayoutMypage";
@@ -31,6 +32,7 @@ function App() {
           <Route path="/user-mypage" element={<UserMypage />} />
           <Route path="/user-info" element={<UserInfo />} />
           <Route path="/pet-info" element={<PetInfo />} />
+          <Route path="/petinfo" element={<PetInformation />} />
           <Route path="/hospital-mypage" element={<HospitalMypage />} />
           <Route path="/hospital-info" element={<HospitalInfo />} />
           <Route path="/admin-mypage" element={<AdminMypage />} />

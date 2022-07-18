@@ -1,6 +1,7 @@
-import React from "react";
-import styled from "styled-components";
-import CalendarUi from "./Calendar";
+import React from 'react';
+import styled from 'styled-components';
+import TimeButton from '../../components/TimeButton';
+import CalendarUi from './Calendar';
 const MainContainer = styled.div`
   max-width: 1000px;
   margin: 1rem auto;
@@ -97,8 +98,8 @@ function Detail() {
         </InfoContainer>
         <ReservationContainer>
           <Reservation>
-            예약
             <CalendarUi />
+            <TimeButton />
           </Reservation>
         </ReservationContainer>
       </ContentContainer>

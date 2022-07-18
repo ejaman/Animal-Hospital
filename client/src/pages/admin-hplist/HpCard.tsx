@@ -6,7 +6,7 @@ import {
   InfoText,
   StatusContainer,
   Select,
-} from "./style";
+} from "../../components/Liststyle";
 function HpCard() {
   return (
     <InfoCard>
