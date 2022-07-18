@@ -1,19 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {Link} from 'react-router-dom';
-import {
-  faMoon,
-  faDove,
-  faHotel,
-  faScissors,
-  faMarsAndVenus,
-  faDog,
-  faCat,
-  faXRay
-} from '@fortawesome/free-solid-svg-icons';
-import { faEarlybirds } from '@fortawesome/free-brands-svg-icons';
-import { CustomAxiosGet } from '../../common/CustomAxios';
+import axios from 'axios';
+
+// import overnight from '../../assets/tag-img/overnight.png';
 
 const TagImg = styled.img`
   width: 40px;
@@ -62,7 +52,7 @@ export default function Tags() {
   // const tagData = [
   //   {
   //     tag: '24시간',
-  //     image: 'https://cdn-icons.flaticon.com/png/512/654/premium/654994.png'
+  //     image: 'https://cdn-icons.flaticon.com/png/512/654/premium/654994.png?token=exp=1658121186~hmac=64d195ab0ababd90d4eec7256144d55b'
   //   },
   //   {
   //     tag: '야간진료',
@@ -98,13 +88,18 @@ export default function Tags() {
   //   },
   // ];
 
-  const [tagData, setTagData] = useState<any>([]); // 태그 데이터 모음
+  const [tagData, setTagData] = useState<object[]>([]); // 태그 데이터 모음
   const [tag, setTag] = useState<number>(-1); // 클릭 된 태그의 인덱스
 
   useEffect(() => {
     async function getData() {
-      const res = await CustomAxiosGet.get('/hostpitalTag/list');
-      setTagData(res);
+      const res = await axios.get('http://localhost:5100/hospitalTag/list', {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      console.log(res);
+      setTagData([...res.data]);
     }
     getData();
     console.log(tagData);
@@ -123,7 +118,7 @@ export default function Tags() {
               tag={tag}
             >
               <TagImg src={category.image} />
-              <TagName>{category.tag}</TagName>
+              <TagName>{category.name}</TagName>
             </TagWrapper>
           )
         })}
