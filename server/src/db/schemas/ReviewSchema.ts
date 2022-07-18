@@ -34,4 +34,12 @@ const ReviewSchema = new Schema(
 
 );
 
+ReviewSchema.virtual('id').get(function(){
+    return this._id.toHexString();
+})
+
+ReviewSchema.set('toJSON', {
+    virtuals: true
+})
+
 export {ReviewSchema}

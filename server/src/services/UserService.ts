@@ -197,10 +197,23 @@ class UserService {
     const userStatus = user.userStatus;
 
     if (userStatus === UserStatus.EXPIRED) {
-      throw new Error('탈퇴한 사용자 입니다.');
+      return true;
     } else {
       return false;
     }
+  }
+
+
+  //권한 없는 리뷰작성자 차단
+  async blockUnauthorized (userId : string) : Promise<boolean>{
+    const user = await this.userModel.findById(userId);
+
+    if(!user || user.role==="admin") {
+     return false
+    } else {
+      return true;
+    }
+
   }
 }
 
