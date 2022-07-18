@@ -6,7 +6,7 @@ import { ReviewInfo, ReviewData } from '../../types/ReviewTypes';
 const Review = model('reviews', ReviewSchema);
 
 interface ToUpdate {
-    userId : string,
+    reviewId : string,
     update : {
         [key : string] : string | number |Date
     }
@@ -51,8 +51,8 @@ export class ReviewModel {
     return reviews;
   }
 
-  async updateReview({userId, update} : ToUpdate): Promise<ReviewData> {
-    const filter = {userId : userId};
+  async updateReview({reviewId, update} : ToUpdate): Promise<ReviewData> {
+    const filter = {_id : reviewId};
     const option = {returnOriginal : false};
     const updatedReview = await Review.findOneAndUpdate(filter, update, option);
     if(!updatedReview){

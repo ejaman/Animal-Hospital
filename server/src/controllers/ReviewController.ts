@@ -47,7 +47,11 @@ export async function getReviewCTR (req: Request,
     next: NextFunction
   ) {
     try {
-       
+        if (_.isEmpty(req.body)) {
+          throw new Error(
+            "body가 비어있거나 header의 Content-Type이 'application/json'인지 확인해주세요"
+          );
+        }
          const {hospitalId} = req.body;
         
          const hospitalReview = await reviewService.getReviewsByHospital(hospitalId); 
@@ -92,7 +96,7 @@ export async function getReviewCTR (req: Request,
       }
     }
   
-
+  // 일반 회원의 리뷰 수정
   export async function updateReviewCTR (req: Request,
     res: Response,
     next: NextFunction
@@ -104,7 +108,24 @@ export async function getReviewCTR (req: Request,
             );
           }
 
-          
+        const { reviewId, userId, targetHospital, date, content, like } = req.body;
+
+        const currentUserId = req.currentUserId;
+        const userRole = req.userRole;
+        
+        if(userId !== currentUserId || userRole==="admin"){
+          res.status(401).json({message : "잘못된 접근입니다."})
+        } else {
+          const toUpdate = {
+            ...(date && {date}),
+            ...(content && {content}),
+            ...(like && {like})
+          }
+
+
+          const updatedReview = await reviewService.updateReview(reviewId, toUpdate);
+          res.status(200).json(updatedReview);
+        }       
         
 
     } catch (error) {
