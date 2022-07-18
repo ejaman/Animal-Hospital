@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { PetInfoType } from "./PetInfoInterface";
 import {
   PetCardContainer,
   DeleteBtn,
@@ -15,16 +17,32 @@ import {
   PetImg,
   Contents,
 } from "./PetInfoStyle";
-function PetCard() {
+const token = localStorage.getItem("token");
+function PetCard({ pet }: any) {
   const [select, setSelect] = useState("F");
+  const onhandleDelete = (event: React.MouseEvent<HTMLElement>) => {
+    const petId = { petId: pet._id };
+    console.log(petId);
 
+    axios
+      .delete("http://localhost:5100/pet/delete", {
+        data: { petId: pet._id },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        // rerender해야힘
+      });
+  };
   const handleSelectChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSelect(value);
   };
   return (
     <PetCardContainer>
-      <DeleteBtn>
+      <DeleteBtn onClick={onhandleDelete}>
         <i className="fa-solid fa-circle-minus fa-xl"></i>
       </DeleteBtn>
       <Contents>
@@ -32,13 +50,13 @@ function PetCard() {
           <PetImg src="https://media.istockphoto.com/photos/crazy-looking-black-and-white-border-collie-dog-say-looking-intently-picture-id1213516345?k=20&m=1213516345&s=612x612&w=0&h=_XUSwcrXe5HjI2QEby0ex6Tl1fB_YJUzUU8o2cUt0YA=" />
         </ImgContainer>
         <InfoContainer>
-          <NameInput value="Name" />
+          <NameInput value={pet.name} />
           <Contents>
-            <InfoInput value="species" />
-            <InfoInput value="breed" />
+            <InfoInput value={pet.species} />
+            <InfoInput value={pet.breed} />
           </Contents>
-          <InfoInput value="age" />
-          <InfoInput value="weight" />
+          <InfoInput value={pet.age} />
+          <InfoInput value={pet.weight} />
           <Contents>
             <Item>
               <RadioText>성별</RadioText>
@@ -108,8 +126,8 @@ function PetCard() {
               </Item>
             </RadioContainer>
           </Contents>
-          <InfoTextarea value="medicalHistorys" />
-          <InfoTextarea value="vaccination" />
+          <InfoTextarea value={pet.medicalHistorys} />
+          <InfoTextarea value={pet.vaccination} />
           {/* <Btn>
         <i className="fa-solid fa-paw"></i>
       </Btn> */}
