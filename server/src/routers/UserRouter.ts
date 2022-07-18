@@ -81,14 +81,16 @@ userRouter.post(
       const isExpired = await userService.blockExpiredUser(email);
 
       if(isExpired){
-        throw new Error("탈퇴한 사용자입니다.")
-        return;
-      }
-
-      const userToken = await userService.getUserToken({ email, password });
+        // TODO : 메인페이지 경로로 이동시키기
+        res.status(302).redirect('/api/user'); 
+      } else {
+        const userToken = await userService.getUserToken({ email, password });
 
   
-      res.status(201).json({ userToken }); //userId, role, userStatus
+        res.status(201).json({ userToken }); //userId, role, userStatus
+      }
+
+      
 
     } catch (error) {
       next(error);
