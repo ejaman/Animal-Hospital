@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {Link} from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
 import {
   faMoon,
   faDove,
@@ -10,7 +10,7 @@ import {
   faMarsAndVenus,
   faDog,
   faCat,
-  faXRay
+  faXRay,
 } from '@fortawesome/free-solid-svg-icons';
 import { faEarlybirds } from '@fortawesome/free-brands-svg-icons';
 import { CustomAxiosGet } from '../../common/CustomAxios';
@@ -25,14 +25,16 @@ const TagWrapper = styled(Link)<ITagValue>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: ${props => props.idx === props.tag ? 'black' : props.theme.palette.gray};
+  color: ${(props) =>
+    props.idx === props.tag ? 'black' : props.theme.palette.gray};
   transition: 0.2s all ease-in-out;
   cursor: pointer;
-  border-bottom: 3px solid ${props => props.idx === props.tag ? 'black' : 'white'};
+  border-bottom: 3px solid
+    ${(props) => (props.idx === props.tag ? 'black' : 'white')};
 
   &:hover {
     color: black;
-    border-bottom: 3px solid ${props => props.theme.palette.gray};
+    border-bottom: 3px solid ${(props) => props.theme.palette.gray};
   }
 
   &:focus {
@@ -52,39 +54,39 @@ export default function Tags() {
   const tagData = [
     {
       tag: '24시간',
-      image: <FontAwesomeIcon icon={faEarlybirds} size='3x' />
+      image: <FontAwesomeIcon icon={faEarlybirds} size="3x" />,
     },
     {
       tag: '야간진료',
-      image: <FontAwesomeIcon icon={faMoon} size='3x' />
+      image: <FontAwesomeIcon icon={faMoon} size="3x" />,
     },
     {
       tag: '강아지 전문',
-      image: <FontAwesomeIcon icon={faDog} size='3x' />
+      image: <FontAwesomeIcon icon={faDog} size="3x" />,
     },
     {
       tag: '고양이 전문',
-      image: <FontAwesomeIcon icon={faCat} size='3x' />
+      image: <FontAwesomeIcon icon={faCat} size="3x" />,
     },
     {
       tag: '특수동물',
-      image: <FontAwesomeIcon icon={faDove} size='3x' />
+      image: <FontAwesomeIcon icon={faDove} size="3x" />,
     },
     {
       tag: '호텔',
-      image: <FontAwesomeIcon icon={faHotel} size='3x' />
+      image: <FontAwesomeIcon icon={faHotel} size="3x" />,
     },
     {
       tag: '미용',
-      image: <FontAwesomeIcon icon={faScissors} size='3x' />
+      image: <FontAwesomeIcon icon={faScissors} size="3x" />,
     },
     {
       tag: '중성화 전문',
-      image: <FontAwesomeIcon icon={faMarsAndVenus} size='3x' />
+      image: <FontAwesomeIcon icon={faMarsAndVenus} size="3x" />,
     },
     {
       tag: 'MRI',
-      image: <FontAwesomeIcon icon={faXRay} size='3x' />
+      image: <FontAwesomeIcon icon={faXRay} size="3x" />,
     },
   ];
 
@@ -100,23 +102,22 @@ export default function Tags() {
   //   console.log(tagData);
   // }, [])
 
-
   return (
     <>
-        {tagData.map((category:any, idx:number) => {
-          return (
-            <TagWrapper
-              key={idx}
-              idx={idx}
-              to='#'
-              onClick={() => setTag(idx)}
-              tag={tag}
-            >
-              {category.image}
-              <TagName>{category.tag}</TagName>
-            </TagWrapper>
-          )
-        })}
+      {tagData.map((category: any, idx: number) => {
+        return (
+          <TagWrapper
+            key={idx}
+            idx={idx}
+            to="#"
+            onClick={() => setTag(idx)}
+            tag={tag}
+          >
+            {category.image}
+            <TagName>{category.tag}</TagName>
+          </TagWrapper>
+        );
+      })}
     </>
-  )
+  );
 }
