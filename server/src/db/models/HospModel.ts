@@ -137,7 +137,21 @@ export class HospitalModel {
     perPage: number,
     searchOptions: SearchOptions
   ): Promise<HospitalInfo[]> {
-    const users = (await Hospital.find(searchOptions)
+    const users = (await Hospital.find(searchOptions, {
+      _id: 0,
+      email: 0,
+      password: 0,
+      director: 0,
+      addressCoordinate: 0,
+      businessNumber: 0,
+      licenseNumber: 0,
+      refreshToken: 0,
+      hospStatus: 0,
+      hospRegStatus: 0,
+      createdAt: 0,
+      updatedAt: 0,
+      __v: 0,
+    })
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)) as HospitalInfo[];

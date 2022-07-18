@@ -561,8 +561,18 @@ hospitalRouter.get('/:hospitalName/detail', async (req, res, next) => {
 
     const hospInfo = await hospitalService.findHospitalByName(hospitalName);
 
-    const { name, address, businessHours, holiday, tag, keyword, image } =
-      hospInfo;
+    const {
+      name,
+      address,
+      businessHours,
+      holiday,
+      tag,
+      keyword,
+      image,
+      phoneNumber,
+      hospitalCapacity,
+      director,
+    } = hospInfo;
 
     const tagIds = tag?.map((data) => data.toString()) as string[];
 
@@ -576,6 +586,9 @@ hospitalRouter.get('/:hospitalName/detail', async (req, res, next) => {
       tag: tagsData,
       keyword,
       image,
+      phoneNumber,
+      hospitalCapacity,
+      director,
     };
     res
       .status(200)
