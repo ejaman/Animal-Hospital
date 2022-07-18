@@ -197,7 +197,7 @@ class UserService {
     const userStatus = user.userStatus;
 
     if (userStatus === UserStatus.EXPIRED) {
-      throw new Error('탈퇴한 사용자 입니다.');
+      return true;
     } else {
       return false;
     }

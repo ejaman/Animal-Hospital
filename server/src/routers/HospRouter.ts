@@ -4,6 +4,7 @@ import {
   hospitalService,
   hospServiceService,
   hospStatusService,
+  hospTagService,
 } from '../services';
 import { HospLoginRequired, onlyHospOwner } from '../middlewares';
 import { upload } from '../utils';
@@ -563,16 +564,22 @@ hospitalRouter.get('/:hospitalName/detail', async (req, res, next) => {
     const { name, address, businessHours, holiday, tag, keyword, image } =
       hospInfo;
 
+    const tagIds = tag?.map((data) => data.toString()) as string[];
+
+    const tagsData = await hospTagService.findByIds(tagIds);
+
     const hospDetailInfo = {
       name,
       address,
       businessHours,
       holiday,
-      tag,
+      tag: tagsData,
       keyword,
       image,
     };
-    res.status(200).json({ data: {}, message: hospDetailInfo });
+    res
+      .status(200)
+      .json({ data: { hospDetailInfo: hospDetailInfo }, message: '' });
   } catch (error) {
     next(error);
   }
