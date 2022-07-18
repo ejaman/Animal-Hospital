@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components';
-import {Link} from 'react-router-dom';
+import {Link, useSearchParams} from 'react-router-dom';
 import axios from 'axios';
 
-// import overnight from '../../assets/tag-img/overnight.png';
+// import overnight from '../../';
 
 const TagImg = styled.img`
   width: 40px;
@@ -14,7 +14,7 @@ interface ITagValue {
   idx: number;
 }
 
-const TagWrapper = styled(Link)<ITagValue>`
+const TagWrapper = styled.div<ITagValue>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -47,49 +47,22 @@ const TagName = styled.p`
   margin-bottom: 10px;
 `;
 
-export default function Tags() {
-  // 가데이터
-  // const tagData = [
-  //   {
-  //     tag: '24시간',
-  //     image: 'https://cdn-icons.flaticon.com/png/512/654/premium/654994.png?token=exp=1658121186~hmac=64d195ab0ababd90d4eec7256144d55b'
-  //   },
-  //   {
-  //     tag: '야간진료',
-  //     image: 'https://cdn-icons.flaticon.com/png/512/2387/premium/2387930.png'
-  //   },
-  //   {
-  //     tag: '강아지 전문',
-  //     image: 'https://cdn-icons-png.flaticon.com/512/7309/7309083.png'
-  //   },
-  //   {
-  //     tag: '고양이 전문',
-  //     image: 'https://cdn-icons.flaticon.com/png/512/2138/premium/2138241.png'
-  //   },
-  //   {
-  //     tag: '특수동물',
-  //     image: 'https://cdn-icons-png.flaticon.com/512/616/616898.png'
-  //   },
-  //   {
-  //     tag: '호텔',
-  //     image: 'https://cdn-icons.flaticon.com/png/512/3009/premium/3009710.png'
-  //   },
-  //   {
-  //     tag: '미용',
-  //     image: 'https://cdn-icons.flaticon.com/png/512/4416/premium/4416844.png'
-  //   },
-  //   {
-  //     tag: '중성화 전문',
-  //     image: 'https://cdn-icons.flaticon.com/png/512/2517/premium/2517449.png'
-  //   },
-  //   {
-  //     tag: 'MRI',
-  //     image: 'https://cdn-icons.flaticon.com/png/512/3213/premium/3213768.png'
-  //   },
-  // ];
+interface ITagData {
+  _id: string
+  name: string,
+  image: string,
+  createdAt: string,
+  updatedAt: string,
+  __v: number
+}
 
-  const [tagData, setTagData] = useState<object[]>([]); // 태그 데이터 모음
-  const [tag, setTag] = useState<number>(-1); // 클릭 된 태그의 인덱스
+export default function Tags() {
+
+  const [tagData, setTagData] = useState<ITagData[]>([]); // 태그 데이터 모음
+  const [tag, setTag] = useState<number>(0); // 클릭 된 태그의 인덱스
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [paramsTag, setParamsTag] = useState<string | null>('');
+  
 
   useEffect(() => {
     async function getData() {
@@ -98,23 +71,28 @@ export default function Tags() {
           'Content-Type': 'application/json',
         }
       });
-      console.log(res);
       setTagData([...res.data]);
     }
     getData();
-    console.log(tagData);
   }, []);
 
+  useEffect(() => {
+    setParamsTag(searchParams.get('tagName'));
+  }, [searchParams])
+
+  function handleTagClick(category: ITagData ,idx: number) {
+    setTag(idx);
+    setSearchParams({page: '1', perPage: '4', tagName: category.name});
+  }
 
   return (
     <>
-        {tagData.map((category:any, idx:number) => {
+        {tagData.map((category: ITagData, idx:number) => {
           return (
             <TagWrapper
-              key={idx}
+              key={category._id}
               idx={idx}
-              to='#'
-              onClick={() => setTag(idx)}
+              onClick={() => handleTagClick(category, idx)}
               tag={tag}
             >
               <TagImg src={category.image} />

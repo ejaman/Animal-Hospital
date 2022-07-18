@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {Link} from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faCircleUser} from '@fortawesome/free-solid-svg-icons';
@@ -93,16 +93,14 @@ const ProfileBtn = styled.div<IIdx>`
   cursor: pointer;
   padding-left: 6px;
   line-height: 35px;
-  border-top-left-radius: ${props => props.num === 'first' && '10px'};
-  border-top-right-radius: ${props => props.num === 'first' && '10px'};
-  border-bottom-right-radius: ${props => props.num === 'last' && '10px'};
-  border-bottom-left-radius: ${props => props.num === 'last' && '10px'};
-  /* ${props => props.num === 'first' &&
-    css `
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-    `
-  } */
+  ${props => props.num === 'first' && css `
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  `}
+  ${props => props.num === 'last' && css `
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+  `}
   font-size: 14px;
   font-weight: 700;
   color: black;
