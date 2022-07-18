@@ -9,6 +9,10 @@ export interface Address {
   address2: string;
 }
 
+export interface SearchOptions {
+  [key: string]: string | mongoose.Types.ObjectId;
+}
+
 export interface addressCoordinate {
   x: string;
   y: string;
@@ -121,6 +125,23 @@ export class HospitalModel {
       option
     )) as HospitalInfo;
     return updatedHospital;
+  }
+
+  async countHospitals(searchOptions: SearchOptions): Promise<number> {
+    const counts = await Hospital.countDocuments(searchOptions);
+    return counts;
+  }
+
+  async findByOption(
+    page: number,
+    perPage: number,
+    searchOptions: SearchOptions
+  ): Promise<HospitalInfo[]> {
+    const users = (await Hospital.find(searchOptions)
+      .sort({ createdAt: -1 })
+      .skip(perPage * (page - 1))
+      .limit(perPage)) as HospitalInfo[];
+    return users;
   }
 }
 
