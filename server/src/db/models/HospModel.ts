@@ -48,6 +48,7 @@ export interface HospitalInfo {
   refreshToken?: string;
   hospStatus?: mongoose.Types.ObjectId;
   hospRegStatus?: mongoose.Types.ObjectId;
+  starRating?: number;
   _id: mongoose.Types.ObjectId;
 }
 

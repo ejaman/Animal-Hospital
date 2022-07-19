@@ -572,6 +572,7 @@ hospitalRouter.get('/:hospitalName/detail', async (req, res, next) => {
       phoneNumber,
       hospitalCapacity,
       director,
+      starRating,
     } = hospInfo;
 
     const tagIds = tag?.map((data) => data.toString()) as string[];
@@ -589,6 +590,7 @@ hospitalRouter.get('/:hospitalName/detail', async (req, res, next) => {
       phoneNumber,
       hospitalCapacity,
       director,
+      starRating,
     };
     res
       .status(200)
@@ -635,6 +637,27 @@ hospitalRouter.get('/list/main', async (req, res, next) => {
       },
       message: '',
     });
+  } catch (error) {
+    next(error);
+  }
+});
+
+hospitalRouter.get('/detail', HospLoginRequired, async (req, res, next) => {
+  try {
+    const hospInfo = await hospitalService.findHospitalByName(
+      req.currentHospName
+    );
+
+    const { name, address, businessHours, holiday, tag, keyword, image } =
+      hospInfo;
+
+    const tagIds = tag?.map((data) => data.toString()) as string[];
+
+    const tagsData = await hospTagService.findByIds(tagIds);
+
+    res
+      .status(200)
+      .json({ data: { hospDetailInfo: hospInfo, tag: tagsData }, message: '' });
   } catch (error) {
     next(error);
   }
