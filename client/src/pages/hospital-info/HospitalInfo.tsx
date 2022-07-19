@@ -26,28 +26,28 @@ export default function HospitalInfo() {
 
   // 폼 내용들은 입력 시마다 내용이 곧바로 저장되므로 추후 debouncing 적용 예정
 
-  // useEffect(() => {
-  //   async function getData() {
-  //     try {
-  //       //응답 성공
-  //       if (info.hospitalState === "비정상") { // 초기 수정 필요할 때
-  //         // api
-  //         const API_URL = 'localhost:5100/hospital/addtional-info';
-  //         const response = await axios.get(API_URL);
-  //         console.log("응답 성공", response);
-  //       } else { // 초기 수정 완료
-  //         // 
-  //         const API_URL = 'localhost:5100/hospital/detail';
-  //         const response = await axios.get(API_URL);
-  //        console.log("응답 성공", response);
-  //       }
-  //     } catch (error) {
-  //       //응답 실패
-  //       console.error("응답 실패", error);
-  //     }
-  //   }
-  //   getData();
-  // }, []);
+  useEffect(() => {
+    async function getData() {
+      try {
+        //응답 성공
+        if (info.hospitalState === "추가정보 미기입") { // 초기 수정 필요할 때
+          // api
+          const API_URL = 'localhost:5100/hospital/addtional-info';
+          const response = await axios.get(API_URL);
+          console.log("응답 성공", response);
+        } else { // 초기 수정 완료s
+          // 
+          const API_URL = 'localhost:5100/hospital/';
+          const response = await axios.get(API_URL);
+         console.log("응답 성공", response);
+        }
+      } catch (error) {
+        //응답 실패
+        console.error("응답 실패", error);
+      }
+    }
+    getData();
+  }, []);
   
 
   /* elements */
@@ -74,7 +74,7 @@ export default function HospitalInfo() {
     holiday: [],
     hospitalCapacity: 0,
     tag: [],
-    keyword: [""],
+    keyword: [],
     image: ""
   });
   const [hospitalServiceInfo, setHospitalServiceInfo] = useState<HospitalServiceInfoType>({
@@ -153,8 +153,12 @@ export default function HospitalInfo() {
       $HashWrapInner.addEventListener('click', () => {
         $HashWrapOuter?.removeChild($HashWrapInner)
         console.log($HashWrapInner.innerHTML)
-        console.log("newKeyword:", newKeyword)
         setKeyword(keyword!.filter((newKeyword: any) => newKeyword))
+        setHospitalInfo(prev => {
+          return {
+            ...prev, keyword: keyword as string[]
+          }
+        })
       })
 
       /* enter's key code: 13 */
@@ -165,20 +169,25 @@ export default function HospitalInfo() {
         else if ($HashWrapOuter && newKeyword && keyword!.length < AVAILABLE_KEYWORD_COUNTS) {
           $HashWrapInner.innerHTML = '#' + newKeyword;
           $HashWrapOuter.appendChild($HashWrapInner);
-          setKeyword(current => [...current!, newKeyword]);
+          const keywords = [...keyword!, newKeyword];
+          setHospitalInfo(prev => {
+            return {
+              ...prev, keyword: keywords
+            }
+          })
           $keywordNumWarning.textContent = "키워드가 정상적으로 등록되었습니다."
+          setNewKeyword('');
         }
         else {
           $keywordNumWarning.textContent = `키워드는 ${AVAILABLE_KEYWORD_COUNTS}개까지 등록 가능합니다.`
           setNewKeyword('');
           console.log("초과 등록 실패");
         }
-        console.log("keyword:", keyword, ", newkeyword:", newKeyword);
       }
     },
     [keyword, newKeyword, $HashWrapInner, $HashWrapOuter, $keywordNumWarning]
   )
-  
+
   const onServiceSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log("서비스 추가 버튼 클릭");
