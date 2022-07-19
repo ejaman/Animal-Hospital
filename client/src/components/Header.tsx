@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import styled, {css} from 'styled-components';
 import {Link} from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -110,12 +110,23 @@ const ProfileBtn = styled.div<IIdx>`
   }
 `;
 
-export default function Header() {
+interface ISearch {
+  searchBox: boolean,
+}
+
+export default function Header({searchBox}: ISearch) {
   const [isLogin, setIsLogin] = useState<boolean>(!!localStorage.getItem('token'));
   // const [isLogin, setIsLogin] = useState<boolean>(true); // 로그인 되었다고 가정한 가데이터
   const [profile, setProfile] = useState<boolean>(false); // 계정 아이콘 클릭 여부 체크
+  const [role, setRole] = useState<string>(''); // TODO: 롤 따라서 마이페이지 이동
+  
+  const haveSearch = searchBox;
 
-  // 마이페이지 클릭 시 role에 맞춰서 마이페이지 이동
+  useEffect(() => {
+    // TODO: role 정한 것 반영
+  }, [])
+
+  // TODO: 마이페이지 클릭 시 role에 맞춰서 마이페이지 이동
   function handleNavigateMypage() {
 
   }
@@ -132,9 +143,9 @@ export default function Header() {
       <div>
         <HeaderContainer>
           <LogoContainer>
-            <Logo to='/'>동물병원</Logo>
+            <Logo to='/'>펫닥터</Logo>
           </LogoContainer>
-          <Search />
+          {haveSearch && <Search />}
           <BtnContainer>
             {!isLogin ?
               <LoginBtn to='/login'>로그인</LoginBtn> :

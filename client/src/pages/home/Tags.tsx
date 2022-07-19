@@ -64,9 +64,9 @@ interface IProps {
 export default function Tags({setTagState}: IProps) {
 
   const [tagData, setTagData] = useState<ITagData[]>([]); // 태그 데이터 모음
-  const [tag, setTag] = useState<number>(0); // 클릭 된 태그의 인덱스
+  const [tag, setTag] = useState<number>(2); // 클릭 된 태그의 인덱스
   const [searchParams, setSearchParams] = useSearchParams();
-  const [paramsTag, setParamsTag] = useState<string>('24시');
+  const [paramsTag, setParamsTag] = useState<string>('강이지전문');
   
 
   useEffect(() => {
@@ -77,11 +77,12 @@ export default function Tags({setTagState}: IProps) {
         }
       });
       setTagData([...res.data]);
+      console.log(res);
     }
     getData();
-    console.log(tagData);
-    setParamsTag(tagData[tag].name);
-    setSearchParams({page: '1', perPage: '4', tagName: paramsTag});
+    // console.log(tagData);
+    // setParamsTag(tagData[tag]?.name); // TODO: 새로고침 하면 값 못 받는 문제
+    setSearchParams({page: '2', perPage: '4', tagName: paramsTag});
   }, []);
 
   useEffect(() => {
