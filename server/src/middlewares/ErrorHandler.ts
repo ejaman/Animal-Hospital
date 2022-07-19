@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from 'express';
 
 
 function errorHandler(
-  error: CustomError,
+  error: Error,
   req: Request,
   res: Response,
   next: NextFunction
