@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {Link, useSearchParams} from 'react-router-dom';
 import axios from 'axios';
@@ -19,7 +19,8 @@ const TagWrapper = styled.div<ITagValue>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: ${props => props.idx === props.tag ? 'black' : props.theme.palette.gray};
+  color: ${(props) =>
+    props.idx === props.tag ? 'black' : props.theme.palette.gray};
   transition: 0.2s all ease-in-out;
   cursor: pointer;
   border-bottom: 3px solid ${props => props.idx === props.tag ? 'black' : 'white'};
@@ -113,5 +114,5 @@ export default function Tags({setTagState}: IProps) {
           )
         })}
     </>
-  )
+  );
 }

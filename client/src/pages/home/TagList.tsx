@@ -1,4 +1,5 @@
 import React   from 'react'
+
 import styled from 'styled-components';
 
 import Tags from './Tags';
@@ -21,5 +22,5 @@ export default function TagList({setTagState}: IProps) {
         <Tags setTagState={(tag:string) => setTagState(tag)} />
       </TagContainer>
     </>
-  )
+  );
 }
