@@ -148,11 +148,12 @@ export async function getReviewCTR (req: Request,
 
         const {reviewId, userId, targetHospital} = req.body;
         const currentUserId = req.currentUserId;
+        const userRole = req.userRole;
         const review = await reviewService.getEachReview(reviewId);
         
 
         // 사용자 및 삭제 대상 병원 확인
-        if(userId === currentUserId && targetHospital === review.targetHospital){
+        if(userRole === "admin"||userId === currentUserId && targetHospital === review.targetHospital){
           const deleteResult = await reviewService.deleteReviewData(reviewId);
           res.status(200).json(deleteResult);
         } else {
