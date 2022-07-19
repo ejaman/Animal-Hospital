@@ -13,6 +13,7 @@ import SearchBar from "./SearchBar";
 const token = localStorage.getItem("token");
 function AdminUserList() {
   const [datas, setDatas] = useState<UserInfoType[]>([]);
+  const [search, setSearch] = useState<string>();
   useEffect(() => {
     axios
       .get("http://localhost:5100/api/userlist", {
@@ -26,15 +27,27 @@ function AdminUserList() {
       });
   }, []);
 
+  const SearchLists = search
+    ? datas.filter((data: any) =>
+        data.email.includes(`${search}`.toLocaleLowerCase())
+      )
+    : datas;
+
   return (
     <ListContainer>
-      <SearchBar datas={datas} />
+      <SearchBar
+        datas={datas}
+        setSearch={(search: string) => setSearch(search)}
+      />
       <Header>
         <InfoText>역할</InfoText>
         <InfoText>이름</InfoText>
         <InfoText>아이디</InfoText>
         <InfoText>상태</InfoText>
       </Header>
+      {SearchLists.map((data: any, i: number) => (
+        <UserCard key={i} data={data} />
+      ))}
     </ListContainer>
   );
 }
