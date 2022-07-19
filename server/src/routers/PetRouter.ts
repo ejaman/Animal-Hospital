@@ -111,8 +111,7 @@ petRouter.patch('/update', loginRequired, upload.single('image'),async(req,res,n
         console.log(image)
 
 
-        const pet = await petService.getPetData(petId)
-
+       
         if(owner === currentOwner) {
 
             const petInfoRequired = {owner, petId};
