@@ -9,13 +9,16 @@ const TagContainer = styled.div`
   padding: 0 90px;
 `;
 
-export default function TagList() {
+interface IProps {
+  setTagState: (tag: string) => void;
+}
 
+export default function TagList({setTagState}: IProps) {
 
   return (
     <>
       <TagContainer>
-        <Tags />
+        <Tags setTagState={(tag:string) => setTagState(tag)} />
       </TagContainer>
     </>
   )

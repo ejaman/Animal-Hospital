@@ -56,12 +56,16 @@ interface ITagData {
   __v: number
 }
 
-export default function Tags() {
+interface IProps {
+  setTagState: (tag: string) => void;
+}
+
+export default function Tags({setTagState}: IProps) {
 
   const [tagData, setTagData] = useState<ITagData[]>([]); // 태그 데이터 모음
   const [tag, setTag] = useState<number>(0); // 클릭 된 태그의 인덱스
   const [searchParams, setSearchParams] = useSearchParams();
-  const [paramsTag, setParamsTag] = useState<string | null>('');
+  const [paramsTag, setParamsTag] = useState<string>('24시');
   
 
   useEffect(() => {
@@ -74,11 +78,19 @@ export default function Tags() {
       setTagData([...res.data]);
     }
     getData();
+    console.log(tagData);
+    setParamsTag(tagData[tag].name);
+    setSearchParams({page: '1', perPage: '4', tagName: paramsTag});
   }, []);
 
   useEffect(() => {
-    setParamsTag(searchParams.get('tagName'));
+    const paramsData = searchParams.get('tagName');
+    paramsData && setParamsTag(paramsData);
   }, [searchParams])
+
+  useEffect(() => {
+    setTagState(paramsTag);
+  }, [paramsTag])
 
   function handleTagClick(category: ITagData ,idx: number) {
     setTag(idx);
