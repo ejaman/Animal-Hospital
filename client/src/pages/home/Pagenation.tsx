@@ -12,7 +12,6 @@ interface IProps {
 export default function Pagination({ total, limit, page, setPage }: IProps) {
   const numPages = Math.ceil(total / limit);
   const pageArr = Array.from({length: numPages}, (v: undefined, i: number) => i);
-  console.log(pageArr);
 
   return (
     <>
