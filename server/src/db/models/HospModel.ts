@@ -67,6 +67,21 @@ export interface ToUpdate {
   };
 }
 
+export interface ToUpdateByName {
+  hospitalName: string;
+  update: {
+    [key: string]:
+      | string
+      | number
+      | Address
+      | addressCoordinate
+      | number[]
+      | string[]
+      | object[]
+      | mongoose.Types.ObjectId;
+  };
+}
+
 export interface HospitalInfoRequired {
   hospitalId: string;
   currentPassword: string;
@@ -128,6 +143,21 @@ export class HospitalModel {
     return updatedHospital;
   }
 
+  async updateByName(
+    hospitalName: string,
+    update: Partial<HospitalInfo>
+  ): Promise<HospitalInfo> {
+    const filter = { name: hospitalName };
+    const option = { returnOriginal: false };
+
+    const updatedHospital = (await Hospital.findOneAndUpdate(
+      filter,
+      update,
+      option
+    )) as HospitalInfo;
+    return updatedHospital;
+  }
+
   async countHospitals(searchOptions: SearchOptions): Promise<number> {
     const counts = await Hospital.countDocuments(searchOptions);
     return counts;
@@ -151,6 +181,32 @@ export class HospitalModel {
       hospRegStatus: 0,
       createdAt: 0,
       updatedAt: 0,
+      __v: 0,
+    })
+      .sort({ createdAt: -1 })
+      .skip(perPage * (page - 1))
+      .limit(perPage)) as HospitalInfo[];
+    return users;
+  }
+
+  async findByOptionFromAdmin(
+    page: number,
+    perPage: number,
+    searchOptions: SearchOptions
+  ): Promise<HospitalInfo[]> {
+    const users = (await Hospital.find(searchOptions, {
+      _id: 0,
+      director: 0,
+      password: 0,
+      addressCoordinate: 0,
+      businessHours: 0,
+      holiday: 0,
+      hospitalCapacity: 0,
+      tag: 0,
+      keyword: 0,
+      image: 0,
+      refreshToken: 0,
+      starRating: 0,
       __v: 0,
     })
       .sort({ createdAt: -1 })

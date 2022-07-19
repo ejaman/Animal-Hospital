@@ -252,6 +252,19 @@ class HospitalService {
     );
     return users;
   }
+
+  async getHospitalsByAdmin(
+    page: number,
+    perPage: number,
+    searchOptions: SearchOptions
+  ): Promise<HospitalInfo[]> {
+    const users = await this.hospitalModel.findByOptionFromAdmin(
+      page,
+      perPage,
+      searchOptions
+    );
+    return users;
+  }
 }
 
 const hospitalService = new HospitalService(hospitalModel);
