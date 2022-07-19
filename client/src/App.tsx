@@ -27,6 +27,7 @@ function App() {
         <Route element={<LayoutSearch />}>
           <Route path="/" element={<Home />} />
           <Route path="detail" element={<Detail />} />
+          <Route path="/hospital/:hospitalName/detail" element={<Detail />} />
         </Route>
         <Route element={<LayoutMypage />}>
           <Route path="/user-mypage" element={<UserMypage />} />
