@@ -4,11 +4,10 @@ import { NextFunction, Request, Response } from 'express';
 // error~next의 4개 인자를 설정해 주어야 함.
 
 class CustomError extends Error {
-  statusCode : number
-  constructor(message : string, statusCode : number ) {
+  statusCode: number;
+  constructor(message: string, statusCode: number = 500) {
     super(message);
-    this.statusCode = 500;
-
+    this.statusCode = statusCode;
   }
 }
 function errorHandler(
@@ -20,7 +19,9 @@ function errorHandler(
   // 터미널에 노란색으로 출력됨.
   console.log('\x1b[33m%s\x1b[0m', error.stack);
 
-  res.status(error.statusCode).json({ result: 'error', message: error.message });
+  res
+    .status(error.statusCode)
+    .json({ result: 'error', message: error.message });
 }
 
-export { errorHandler };
+export { errorHandler, CustomError };

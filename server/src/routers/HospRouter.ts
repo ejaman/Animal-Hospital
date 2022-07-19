@@ -6,7 +6,7 @@ import {
   hospStatusService,
   hospTagService,
 } from '../services';
-import { HospLoginRequired, onlyHospOwner } from '../middlewares';
+import { adminOnly, HospLoginRequired, onlyHospOwner } from '../middlewares';
 import { upload } from '../utils';
 import mongoose, { model } from 'mongoose';
 
@@ -662,5 +662,41 @@ hospitalRouter.get('/detail', HospLoginRequired, async (req, res, next) => {
     next(error);
   }
 });
+
+hospitalRouter.patch(
+  '/admin/:hospitalName',
+  // adminOnly,
+  async (req, res, next) => {
+    try {
+      if (_.isEmpty(req.body)) {
+        throw new Error(
+          'headers의 Content-Type을 application/json으로 설정해주세요'
+        );
+      }
+      const { hospitalName } = req.params;
+      const { hospRegStatus, hospStatus } = req.body;
+
+      // 위 데이터가 undefined가 아니라면, 즉, 프론트에서 업데이트를 위해
+      // 보내주었다면, 업데이트용 객체에 삽입함.
+      const toUpdate = {
+        ...(hospRegStatus && { hospRegStatus }),
+        ...(hospStatus && { hospStatus }),
+      };
+
+      // 사용자 정보를 업데이트함.
+      const deleteHospInfo = await hospitalService.updateStatus(
+        hospitalName,
+        toUpdate
+      );
+
+      res.status(200).json({
+        data: { deleteHospInfo: deleteHospInfo },
+        message: '탈퇴하였습니다.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 export { hospitalRouter };
