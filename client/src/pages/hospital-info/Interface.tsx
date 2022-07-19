@@ -10,7 +10,7 @@ export interface HospitalInfoType {
     address2: string;
   };
   phoneNumber: string;
-  businessHours: string;
+  businessHours: string[];
   businessNumber: string;
   licenseNumber: string;
   holiday: string[];

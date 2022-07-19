@@ -7,7 +7,8 @@ import { SubTitle,
   UploadFileLabel,
   UploadFileInput,
   CategoryLabel,
-  CategoryInput,
+  DayLabel,
+  TimeLabel,
   KeywordInput
 } from "./Style";
 import { HospitalInfoType, HospitalServiceInfoType } from "./Interface";
@@ -67,10 +68,10 @@ export default function HospitalInfo() {
       address2: ""
     },
     phoneNumber: "",
-    businessHours: "",
+    businessHours: [],
     businessNumber: "",
     licenseNumber: "",
-    holiday: [""],
+    holiday: [],
     hospitalCapacity: 0,
     tag: [],
     keyword: [""],
@@ -83,7 +84,6 @@ export default function HospitalInfo() {
     serviceCapacity: 0
   });
   const [serviceList, setServiceList] = useState<any[]>([]);
-  const [image, setImage] = useState('');
   const [keyword, setKeyword] = useState<string[]|undefined>([]);
   const [newKeyword, setNewKeyword] = useState('');
   const [day, setDay] = useState<string[]|undefined>([]);
@@ -104,7 +104,9 @@ export default function HospitalInfo() {
     return new Promise((resolve: any) => {
       if (reader) {
         reader.onload = () => {
-        setImage(reader.result as string);
+        setHospitalInfo(prev => {
+          return { ...prev, image: reader.result as string}
+        });
         resolve();
         };
       }
@@ -163,7 +165,6 @@ export default function HospitalInfo() {
     [keyword, newKeyword, $HashWrapInner, $HashWrapOuter, $keywordNumWarning]
   )
   
-  // React.FormEvent<HTMLFormElement>
   const onServiceSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log("서비스 추가 버튼 클릭");
@@ -175,7 +176,6 @@ export default function HospitalInfo() {
     serviceDesc: "",
     serviceCapacity: 0
   })
-    // 
     console.log("serviceList:", serviceList);
   }
 
@@ -187,26 +187,8 @@ export default function HospitalInfo() {
       '버튼이 클릭되었습니다(확인용)'
     )
   };
-  
-  const onClickDay= (e: MouseEvent<HTMLElement>) => {
-    // const dayId = e.currentTarget.id;
-    // console.log(dayId); // 월, 화, 수, ...
-    // // 리액트스럽게 해보고 싶은데 state 활용해서 클릭된 요일만 배열에 담기고 클릭 상태가 아닌 요일은 배열에서 빠지게...일단 이렇게 구현해봄
-    // // const selectDay = document.querySelector(`#${dayId}`);
-    // // useEffect();
-    // if (day!.find((week) => week === dayId)) { // 이미 휴무일 배열에 있는 요일이면 제거하고 클릭 상태를 해제한다.
-    //   const dayIndex = day!.indexOf(dayId); // 인덱스값 찾기
-    //   setDay((current) => current!.filter((_, index) =>  index !== dayIndex))
-    //     // const [id, ...rest] = current;
-    //     // return rest
-    //   // selectDay
-    // } else { // 휴무일 배열에 없는 요일이면 추가한다.
-    //   setDay([...day!, dayId]); 
-    // }
-    // console.log("휴무일 배열:", day);
-  }
 
-  const checkHandler = ({ target }: any) => {
+  const checkCategoryHandler = ({ target }: any) => {
     setIsChecked(!isChecked);
     checkedCategoryHandler(target.parentNode, target.value, target.checked)
   }
@@ -234,23 +216,65 @@ export default function HospitalInfo() {
       return { ...prev, tag: categoryList }
     })
   }
-
-  const checkedDayHandler = () => {
-    // if (isChecked) {
-    //   setDay([...day!, code]);
-    // } else if (!isChecked && day?.find(prop => prop === code)) {
-    //   const filter = day.filter(prop => prop !== code);
-    //   setDay([...filter]);
-    // }
-
-    // const id = e.currentTarget.id;
-    // console.log(id);
+  
+  const checkDayHandler = ({ target }: any) => {
+    setIsChecked(!isChecked);
+    checkedDayHandler(target.parentNode, target.value, target.checked)
   }
 
-  const onClickTime = (e: MouseEvent<HTMLElement>) => {
-    const id = e.currentTarget.id;
-    console.log(id);
+  const checkedDayHandler = (box: any, id: any, isChecked: any) => {
+    console.log(box, id, isChecked);
+    const dayList = [...hospitalInfo.holiday!];
+    if (isChecked) {
+      dayList.push(id);
+      box.style.borderColor = theme.palette.blue;
+      box.style.color = theme.palette.blue;
+    } else if (!isChecked && dayList.find(i => i === id)) {
+      box.style.borderColor = theme.palette.lightgray;
+      box.style.color = "black";
+      const index = dayList.indexOf(id);
+      console.log(index);
+      if (index !== -1) {
+        dayList.splice(index, 1);
+      }
+    }
+    if (dayList[0] === "") {
+      dayList.splice(0, 1);
+    }
+    setHospitalInfo(prev => {
+      return { ...prev, holiday: dayList }
+    })
   }
+
+  const checkBusinessHoursHandler = ({ target }: any) => {
+    setIsChecked(!isChecked);
+    checkedBusinessHoursHandler(target.parentNode, target.value, target.checked)
+  }
+
+  const checkedBusinessHoursHandler = (box: any, id: any, isChecked: any) => {
+    console.log(box, id, isChecked);
+    const businessHoursList = [...hospitalInfo.businessHours!];
+    if (isChecked) {
+      businessHoursList.push(id);
+      box.style.borderColor = theme.palette.blue;
+      box.style.color = theme.palette.blue;
+    } else if (!isChecked && businessHoursList.find(i => i === id)) {
+      box.style.borderColor = theme.palette.lightgray;
+      box.style.color = "black";
+      const index = businessHoursList.indexOf(id);
+      console.log(index);
+      if (index !== -1) {
+        businessHoursList.splice(index, 1);
+      }
+    }
+    if (businessHoursList[0] === "") {
+      businessHoursList.splice(0, 1);
+    }
+    setHospitalInfo(prev => {
+      return { ...prev, businessHours: businessHoursList }
+    })
+  }
+
 
   const withdrawButtonHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -276,7 +300,7 @@ export default function HospitalInfo() {
         "address2": "이진수 동물병원"
       },
       "phoneNumber": "010-0000-0000",
-      "businessHours": "24",
+      "businessHours": [""],
       "businessNumber": "546521354",
       "licenseNumber": "XXXXXXXXX",
       "holiday": [""],
@@ -410,7 +434,7 @@ export default function HospitalInfo() {
                   />
                 </div>
                 <div>
-                  {image && <img src={image} width="280px" alt="" />}
+                  {hospitalInfo.image && <img src={hospitalInfo.image} width="280px" alt="" />}
                 </div>
               </Row>
               <div style={{ marginBottom: "0.5rem" }} />
@@ -449,7 +473,7 @@ export default function HospitalInfo() {
                       <input type="checkbox"
                         id={category}
                         key={category}
-                        onChange={e => checkHandler(e)}
+                        onChange={e => checkCategoryHandler(e)}
                         value={category}
                         hidden
                       />
@@ -497,11 +521,19 @@ export default function HospitalInfo() {
                     style={{ marginBottom: "0.5rem" }}
                   >
                     {DAY_LIST.map((day) => (
-                      <Button
-                      id={day}
-                      key={day}
-                      onClick={onClickDay}
-                      >{day}</Button>
+                      <DayLabel
+                        htmlFor={day}
+                        key={day+"L"}
+                      >
+                        <input type="checkbox"
+                          id={day}
+                          key={day}
+                          onChange={e => checkDayHandler(e)}
+                          value={day}
+                          hidden
+                        />
+                        {day}
+                      </DayLabel>
                     ))}
                 
                     {/* {dayList.map((day) => {
@@ -533,11 +565,18 @@ export default function HospitalInfo() {
                   <Row>시간 선택</Row>
                   <Row>
                     {TIME_LIST.map((time) => (
-                      <Button
-                        id={time}
-                        key={time}
-                        onClick={onClickTime}
-                      >{time}:00</Button>
+                      <TimeLabel
+                        htmlFor={time}
+                        key={time+"L"}
+                      >
+                        <input type="checkbox"
+                          id={time}
+                          key={time}
+                          onClick={checkBusinessHoursHandler}
+                          value={time}
+                          hidden
+                        />{time}:00
+                      </TimeLabel>
                     ))}
                   </Row>
                   <Row style={{ marginTop: "1rem" }}>

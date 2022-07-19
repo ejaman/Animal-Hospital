@@ -31,9 +31,6 @@ const UploadFileInput = styled.input`
 `
 
 /* category css */
-const CategoryInput = styled.input`
-`
-
 const CategoryLabel = styled.label`
   display: inline-block;
   padding: .5em .8em;
@@ -49,12 +46,48 @@ const CategoryLabel = styled.label`
     border-color: ${theme.palette.blue};
     color: ${theme.palette.blue};
   }
-  
+};
+`
+
+/* day css */
+const DayLabel = styled.label`
+  display: inline-block;
+  padding: .5em .8em;
+  fontSize: inherit;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid ${theme.palette.lightgray};
+  border-radius: .25em;
+  color: black;
+
+  :hover {
+    transition: 2ms ease-in;
+    border-color: ${theme.palette.blue};
+    color: ${theme.palette.blue};
+  }
+};
+`
+
+/* time css */
+const TimeLabel = styled.label`
+  display: inline-block;
+  padding: .5em .8em;
+  fontSize: inherit;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid ${theme.palette.lightgray};
+  border-radius: .25em;
+  color: black;
+
+  :hover {
+    transition: 2ms ease-in;
+    border-color: ${theme.palette.blue};
+    color: ${theme.palette.blue};
+  }
 };
 `
 
 /* keyword css */
-  
 const KeywordInput = styled.div`
   margin: 24px 24px;
   border-bottom: 2px solid ${theme.palette.gray};
@@ -98,4 +131,4 @@ const KeywordInput = styled.div`
   }
 `
 
-export { SubTitle, UploadFileLabel, UploadFileInput, CategoryLabel, CategoryInput, KeywordInput };
+export { SubTitle, UploadFileLabel, UploadFileInput, CategoryLabel, DayLabel, TimeLabel, KeywordInput };
