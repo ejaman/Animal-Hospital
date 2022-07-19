@@ -4,6 +4,7 @@ import {
   hospitalService,
   hospServiceService,
   hospStatusService,
+  hospTagService,
 } from '../services';
 import { HospLoginRequired, onlyHospOwner } from '../middlewares';
 import { upload } from '../utils';
@@ -560,10 +561,7 @@ hospitalRouter.get('/:hospitalName/detail', async (req, res, next) => {
 
     const hospInfo = await hospitalService.findHospitalByName(hospitalName);
 
-    const { name, address, businessHours, holiday, tag, keyword, image } =
-      hospInfo;
-
-    const hospDetailInfo = {
+    const {
       name,
       address,
       businessHours,
@@ -571,8 +569,47 @@ hospitalRouter.get('/:hospitalName/detail', async (req, res, next) => {
       tag,
       keyword,
       image,
+      starRating,
+    } = hospInfo;
+
+    const tagIds = tag?.map((data) => data.toString()) as string[];
+
+    const tagsData = await hospTagService.findByIds(tagIds);
+
+    const hospDetailInfo = {
+      name,
+      address,
+      businessHours,
+      holiday,
+      tag: tagsData,
+      keyword,
+      image,
+      starRating,
     };
-    res.status(200).json({ data: {}, message: hospDetailInfo });
+    res
+      .status(200)
+      .json({ data: { hospDetailInfo: hospDetailInfo }, message: '' });
+  } catch (error) {
+    next(error);
+  }
+});
+
+hospitalRouter.get('/detail', HospLoginRequired, async (req, res, next) => {
+  try {
+    const hospInfo = await hospitalService.findHospitalByName(
+      req.currentHospName
+    );
+
+    const { name, address, businessHours, holiday, tag, keyword, image } =
+      hospInfo;
+
+    const tagIds = tag?.map((data) => data.toString()) as string[];
+
+    const tagsData = await hospTagService.findByIds(tagIds);
+
+    res
+      .status(200)
+      .json({ data: { hospDetailInfo: hospInfo, tag: tagsData }, message: '' });
   } catch (error) {
     next(error);
   }
