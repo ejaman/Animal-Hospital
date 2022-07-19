@@ -174,6 +174,20 @@ class HospitalService {
     return updatedUser;
   }
 
+  async updateStatus(
+    hospitalName: string,
+    toUpdate: Partial<HospitalInfo>
+  ): Promise<HospitalInfo> {
+    const filter = { name: hospitalName };
+    const option = { returnOriginal: false };
+
+    const updatedUser = await this.hospitalModel.updateByName(
+      hospitalName,
+      toUpdate
+    );
+    return updatedUser;
+  }
+
   async setHospitalInfo(
     hospitalInfoRequired: HospitalInfoRequired,
     toUpdate: Partial<HospitalInfo>

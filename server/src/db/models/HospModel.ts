@@ -67,6 +67,21 @@ export interface ToUpdate {
   };
 }
 
+export interface ToUpdateByName {
+  hospitalName: string;
+  update: {
+    [key: string]:
+      | string
+      | number
+      | Address
+      | addressCoordinate
+      | number[]
+      | string[]
+      | object[]
+      | mongoose.Types.ObjectId;
+  };
+}
+
 export interface HospitalInfoRequired {
   hospitalId: string;
   currentPassword: string;
@@ -118,6 +133,21 @@ export class HospitalModel {
 
   async update({ hospitalId, update }: ToUpdate): Promise<HospitalInfo> {
     const filter = { _id: hospitalId };
+    const option = { returnOriginal: false };
+
+    const updatedHospital = (await Hospital.findOneAndUpdate(
+      filter,
+      update,
+      option
+    )) as HospitalInfo;
+    return updatedHospital;
+  }
+
+  async updateByName(
+    hospitalName: string,
+    update: Partial<HospitalInfo>
+  ): Promise<HospitalInfo> {
+    const filter = { name: hospitalName };
     const option = { returnOriginal: false };
 
     const updatedHospital = (await Hospital.findOneAndUpdate(
