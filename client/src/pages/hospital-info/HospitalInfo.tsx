@@ -466,7 +466,7 @@ export default function HospitalInfo() {
               <Row>
                 <SubTitle>병원 사진</SubTitle>
                 <div style={{ marginBottom: "0.5rem" }} />
-                <div style={{ marginBottom: "0.5rem" }}>
+                <div style={{ marginLeft: "0.5rem", marginBottom: "0.5rem" }}>
                   <UploadFileLabel htmlFor="uploadFile">업로드</UploadFileLabel>
                   <UploadFileInput type="file"
                     id="uploadFile"
@@ -486,13 +486,13 @@ export default function HospitalInfo() {
               <Row>
                 <Col>
                   <Row>
-                    <SubTitle>주소</SubTitle>
+                    <SubTitle style={{ marginBottom: "0.5rem" }}>주소</SubTitle>
                   </Row>
                   <Row>
                     <input
                       name="postalCode"
                       style={{
-                        marginBottom: "1rem",
+                        marginBottom: "0.5rem",
                         marginLeft: "0.5rem",
                         width: "6rem"
                       }}
@@ -505,7 +505,7 @@ export default function HospitalInfo() {
                     <input
                       name="address1"
                       style={{
-                        marginBottom: "1rem",
+                        marginBottom: "0.5rem",
                         marginLeft: "0.5rem",
                         width: "20rem"
                       }}
@@ -537,7 +537,7 @@ export default function HospitalInfo() {
                 </Modal>
               </Row>
               <Row>
-                <SubTitle>카테고리</SubTitle>
+                <SubTitle style={{ marginBottom: "0.5rem" }}>카테고리</SubTitle>
               </Row>
               <Row>
                 {CATEGORY_LIST.map((category) => (
@@ -559,7 +559,7 @@ export default function HospitalInfo() {
                 ))}
               </Row>
               <Row>
-                <SubTitle>키워드</SubTitle>
+                <SubTitle style={{ marginTop: "1rem" }}>키워드</SubTitle>
                 <span
                   style={{
                     marginLeft: "1rem",
@@ -587,12 +587,8 @@ export default function HospitalInfo() {
               </Row>
               <Row>
                 <Col>
-                  <SubTitle
-                    style={{
-                      marginBottom: "1rem"
-                    }}
-                  >영업시간</SubTitle>
-                  <Row>시간 선택</Row>
+                  <SubTitle>영업시간</SubTitle>
+                  <Row style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>시간 선택</Row>
                   <Row>
                     {TIME_LIST.map((time) => (
                       <TimeLabel
@@ -609,10 +605,8 @@ export default function HospitalInfo() {
                       </TimeLabel>
                     ))}
                   </Row>
-                  <Row>휴무일 선택</Row>
-                  <Row
-                    style={{ marginBottom: "0.5rem" }}
-                  >
+                  <Row style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>휴무일 선택</Row>
+                  <Row>
                     {DAY_LIST.map((day) => (
                       <DayLabel
                         htmlFor={day}
