@@ -429,9 +429,9 @@ export default function HospitalInfo() {
                   disabled
                 />
                 <Button
-                    style={{ marginLeft: "0.5rem" }}
-                    onClick={buttonHandler}
-                  >변경</Button>
+                  style={{ marginLeft: "0.5rem" }}
+                  onClick={buttonHandler}
+                >변경</Button>
               </Row>
               <Row>
                 <SubTitle>병원 연락처</SubTitle>
