@@ -29,20 +29,20 @@ const SumbitBtn = styled.button`
   border: none;
 `;
 function SearchBar({ datas }: any) {
-  const [name, setName] = useState<string>();
+  const [email, setEmail] = useState<string>();
   const formRef = useRef<HTMLFormElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-  const SearchLists = datas.filter((data: any) =>
-    data.userName.includes(`${name}`)
-  );
+  const SearchLists = email
+    ? datas.filter((data: any) => data.email.includes(`${email}`))
+    : datas;
 
   // datas.map((data: any) => console.log(data.userName));
   const onSubmit = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    console.log(searchRef.current?.value);
-    setName(searchRef.current?.value);
+    setEmail(searchRef.current?.value);
     formRef.current?.reset();
   };
+
   return (
     <Container>
       <Searchbar ref={formRef}>
@@ -50,6 +50,7 @@ function SearchBar({ datas }: any) {
         <SearchInput ref={searchRef} type="text" />
         <SumbitBtn onClick={onSubmit}></SumbitBtn>
       </Searchbar>
+
       {SearchLists.map((data: any, i: number) => (
         <UserCard key={i} data={data} />
       ))}
