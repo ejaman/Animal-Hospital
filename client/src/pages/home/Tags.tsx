@@ -1,19 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
-import {
-  faMoon,
-  faDove,
-  faHotel,
-  faScissors,
-  faMarsAndVenus,
-  faDog,
-  faCat,
-  faXRay,
-} from '@fortawesome/free-solid-svg-icons';
-import { faEarlybirds } from '@fortawesome/free-brands-svg-icons';
-import { CustomAxiosGet } from '../../common/CustomAxios';
+import {Link, useSearchParams} from 'react-router-dom';
+import axios from 'axios';
+
+// import overnight from '../../';
 
 const TagImg = styled.img`
   width: 40px;
@@ -24,7 +14,7 @@ interface ITagValue {
   idx: number;
 }
 
-const TagWrapper = styled(Link)<ITagValue>`
+const TagWrapper = styled.div<ITagValue>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -58,72 +48,69 @@ const TagName = styled.p`
   margin-bottom: 10px;
 `;
 
-export default function Tags() {
-  // 가데이터
-  const tagData = [
-    {
-      tag: '24시간',
-      image: 'https://cdn-icons.flaticon.com/png/512/654/premium/654994.png?token=exp=1658079781~hmac=af4eae4306b54fcd714407d9f2220381'
-    },
-    {
-      tag: '야간진료',
-      image: 'https://cdn-icons.flaticon.com/png/512/2387/premium/2387930.png?token=exp=1658081263~hmac=793d349e5d4c8e4982194ac346a4a6b3'
-    },
-    {
-      tag: '강아지 전문',
-      image: 'https://cdn-icons-png.flaticon.com/512/7309/7309083.png'
-    },
-    {
-      tag: '고양이 전문',
-      image: 'https://cdn-icons.flaticon.com/png/512/2138/premium/2138241.png?token=exp=1658081093~hmac=bb21fab13cd4446e8808d324ab1b141a'
-    },
-    {
-      tag: '특수동물',
-      image: 'https://cdn-icons-png.flaticon.com/512/616/616898.png'
-    },
-    {
-      tag: '호텔',
-      image: 'https://cdn-icons.flaticon.com/png/512/3009/premium/3009710.png?token=exp=1658081291~hmac=7fad3f97efda14c2126a26d1b43a2d92'
-    },
-    {
-      tag: '미용',
-      image: 'https://cdn-icons.flaticon.com/png/512/4416/premium/4416844.png?token=exp=1658081319~hmac=f99bebeae826dd6e58f54dfdb00eae8b'
-    },
-    {
-      tag: '중성화 전문',
-      image: 'https://cdn-icons.flaticon.com/png/512/2517/premium/2517449.png?token=exp=1658081347~hmac=2be1853ecf838b39e9aa222dc2c5cf33'
-    },
-    {
-      tag: 'MRI',
-      image: 'https://cdn-icons.flaticon.com/png/512/3213/premium/3213768.png?token=exp=1658081371~hmac=f23b55a2c907468d99c09181e018a369'
-    },
-  ];
+interface ITagData {
+  _id: string
+  name: string,
+  image: string,
+  createdAt: string,
+  updatedAt: string,
+  __v: number
+}
 
-  // const [tagData, setTagData] = useState<any>([]); // 태그 데이터 모음
-  const [tag, setTag] = useState<number>(-1); // 클릭 된 태그의 인덱스
+interface IProps {
+  setTagState: (tag: string) => void;
+}
 
-  // useEffect(() => {
-  //   async function getData() {
-  //     const res = await CustomAxiosGet.get('/hostpitalTag/list');
-  //     setTagData(res);
-  //   }
-  //   getData();
-  //   console.log(tagData);
-  // }, []);
+export default function Tags({setTagState}: IProps) {
+
+  const [tagData, setTagData] = useState<ITagData[]>([]); // 태그 데이터 모음
+  const [tag, setTag] = useState<number>(2); // 클릭 된 태그의 인덱스
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [paramsTag, setParamsTag] = useState<string>('강이지전문');
+  
+
+  useEffect(() => {
+    async function getData() {
+      const res = await axios.get('http://localhost:5100/hospitalTag/list', {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      setTagData([...res.data]);
+      console.log(res);
+    }
+    getData();
+    // console.log(tagData);
+    // setParamsTag(tagData[tag]?.name); // TODO: 새로고침 하면 값 못 받는 문제
+    setSearchParams({page: '2', perPage: '4', tagName: paramsTag});
+  }, []);
+
+  useEffect(() => {
+    const paramsData = searchParams.get('tagName');
+    paramsData && setParamsTag(paramsData);
+  }, [searchParams])
+
+  useEffect(() => {
+    setTagState(paramsTag);
+  }, [paramsTag])
+
+  function handleTagClick(category: ITagData ,idx: number) {
+    setTag(idx);
+    setSearchParams({page: '1', perPage: '4', tagName: category.name});
+  }
 
   return (
     <>
-        {tagData.map((category:any, idx:number) => {
+        {tagData.map((category: ITagData, idx:number) => {
           return (
             <TagWrapper
-              key={idx}
+              key={category._id}
               idx={idx}
-              to='#'
-              onClick={() => setTag(idx)}
+              onClick={() => handleTagClick(category, idx)}
               tag={tag}
             >
               <TagImg src={category.image} />
-              <TagName>{category.tag}</TagName>
+              <TagName>{category.name}</TagName>
             </TagWrapper>
           )
         })}
