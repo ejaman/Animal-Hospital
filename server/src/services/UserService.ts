@@ -198,9 +198,26 @@ class UserService {
 
     if (userStatus === UserStatus.EXPIRED) {
       return true;
+
     } else {
       return false;
     }
+  }
+
+
+  //권한 없는 리뷰작성자 차단
+  async blockUnauthorized (userId : string) : Promise<boolean>{
+    const user = await this.userModel.findById(userId);
+    console.log(user.role);
+
+    if(user && user.role==="basic-user") {
+      
+     return true
+
+    } else {
+      return false;
+    }
+
   }
 }
 
