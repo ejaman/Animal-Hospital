@@ -30,6 +30,29 @@ const UploadFileInput = styled.input`
   border: 0;
 `
 
+/* category css */
+const CategoryInput = styled.input`
+`
+
+const CategoryLabel = styled.label`
+  display: inline-block;
+  padding: .5em .8em;
+  fontSize: inherit;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid ${theme.palette.lightgray};
+  border-radius: .25em;
+  color: black;
+
+  :hover {
+    transition: 2ms ease-in;
+    border-color: ${theme.palette.blue};
+    color: ${theme.palette.blue};
+  }
+  
+};
+`
+
 /* keyword css */
   
 const KeywordInput = styled.div`
@@ -75,4 +98,4 @@ const KeywordInput = styled.div`
   }
 `
 
-export { SubTitle, UploadFileLabel, UploadFileInput, KeywordInput };
+export { SubTitle, UploadFileLabel, UploadFileInput, CategoryLabel, CategoryInput, KeywordInput };
