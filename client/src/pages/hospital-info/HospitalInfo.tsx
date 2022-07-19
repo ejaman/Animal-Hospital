@@ -1,5 +1,8 @@
 // react와 vanilla js 혼종인 파일이다. 리액트로 서서히 바꿔나가자
-import React, { useState, useCallback, useEffect, MouseEvent } from 'react';
+import React, { useState, useCallback, useEffect, useRef, MouseEvent } from 'react';
+import DaumPostcode from "react-daum-postcode";
+import Modal from "react-modal";
+import { HospitalInfoType, HospitalServiceInfoType, Data } from "./Interface";
 import "antd/dist/antd.min.css";
 import { Button, Form, Typography, Row, Col} from "antd";
 import { theme } from '../../styles/Colors';
@@ -11,13 +14,10 @@ import { SubTitle,
   TimeLabel,
   KeywordInput
 } from "./Style";
-import { HospitalInfoType, HospitalServiceInfoType } from "./Interface";
+import { ModalStyle } from "../../components/ModalStyle";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { hospitalLoginState } from "../../state/HospitalState";
-import { palette } from '@mui/system';
-import { pink } from '@mui/material/colors';
-import { speedDialIconClasses } from '@mui/material';
 
 const { Title } = Typography;
 
@@ -90,6 +90,13 @@ export default function HospitalInfo() {
   const [time, setTime] = useState<string[]|undefined>([]);
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
+  /* address modal */
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  /* password */
+  const currentPwRef = useRef<HTMLInputElement>(null);
+  const newPwRef = useRef<HTMLInputElement>(null);
+
   /* constants */
   const AVAILABLE_KEYWORD_LENGTH = 10;
   const AVAILABLE_KEYWORD_COUNTS = 3;
@@ -127,7 +134,14 @@ export default function HospitalInfo() {
     setHospitalInfo(hospitalData);
     setHospitalServiceInfo(hospitalServiceData);
   };
-
+ 
+  const onChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setHospitalInfo(prev => {
+      return { ...prev, postalCode: e.target.value }
+    })
+  };
+  
   const onKeyUp = useCallback(
     (e: any) => {
       
@@ -188,13 +202,47 @@ export default function HospitalInfo() {
     )
   };
 
+  const onOpenClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    setIsOpen(!isOpen);
+  };
+
+  const onhandleUpdate = async (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    const currentPassword = currentPwRef.current?.value;
+    const newPassword = newPwRef.current?.value;
+    // const data = {
+    //   ...hospitalInfo,
+    //   address: addr,
+    //   currentPassword: currentPassword,
+    //   newPassword: newPassword,
+    // };
+
+    // axios
+    //   .patch(`localhost:5100/api/hospital/`, data)
+    //   .then((res) => {
+    //     console.log(res);
+    //   });
+  };
+
+  const completeHandler = (data: Data) => {
+    setIsOpen(false);
+    const ex = {
+      ...hospitalInfo.address,
+      postalCode: data.zonecode,
+      address1: data.roadAddress
+    }
+    setHospitalInfo(prev => {
+      return {...prev, address: ex}
+    });
+  };
+
   const checkCategoryHandler = ({ target }: any) => {
     setIsChecked(!isChecked);
     checkedCategoryHandler(target.parentNode, target.value, target.checked)
   }
 
   const checkedCategoryHandler = (box: any, id: any, isChecked: any) => {
-    console.log(box, id, isChecked);
     const categoryList = [...hospitalInfo.tag!];
     if (isChecked) {
       categoryList.push(id);
@@ -204,7 +252,6 @@ export default function HospitalInfo() {
       box.style.borderColor = theme.palette.lightgray;
       box.style.color = "black";
       const index = categoryList.indexOf(id);
-      console.log(index);
       if (index !== -1) {
         categoryList.splice(index, 1);
       }
@@ -223,7 +270,6 @@ export default function HospitalInfo() {
   }
 
   const checkedDayHandler = (box: any, id: any, isChecked: any) => {
-    console.log(box, id, isChecked);
     const dayList = [...hospitalInfo.holiday!];
     if (isChecked) {
       dayList.push(id);
@@ -233,7 +279,6 @@ export default function HospitalInfo() {
       box.style.borderColor = theme.palette.lightgray;
       box.style.color = "black";
       const index = dayList.indexOf(id);
-      console.log(index);
       if (index !== -1) {
         dayList.splice(index, 1);
       }
@@ -252,7 +297,6 @@ export default function HospitalInfo() {
   }
 
   const checkedBusinessHoursHandler = (box: any, id: any, isChecked: any) => {
-    console.log(box, id, isChecked);
     const businessHoursList = [...hospitalInfo.businessHours!];
     if (isChecked) {
       businessHoursList.push(id);
@@ -262,7 +306,6 @@ export default function HospitalInfo() {
       box.style.borderColor = theme.palette.lightgray;
       box.style.color = "black";
       const index = businessHoursList.indexOf(id);
-      console.log(index);
       if (index !== -1) {
         businessHoursList.splice(index, 1);
       }
@@ -375,6 +418,8 @@ export default function HospitalInfo() {
               </Row>
               <Row>
                 <SubTitle>비밀번호</SubTitle>
+                {/* <input ref={newPwRef} placeholder="새 비밀번호" />
+                <input ref={currentPwRef} placeholder="현재 비밀번호" /> */}
                 <input
                   name="password"
                   style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
@@ -439,26 +484,57 @@ export default function HospitalInfo() {
               </Row>
               <div style={{ marginBottom: "0.5rem" }} />
               <Row>
-                <SubTitle>주소</SubTitle>
-                <input
-                  name="postalCode"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.address?.postalCode || ""}
-                />
-                <input
-                  name="address1"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.address?.address1}
-                />
-                <input
-                  name="address2"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.address?.address2}
-                />
-                <Button style={{ marginLeft: "0.5rem" }}>수정</Button>
+                <Col>
+                  <Row>
+                    <SubTitle>주소</SubTitle>
+                  </Row>
+                  <Row>
+                    <input
+                      name="postalCode"
+                      style={{
+                        marginBottom: "1rem",
+                        marginLeft: "0.5rem",
+                        width: "6rem"
+                      }}
+                      type="text"
+                      defaultValue={hospitalInfo?.address?.postalCode || ""}
+                      onChange={onChangeAddress}
+                    />
+                  </Row>
+                  <Row>
+                    <input
+                      name="address1"
+                      style={{
+                        marginBottom: "1rem",
+                        marginLeft: "0.5rem",
+                        width: "20rem"
+                      }}
+                      type="text"
+                      defaultValue={hospitalInfo?.address?.address1}
+                      onChange={onChangeAddress}
+                    />
+                  </Row>
+                  <Row>
+                    <input
+                      name="address2"
+                      style={{
+                        marginBottom: "1rem",
+                        marginLeft: "0.5rem",
+                        width: "18rem"
+                      }}
+                      type="text"
+                      defaultValue={hospitalInfo?.address?.address2}
+                      onChange={onChangeAddress}
+                    />
+                    <Button
+                    style={{ marginLeft: "0.5rem" }}
+                    onClick={onOpenClick}
+                  >수정</Button>
+                  </Row>
+                </Col>
+                <Modal isOpen={isOpen} ariaHideApp={false} style={ModalStyle}>
+                  <DaumPostcode onComplete={completeHandler} />
+                </Modal>
               </Row>
               <Row>
                 <SubTitle>카테고리</SubTitle>
@@ -516,6 +592,23 @@ export default function HospitalInfo() {
                       marginBottom: "1rem"
                     }}
                   >영업시간</SubTitle>
+                  <Row>시간 선택</Row>
+                  <Row>
+                    {TIME_LIST.map((time) => (
+                      <TimeLabel
+                        htmlFor={time}
+                        key={time+"L"}
+                      >
+                        <input type="checkbox"
+                          id={time}
+                          key={time}
+                          onClick={checkBusinessHoursHandler}
+                          value={time}
+                          hidden
+                        />{time}:00
+                      </TimeLabel>
+                    ))}
+                  </Row>
                   <Row>휴무일 선택</Row>
                   <Row
                     style={{ marginBottom: "0.5rem" }}
@@ -561,23 +654,6 @@ export default function HospitalInfo() {
                           >{day}</Button>
                       )
                     })} */}
-                  </Row>
-                  <Row>시간 선택</Row>
-                  <Row>
-                    {TIME_LIST.map((time) => (
-                      <TimeLabel
-                        htmlFor={time}
-                        key={time+"L"}
-                      >
-                        <input type="checkbox"
-                          id={time}
-                          key={time}
-                          onClick={checkBusinessHoursHandler}
-                          value={time}
-                          hidden
-                        />{time}:00
-                      </TimeLabel>
-                    ))}
                   </Row>
                   <Row style={{ marginTop: "1rem" }}>
                     <SubTitle>시간당 예약가능 고객 수</SubTitle>

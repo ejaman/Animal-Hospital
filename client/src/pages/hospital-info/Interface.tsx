@@ -25,3 +25,9 @@ export interface HospitalServiceInfoType {
   serviceDesc: string;
   serviceCapacity: number;
 }
+
+export interface Data {
+  address: string;
+  zonecode: string;
+  roadAddress: string;
+}
