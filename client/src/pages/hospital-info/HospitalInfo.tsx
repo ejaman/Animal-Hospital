@@ -6,7 +6,7 @@ import { HospitalInfoType, HospitalServiceInfoType, Data } from "./Interface";
 import "antd/dist/antd.min.css";
 import { Button, Form, Typography, Row, Col} from "antd";
 import { theme } from '../../styles/Colors';
-import { SubTitle,
+import {
   UploadFileLabel,
   UploadFileInput,
   CategoryLabel,
@@ -15,11 +15,19 @@ import { SubTitle,
   KeywordInput
 } from "./Style";
 import { ModalStyle } from "../../components/ModalStyle";
+import {
+  Title,
+  MainContainer,
+  Container,
+  InputLabel,
+  InfoInput,
+  InfoBtn,
+  DeactivateContainer,
+  DeactiveBtn
+} from "../../components/InfoForm"
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { hospitalLoginState } from "../../state/HospitalState";
-
-const { Title } = Typography;
 
 export default function HospitalInfo() { 
   const [info, setInfo] = useRecoilState(hospitalLoginState);
@@ -86,8 +94,6 @@ export default function HospitalInfo() {
   const [serviceList, setServiceList] = useState<any[]>([]);
   const [keyword, setKeyword] = useState<string[]|undefined>([]);
   const [newKeyword, setNewKeyword] = useState('');
-  const [day, setDay] = useState<string[]|undefined>([]);
-  const [time, setTime] = useState<string[]|undefined>([]);
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
   /* address modal */
@@ -374,25 +380,26 @@ export default function HospitalInfo() {
   return (
     <div style={{ margin: "0 2rem 2rem 2rem" }}>
       <div className="ant-typography">
-        <Title>병원 정보</Title>
+        <Title>병원정보</Title>
       </div>
       <div
-        style={{
-          borderStyle: "solid",
-          borderColor: `${theme.palette.orange}`,
-          borderWidth: "10px",
-          borderRadius: "5%",
-          padding: "1rem 2rem 1rem 2rem"
-        }}
+        // style={{
+        //   borderStyle: "solid",
+        //   borderColor: `${theme.palette.orange}`,
+        //   borderWidth: "10px",
+        //   borderRadius: "5%",
+        //   padding: "1rem 2rem 1rem 2rem"
+        // }}
       >
         <Row>
           <Col span={12}>
             <Form name="hospitalInfoForm">
               <Row>
-                <SubTitle>병원명</SubTitle>
-                <input
+                <InputLabel>병원명</InputLabel>
+                <InfoInput
                   name="name"
                   style={{
+                    width: "12rem",
                     marginBottom: "1rem",
                     marginLeft: "0.5rem"
                   }}
@@ -402,8 +409,8 @@ export default function HospitalInfo() {
                 />
               </Row>
               <Row>
-                <SubTitle>이름</SubTitle>
-                <input
+                <InputLabel>이름</InputLabel>
+                <InfoInput
                   name="director"
                   style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
                   type="text"
@@ -412,10 +419,11 @@ export default function HospitalInfo() {
                 />
               </Row>
               <Row>
-                <SubTitle>이메일</SubTitle>
-                <input
+                <InputLabel>이메일</InputLabel>
+                <InfoInput
                   name="email"
                   style={{
+                    width: "12rem",
                     marginBottom: "1rem",
                     marginLeft: "0.5rem"
                   }}
@@ -426,10 +434,10 @@ export default function HospitalInfo() {
                 />
               </Row>
               <Row>
-                <SubTitle>비밀번호</SubTitle>
+                <InputLabel>비밀번호</InputLabel>
                 {/* <input ref={newPwRef} placeholder="새 비밀번호" />
                 <input ref={currentPwRef} placeholder="현재 비밀번호" /> */}
-                <input
+                <InfoInput
                   name="password"
                   style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
                   type="password"
@@ -437,14 +445,14 @@ export default function HospitalInfo() {
                   defaultValue=""
                   disabled
                 />
-                <Button
+                <InfoBtn
                   style={{ marginLeft: "0.5rem" }}
                   onClick={buttonHandler}
-                >변경</Button>
+                >변경</InfoBtn>
               </Row>
               <Row>
-                <SubTitle>병원 연락처</SubTitle>
-                <input
+                <InputLabel>병원 연락처</InputLabel>
+                <InfoInput
                   name="phoneNumber"
                   style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
                   type="text"
@@ -453,8 +461,8 @@ export default function HospitalInfo() {
                 />
               </Row>
               <Row>
-                <SubTitle>사업자 등록번호</SubTitle>
-                <input
+                <InputLabel>사업자 등록번호</InputLabel>
+                <InfoInput
                   name="businessNumber"
                   style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
                   type="text"
@@ -463,8 +471,8 @@ export default function HospitalInfo() {
                 />
               </Row>
               <Row>
-                <SubTitle>면허번호</SubTitle>
-                <input
+                <InputLabel>면허번호</InputLabel>
+                <InfoInput
                   name="licenseNumber"
                   style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
                   type="text"
@@ -473,7 +481,7 @@ export default function HospitalInfo() {
                 />
               </Row>
               <Row>
-                <SubTitle>병원 사진</SubTitle>
+                <InputLabel>병원 사진</InputLabel>
                 <div style={{ marginBottom: "0.5rem" }} />
                 <div style={{ marginLeft: "0.5rem", marginBottom: "0.5rem" }}>
                   <UploadFileLabel htmlFor="uploadFile">업로드</UploadFileLabel>
@@ -495,10 +503,10 @@ export default function HospitalInfo() {
               <Row>
                 <Col>
                   <Row>
-                    <SubTitle style={{ marginBottom: "0.5rem" }}>주소</SubTitle>
+                    <InputLabel style={{ marginBottom: "0.5rem" }}>주소</InputLabel>
                   </Row>
                   <Row>
-                    <input
+                    <InfoInput
                       name="postalCode"
                       style={{
                         marginBottom: "0.5rem",
@@ -511,7 +519,7 @@ export default function HospitalInfo() {
                     />
                   </Row>
                   <Row>
-                    <input
+                    <InfoInput
                       name="address1"
                       style={{
                         marginBottom: "0.5rem",
@@ -524,7 +532,7 @@ export default function HospitalInfo() {
                     />
                   </Row>
                   <Row>
-                    <input
+                    <InfoInput
                       name="address2"
                       style={{
                         marginBottom: "1rem",
@@ -535,10 +543,10 @@ export default function HospitalInfo() {
                       defaultValue={hospitalInfo?.address?.address2}
                       onChange={onChangeAddress}
                     />
-                    <Button
+                    <InfoBtn
                     style={{ marginLeft: "0.5rem" }}
                     onClick={onOpenClick}
-                  >수정</Button>
+                  >수정</InfoBtn>
                   </Row>
                 </Col>
                 <Modal isOpen={isOpen} ariaHideApp={false} style={ModalStyle}>
@@ -546,7 +554,7 @@ export default function HospitalInfo() {
                 </Modal>
               </Row>
               <Row>
-                <SubTitle style={{ marginBottom: "0.5rem" }}>카테고리</SubTitle>
+                <InputLabel style={{ marginBottom: "0.5rem" }}>카테고리</InputLabel>
               </Row>
               <Row>
                 {CATEGORY_LIST.map((category) => (
@@ -555,7 +563,7 @@ export default function HospitalInfo() {
                       htmlFor={category}
                       key={category+"L"}
                     >
-                      <input type="checkbox"
+                      <InfoInput type="checkbox"
                         id={category}
                         key={category}
                         onChange={e => checkCategoryHandler(e)}
@@ -568,7 +576,7 @@ export default function HospitalInfo() {
                 ))}
               </Row>
               <Row>
-                <SubTitle style={{ marginTop: "1rem" }}>키워드</SubTitle>
+                <InputLabel style={{ marginTop: "1rem" }}>키워드</InputLabel>
                 <span
                   style={{
                     marginLeft: "1rem",
@@ -585,7 +593,7 @@ export default function HospitalInfo() {
                       <span key={index}></span>
                     )
                   })} */}
-                  <input
+                  <InfoInput
                     name="keyword"
                     className="HashInput"
                     type="text"
@@ -596,8 +604,7 @@ export default function HospitalInfo() {
               </Row>
               <Row>
                 <Col>
-                  <SubTitle>영업시간</SubTitle>
-                  <Row style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>시간 선택</Row>
+                  <InputLabel>영업시간</InputLabel>
                   <Row>
                     {TIME_LIST.map((time) => (
                       <TimeLabel
@@ -614,7 +621,9 @@ export default function HospitalInfo() {
                       </TimeLabel>
                     ))}
                   </Row>
-                  <Row style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>휴무일 선택</Row>
+                  <Row style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
+                    <InputLabel>휴무일 선택</InputLabel>
+                    </Row>
                   <Row>
                     {DAY_LIST.map((day) => (
                       <DayLabel
@@ -659,8 +668,8 @@ export default function HospitalInfo() {
                     })} */}
                   </Row>
                   <Row style={{ marginTop: "1rem" }}>
-                    <SubTitle>시간당 예약가능 고객 수</SubTitle>
-                    <input
+                    <InputLabel>시간당 예약가능 고객 수</InputLabel>
+                    <InfoInput
                       name="hospitalCapacity"
                       style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
                       type="text"
@@ -680,17 +689,17 @@ export default function HospitalInfo() {
           <Col>
             <Form>
               <Row>
-                <SubTitle
+                <InputLabel
                   style={{
                     margin: "auto",
                     fontWeight: "bold"
                   }}
-                >서비스 추가</SubTitle>
+                >서비스 추가</InputLabel>
               </Row>
               <Row>
                 <div>
                   <label>서비스명</label>
-                  <input
+                  <InfoInput
                     name="serviceName"
                     onChange={onChange}
                     style={{
@@ -703,7 +712,7 @@ export default function HospitalInfo() {
               <Row>
                 <div>
                   <label>서비스 가격</label>
-                  <input
+                  <InfoInput
                     name="servicePrice"
                     onChange={onChange}
                     style={{
@@ -716,7 +725,7 @@ export default function HospitalInfo() {
               <Row>
                 <div>
                   <label>서비스 설명</label>
-                  <input
+                  <InfoInput
                     name="serviceDesc"
                     onChange={onChange}
                     style={{
@@ -740,23 +749,23 @@ export default function HospitalInfo() {
                 </div>
               </Row>
               <Row>
-              <Button
+              <InfoBtn
                 style={{
                   marginLeft: "0.5rem",
                   marginBottom: "1.5rem",
                   margin: "auto"
                 }}
                 onClick={onServiceSubmit}
-              >추가</Button>
+              >추가</InfoBtn>
               </Row>
               <Row>
-                <SubTitle
+                <InputLabel
                   style={{
                     marginBottom: "1rem",
                     margin: "auto",
                     fontWeight: "bold"
                   }}
-                >제공중인 서비스 목록</SubTitle>
+                >제공중인 서비스 목록</InputLabel>
               </Row>
               <Row>
                 <Col>
@@ -795,12 +804,10 @@ export default function HospitalInfo() {
           </Col>
         </Row>
       </div>
-      <Row>
-          <Button
-            style={{ marginTop: "1rem", marginLeft: "1rem" }}
-            onClick={withdrawButtonHandler}
-          >탈퇴</Button>
-      </Row>
+      <DeactivateContainer>
+        <p>Animal Hospital에서 탈퇴하고 싶으신가요?</p>
+        <DeactiveBtn onClick={withdrawButtonHandler}>탈퇴하기</DeactiveBtn>
+      </DeactivateContainer>
     </div>
   );
 }
