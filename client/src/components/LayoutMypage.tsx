@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Outlet } from 'react-router-dom';
 
 import Footer from './Footer';
-import HeaderMypage from './HeaderMypage';
+import Header from './Header';
 
 
 const Wrapper = styled.div`
@@ -20,7 +20,7 @@ export default function LayoutMypage() {
   return (
     <>
       <Wrapper>
-        <HeaderMypage />
+        <Header searchBox={false} />
         <ContentWrapper>
           <Outlet />
         </ContentWrapper>

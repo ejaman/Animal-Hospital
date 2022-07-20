@@ -22,12 +22,19 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* 헤더 푸터 x */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
+        {/* 헤더 푸터 검색창 버전 */}
         <Route element={<LayoutSearch />}>
           <Route path="/" element={<Home />} />
           <Route path="detail" element={<Detail />} />
+          <Route path="/hospital/:hospitalName/detail" element={<Detail />} />
+          <Route path="/hospital/:hospitalName/Services" element={<Detail />} />
         </Route>
+
+        {/* 헤더 푸터 검색창x 버전 */}
         <Route element={<LayoutMypage />}>
           <Route path="/user-mypage" element={<UserMypage />} />
           <Route path="/user-info" element={<UserInfo />} />

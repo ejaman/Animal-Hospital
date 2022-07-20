@@ -11,22 +11,35 @@ class ReviewService {
     }
 
     //일반 회원의 자신이 작성한 리뷰 조회
-    async getReviewsByUser(userId : string) : Promise<ReviewInfo[]>{
+    async getReviewsByUser(userId : string) : Promise<ReviewData[]>{
         const reviews = await this.reviewModel.findByOwnerId(userId);
         return reviews;
     }
 
     //병원 회원의 자기 병원에 대한 모든 리뷰 조회
-    async getReviewsByHospital(hospitalId : string) : Promise<ReviewInfo[]>{
+    async getReviewsByHospital(hospitalId : string) : Promise<ReviewData[]>{
         const reviews = await this.reviewModel.findByHospitalId(hospitalId);
         return reviews;
     }
 
+    //관리자의 모든 리뷰 조회
+    async getAllReviews():Promise<ReviewInfo[]>{
+        const reviews = await this.reviewModel.findAll();
+        return reviews;
+
+    }
+
+    //개별리뷰조회
+    async getEachReview(reviewId : string) : Promise<ReviewData>{
+        const review = await this.reviewModel.findById(reviewId);
+        return review;
+    }
+
     //일반 회원의 리뷰 수정
-    async updateReview(userId : string, toUpdate : Partial<ReviewInfo>) : Promise<ReviewData>{
-        let review = await this.reviewModel.findById(userId);
+    async updateReview(reviewId : string, toUpdate : Partial<ReviewInfo>) : Promise<ReviewData>{
+        let review = await this.reviewModel.findById(reviewId);
         // const {update} = toUpdate;
-        review = await reviewModel.updateReview({userId,update : toUpdate});
+        review = await reviewModel.updateReview({reviewId,update : toUpdate});
         return review;
     }
 

@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {
   HospitalInfoRequired,
+  SearchOptions,
   ToUpdate,
   HospitalLoginResult,
   HospitalInfo,
@@ -173,6 +174,20 @@ class HospitalService {
     return updatedUser;
   }
 
+  async updateStatus(
+    hospitalName: string,
+    toUpdate: Partial<HospitalInfo>
+  ): Promise<HospitalInfo> {
+    const filter = { name: hospitalName };
+    const option = { returnOriginal: false };
+
+    const updatedUser = await this.hospitalModel.updateByName(
+      hospitalName,
+      toUpdate
+    );
+    return updatedUser;
+  }
+
   async setHospitalInfo(
     hospitalInfoRequired: HospitalInfoRequired,
     toUpdate: Partial<HospitalInfo>
@@ -228,6 +243,41 @@ class HospitalService {
     });
 
     return hospital;
+  }
+
+  async countTotalHospitals(searchOptions: SearchOptions): Promise<number> {
+    const total = await this.hospitalModel.countHospitals(searchOptions);
+
+    if (total < 1) {
+      throw new Error('병원이 없습니다.');
+    }
+    return total;
+  }
+
+  async getHospitals(
+    page: number,
+    perPage: number,
+    searchOptions: SearchOptions
+  ): Promise<HospitalInfo[]> {
+    const users = await this.hospitalModel.findByOption(
+      page,
+      perPage,
+      searchOptions
+    );
+    return users;
+  }
+
+  async getHospitalsByAdmin(
+    page: number,
+    perPage: number,
+    searchOptions: SearchOptions
+  ): Promise<HospitalInfo[]> {
+    const users = await this.hospitalModel.findByOptionFromAdmin(
+      page,
+      perPage,
+      searchOptions
+    );
+    return users;
   }
 }
 

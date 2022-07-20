@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import DaumPostcode from "react-daum-postcode";
 import Modal from "react-modal";
-import axios from "axios";
 import { UserInfoType, Data, Address } from "./Interface";
 import {
   MainContainer,
@@ -19,6 +20,7 @@ import { ModalStyle } from "../../components/ModalStyle";
 
 const token = localStorage.getItem("token");
 function UserInfo() {
+  const navigate = useNavigate();
   // 받아온 정보를 저장하는 state
   const [userInfo, setUserInfo] = useState<UserInfoType>({
     userName: "",
@@ -26,6 +28,7 @@ function UserInfo() {
     email: "",
     password: "",
     phoneNumber: "",
+    userStatus: "",
   });
   // address 관련
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -99,6 +102,31 @@ function UserInfo() {
       })
       .then((res) => {
         console.log(res);
+
+        alert("수정이 완료되었습니다 👍");
+
+        // 수정할 때 마다 입력해야함 + 새로운 비밀번호는 입력하지 않아도 됨
+        // 현재 비밀번호 위치를 수정 옆으로?
+      });
+  };
+  const expiration = async () => {
+    //TODO
+    // console.log(token);
+    await axios
+      .patch(
+        `http://localhost:5100/api/expiration
+      `,
+        {},
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        alert(`${userInfo.userName}님 탈퇴가 완료되었습니다 🥲`);
+        localStorage.removeItem("token");
+        navigate("/");
       });
   };
   return (
@@ -143,8 +171,11 @@ function UserInfo() {
           </Divider>
         </Container>
         <Container>
-          <InputLabel>비밀번호</InputLabel>
+          <InputLabel>비밀번호 수정</InputLabel>
           <InfoInput ref={newPwRef} placeholder="새 비밀번호" />
+        </Container>
+        <Container>
+          <InputLabel>비밀번호 확인</InputLabel>
           <InfoInput ref={currentPwRef} placeholder="현재 비밀번호" />
         </Container>
 
@@ -156,7 +187,7 @@ function UserInfo() {
       </Form>
       <DeactivateContainer>
         <p>Animal Hospital에서 탈퇴하고 싶으신가요?</p>
-        <DeactiveBtn onClick={() => alert("탈퇴 ㄲ")}>탈퇴하기</DeactiveBtn>
+        <DeactiveBtn onClick={expiration}>탈퇴하기</DeactiveBtn>
       </DeactivateContainer>
     </MainContainer>
   );
