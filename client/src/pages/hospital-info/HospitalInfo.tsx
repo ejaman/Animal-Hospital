@@ -1,38 +1,54 @@
-import React, { useState, useCallback, useEffect, MouseEvent } from 'react';
+// react와 vanilla js 혼종인 파일이다. 리액트로 서서히 바꿔나가자
+import React, { useState, useCallback, useEffect, useRef, MouseEvent } from 'react';
+import DaumPostcode from "react-daum-postcode";
+import Modal from "react-modal";
+import { HospitalInfoType, HospitalServiceInfoType, Data } from "./Interface";
 import "antd/dist/antd.min.css";
-import { Button, Form, Input, Typography, Row, Col} from "antd";import { theme } from '../../styles/Colors';
+import { Button, Form, Typography, Row, Col} from "antd";
+import { theme } from '../../styles/Colors';
 import { SubTitle,
   UploadFileLabel,
   UploadFileInput,
+  CategoryLabel,
+  DayLabel,
+  TimeLabel,
   KeywordInput
 } from "./Style";
-import { HospitalInfoType, HospitalServiceInfoType } from "./Interface";
+import { ModalStyle } from "../../components/ModalStyle";
 import axios from "axios";
-import { createNextState } from '@reduxjs/toolkit';
+import { useRecoilState } from "recoil";
+import { hospitalLoginState } from "../../state/HospitalState";
 
 const { Title } = Typography;
 
-export default function HospitalInfo() {
+export default function HospitalInfo() { 
+  const [info, setInfo] = useRecoilState(hospitalLoginState);
+
   // 폼 내용들은 입력 시마다 내용이 곧바로 저장되므로 추후 debouncing 적용 예정
 
-  /* axios api */
-  // const [datas, setDatas] = useState<[]>([]);
-  // // 병원 api 연결을 위해 주석 풀고 나머지 작성 예정
-  // const API_URL = `http://localhost:5100/api/user`;
-
   // useEffect(() => {
-  //   if (datas.length) console.log("datas:", datas);
-  // }, [datas]);
-
-  // const getAPI = useCallback(
-  //   async (e: any) => {
-  //     e.preventDefault();
-  //     const result = await axios.get(API_URL);
-  //     console.log("result.data: ", result.data);
-  //   },
-  //   [API_URL]
-  // );
-
+  //   async function getData() {
+  //     try {
+  //       //응답 성공
+  //       if (info.hospitalState === "비정상") { // 초기 수정 필요할 때
+  //         // api
+  //         const API_URL = 'localhost:5100/hospital/addtional-info';
+  //         const response = await axios.get(API_URL);
+  //         console.log("응답 성공", response);
+  //       } else { // 초기 수정 완료
+  //         // 
+  //         const API_URL = 'localhost:5100/hospital/detail';
+  //         const response = await axios.get(API_URL);
+  //        console.log("응답 성공", response);
+  //       }
+  //     } catch (error) {
+  //       //응답 실패
+  //       console.error("응답 실패", error);
+  //     }
+  //   }
+  //   getData();
+  // }, []);
+  
   /* elements */
   const $HashWrapOuter = document.querySelector('.HashWrapOuter');
   const $HashWrapInner = document.createElement('div');
@@ -51,12 +67,13 @@ export default function HospitalInfo() {
       address2: ""
     },
     phoneNumber: "",
-    businessHours: "",
+    businessHours: [],
     businessNumber: "",
     licenseNumber: "",
-    holiday: [""],
+    holiday: [],
     hospitalCapacity: 0,
-    tag: "",
+    tag: [],
+
     keyword: [""],
     image: ""
   });
@@ -67,21 +84,25 @@ export default function HospitalInfo() {
     serviceCapacity: 0
   });
   const [serviceList, setServiceList] = useState<any[]>([]);
-  const [image, setImage] = useState('');
   const [keyword, setKeyword] = useState<string[]|undefined>([]);
   const [newKeyword, setNewKeyword] = useState('');
   const [day, setDay] = useState<string[]|undefined>([]);
   const [time, setTime] = useState<string[]|undefined>([]);
-  const [isButtonClicked, setisButtonClicked] = useState<boolean>(false);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
 
-  /* values */
-  const categoryList = ["24시간", "야간진료", "강아지 전문", "고양이 전문", "특수동물", "호텔", "미용", "중성화 전문", "MRI"];
-  const dayList = ["월", "화", "수", "목", "금", "토", "일"];
-  const timeList = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
+  /* address modal */
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  /* password */
+  const currentPwRef = useRef<HTMLInputElement>(null);
+  const newPwRef = useRef<HTMLInputElement>(null);
   
   /* constants */
   const AVAILABLE_KEYWORD_LENGTH = 10;
   const AVAILABLE_KEYWORD_COUNTS = 3;
+  const CATEGORY_LIST = ["24시간", "야간진료", "강아지 전문", "고양이 전문", "특수동물", "호텔", "미용", "중성화 전문", "MRI"];
+  const DAY_LIST = ["월", "화", "수", "목", "금", "토", "일"];
+  const TIME_LIST = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
   
   /* image converter */
   const convertFileToBase64 = (file: any) => {
@@ -90,7 +111,9 @@ export default function HospitalInfo() {
     return new Promise((resolve: any) => {
       if (reader) {
         reader.onload = () => {
-        setImage(reader.result as string);
+        setHospitalInfo(prev => {
+          return { ...prev, image: reader.result as string}
+        });
         resolve();
         };
       }
@@ -111,7 +134,14 @@ export default function HospitalInfo() {
     // setHospitalInfo(hospitalData);
     // setHospitalServiceInfo(hospitalServiceData);
   };
-
+ 
+  const onChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setHospitalInfo(prev => {
+      return { ...prev, postalCode: e.target.value }
+    })
+  };
+  
   const onKeyUp = useCallback(
     (e: any) => {
       
@@ -148,21 +178,18 @@ export default function HospitalInfo() {
     },
     [keyword, newKeyword, $HashWrapInner, $HashWrapOuter, $keywordNumWarning]
   )
-  
-  // React.FormEvent<HTMLFormElement>
+
   const onServiceSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log("서비스 추가 버튼 클릭");
     console.log("추가된 서비스:", hospitalServiceInfo);
     setServiceList([...serviceList, hospitalServiceInfo]);
-    // PROBLEM : 초기화(보내지는 값만 초기화가 되고 form에는 반영이 안돼서 이전에 입력했던 사항이 그대로 남아있음...키워드와 비슷한 문제로 보임)
     setHospitalServiceInfo({
     serviceName: "",
     servicePrice: 0,
     serviceDesc: "",
     serviceCapacity: 0
   })
-    // 
     console.log("serviceList:", serviceList);
   }
 
@@ -174,33 +201,121 @@ export default function HospitalInfo() {
       '버튼이 클릭되었습니다(확인용)'
     )
   };
-  
-  const onClickDay= (e: MouseEvent<HTMLElement>) => {
-    const dayId = e.currentTarget.id;
-    console.log(dayId); // 월, 화, 수, ...
-    // 리액트스럽게 해보고 싶은데 state 활용해서 클릭된 요일만 배열에 담기고 클릭 상태가 아닌 요일은 배열에서 빠지게...일단 이렇게 구현해봄
-    // const selectDay = document.querySelector(`#${dayId}`);
-    // useEffect();
-    if (day!.find((week) => week === dayId)) { // 이미 휴무일 배열에 있는 요일이면 제거하고 클릭 상태를 해제한다.
-      const dayIndex = day!.indexOf(dayId); // 인덱스값 찾기
-      setDay((current) => current!.filter((_, index) =>  index !== dayIndex))
-        // const [id, ...rest] = current;
-        // return rest
-      // selectDay
-    } else { // 휴무일 배열에 없는 요일이면 추가한다.
-      setDay([...day!, dayId]); 
+
+  const onOpenClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    setIsOpen(!isOpen);
+  };
+
+  const onhandleUpdate = async (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    const currentPassword = currentPwRef.current?.value;
+    const newPassword = newPwRef.current?.value;
+    // const data = {
+    //   ...hospitalInfo,
+    //   address: addr,
+    //   currentPassword: currentPassword,
+    //   newPassword: newPassword,
+    // };
+
+    // axios
+    //   .patch(`localhost:5100/api/hospital/`, data)
+    //   .then((res) => {
+    //     console.log(res);
+    //   });
+  };
+
+  const completeHandler = (data: Data) => {
+    setIsOpen(false);
+    const ex = {
+      ...hospitalInfo.address,
+      postalCode: data.zonecode,
+      address1: data.roadAddress
     }
-    console.log("휴무일 배열:", day);
+    setHospitalInfo(prev => {
+      return {...prev, address: ex}
+    });
+  };
+
+  const checkCategoryHandler = ({ target }: any) => {
+    setIsChecked(!isChecked);
+    checkedCategoryHandler(target.parentNode, target.value, target.checked)
   }
 
-  const onClickCategory = (e: MouseEvent<HTMLElement>) => {
-    const id = e.currentTarget.id;
-    console.log(id);
+  const checkedCategoryHandler = (box: any, id: any, isChecked: any) => {
+    const categoryList = [...hospitalInfo.tag!];
+    if (isChecked) {
+      categoryList.push(id);
+      box.style.borderColor = theme.palette.blue;
+      box.style.color = theme.palette.blue;
+    } else if (!isChecked && categoryList.find(i => i === id)) {
+      box.style.borderColor = theme.palette.lightgray;
+      box.style.color = "black";
+      const index = categoryList.indexOf(id);
+      if (index !== -1) {
+        categoryList.splice(index, 1);
+      }
+    }
+    if (categoryList[0] === "") {
+      categoryList.splice(0, 1);
+    }
+    setHospitalInfo(prev => {
+      return { ...prev, tag: categoryList }
+    })
+  }
+  
+  const checkDayHandler = ({ target }: any) => {
+    setIsChecked(!isChecked);
+    checkedDayHandler(target.parentNode, target.value, target.checked)
   }
 
-  const onClickTime = (e: MouseEvent<HTMLElement>) => {
-    const id = e.currentTarget.id;
-    console.log(id);
+  const checkedDayHandler = (box: any, id: any, isChecked: any) => {
+    const dayList = [...hospitalInfo.holiday!];
+    if (isChecked) {
+      dayList.push(id);
+      box.style.borderColor = theme.palette.blue;
+      box.style.color = theme.palette.blue;
+    } else if (!isChecked && dayList.find(i => i === id)) {
+      box.style.borderColor = theme.palette.lightgray;
+      box.style.color = "black";
+      const index = dayList.indexOf(id);
+      if (index !== -1) {
+        dayList.splice(index, 1);
+      }
+    }
+    if (dayList[0] === "") {
+      dayList.splice(0, 1);
+    }
+    setHospitalInfo(prev => {
+      return { ...prev, holiday: dayList }
+    })
+  }
+
+  const checkBusinessHoursHandler = ({ target }: any) => {
+    setIsChecked(!isChecked);
+    checkedBusinessHoursHandler(target.parentNode, target.value, target.checked)
+  }
+
+  const checkedBusinessHoursHandler = (box: any, id: any, isChecked: any) => {
+    const businessHoursList = [...hospitalInfo.businessHours!];
+    if (isChecked) {
+      businessHoursList.push(id);
+      box.style.borderColor = theme.palette.blue;
+      box.style.color = theme.palette.blue;
+    } else if (!isChecked && businessHoursList.find(i => i === id)) {
+      box.style.borderColor = theme.palette.lightgray;
+      box.style.color = "black";
+      const index = businessHoursList.indexOf(id);
+      if (index !== -1) {
+        businessHoursList.splice(index, 1);
+      }
+    }
+    if (businessHoursList[0] === "") {
+      businessHoursList.splice(0, 1);
+    }
+    setHospitalInfo(prev => {
+      return { ...prev, businessHours: businessHoursList }
+    })
   }
 
   const withdrawButtonHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -227,13 +342,13 @@ export default function HospitalInfo() {
         "address2": "이진수 동물병원"
       },
       "phoneNumber": "010-0000-0000",
-      "businessHours": "24",
+      "businessHours": [""],
       "businessNumber": "546521354",
       "licenseNumber": "XXXXXXXXX",
       "holiday": [""],
       "hospitalCapacity": 3,
-      "tag": "",
-      "keyword": ["소동물 전문"],
+      "tag": [""],
+      "keyword": [""],
       // "image": "https://o-oa.com/wp-content/uploads/2020/05/LJS_01.jpg",
       "image": ""
     });
@@ -302,6 +417,8 @@ export default function HospitalInfo() {
               </Row>
               <Row>
                 <SubTitle>비밀번호</SubTitle>
+                {/* <input ref={newPwRef} placeholder="새 비밀번호" />
+                <input ref={currentPwRef} placeholder="현재 비밀번호" /> */}
                 <input
                   name="password"
                   style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
@@ -311,9 +428,9 @@ export default function HospitalInfo() {
                   disabled
                 />
                 <Button
-                    style={{ marginLeft: "0.5rem" }}
-                    onClick={buttonHandler}
-                  >변경</Button>
+                  style={{ marginLeft: "0.5rem" }}
+                  onClick={buttonHandler}
+                >변경</Button>
               </Row>
               <Row>
                 <SubTitle>병원 연락처</SubTitle>
@@ -348,7 +465,7 @@ export default function HospitalInfo() {
               <Row>
                 <SubTitle>병원 사진</SubTitle>
                 <div style={{ marginBottom: "0.5rem" }} />
-                <div style={{ marginBottom: "0.5rem" }}>
+                <div style={{ marginLeft: "0.5rem", marginBottom: "0.5rem" }}>
                   <UploadFileLabel htmlFor="uploadFile">업로드</UploadFileLabel>
                   <UploadFileInput type="file"
                     id="uploadFile"
@@ -361,46 +478,87 @@ export default function HospitalInfo() {
                   />
                 </div>
                 <div>
-                  {image && <img src={image} width="280px" alt="" />}
+                  {hospitalInfo.image && <img src={hospitalInfo.image} width="280px" alt="" />}
                 </div>
               </Row>
               <div style={{ marginBottom: "0.5rem" }} />
               <Row>
-                <SubTitle>주소</SubTitle>
-                <input
-                  name="postalCode"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.address?.postalCode || ""}
-                />
-                <input
-                  name="address1"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.address?.address1}
-                />
-                <input
-                  name="address2"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.address?.address2}
-                />
-                <Button style={{ marginLeft: "0.5rem" }}>수정</Button>
+                <Col>
+                  <Row>
+                    <SubTitle style={{ marginBottom: "0.5rem" }}>주소</SubTitle>
+                  </Row>
+                  <Row>
+                    <input
+                      name="postalCode"
+                      style={{
+                        marginBottom: "0.5rem",
+                        marginLeft: "0.5rem",
+                        width: "6rem"
+                      }}
+                      type="text"
+                      defaultValue={hospitalInfo?.address?.postalCode || ""}
+                      onChange={onChangeAddress}
+                    />
+                  </Row>
+                  <Row>
+                    <input
+                      name="address1"
+                      style={{
+                        marginBottom: "0.5rem",
+                        marginLeft: "0.5rem",
+                        width: "20rem"
+                      }}
+                      type="text"
+                      defaultValue={hospitalInfo?.address?.address1}
+                      onChange={onChangeAddress}
+                    />
+                  </Row>
+                  <Row>
+                    <input
+                      name="address2"
+                      style={{
+                        marginBottom: "1rem",
+                        marginLeft: "0.5rem",
+                        width: "18rem"
+                      }}
+                      type="text"
+                      defaultValue={hospitalInfo?.address?.address2}
+                      onChange={onChangeAddress}
+                    />
+                    <Button
+                    style={{ marginLeft: "0.5rem" }}
+                    onClick={onOpenClick}
+                  >수정</Button>
+                  </Row>
+                </Col>
+                <Modal isOpen={isOpen} ariaHideApp={false} style={ModalStyle}>
+                  <DaumPostcode onComplete={completeHandler} />
+                </Modal>
               </Row>
               <Row>
-                <SubTitle>카테고리</SubTitle>
+                <SubTitle style={{ marginBottom: "0.5rem" }}>카테고리</SubTitle>
               </Row>
               <Row>
-                {categoryList.map((category) => (
-                  <Button
-                    id={category}
-                    key={category}
-                    onClick={onClickCategory}
-                  >{category}</Button>
+                {CATEGORY_LIST.map((category) => (
+                  <Row key={category+"Row"}>
+                    <CategoryLabel
+                      htmlFor={category}
+                      key={category+"L"}
+                    >
+                      <input type="checkbox"
+                        id={category}
+                        key={category}
+                        onChange={e => checkCategoryHandler(e)}
+                        value={category}
+                        hidden
+                      />
+                      {category}
+                    </CategoryLabel>
+                  </Row>
                 ))}
               </Row>
               <Row>
-                <SubTitle>키워드</SubTitle>
+                <SubTitle style={{ marginTop: "1rem" }}>키워드</SubTitle>
                 <span
                   style={{
                     marginLeft: "1rem",
@@ -428,23 +586,41 @@ export default function HospitalInfo() {
               </Row>
               <Row>
                 <Col>
-                  <SubTitle
-                    style={{
-                      marginBottom: "1rem"
-                    }}
-                  >영업시간</SubTitle>
-                  <Row>휴무일 선택</Row>
-                  <Row
-                    style={{ marginBottom: "0.5rem" }}
-                  >
-                    {dayList.map((day) => (
-                      <Button
-                      id={day}
-                      key={day}
-                      onClick={onClickDay}
-                      >{day}</Button>
+                  <SubTitle>영업시간</SubTitle>
+                  <Row style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>시간 선택</Row>
+                  <Row>
+                    {TIME_LIST.map((time) => (
+                      <TimeLabel
+                        htmlFor={time}
+                        key={time+"L"}
+                      >
+                        <input type="checkbox"
+                          id={time}
+                          key={time}
+                          onClick={checkBusinessHoursHandler}
+                          value={time}
+                          hidden
+                        />{time}:00
+                      </TimeLabel>
                     ))}
-                
+                  </Row>
+                  <Row style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>휴무일 선택</Row>
+                  <Row>
+                    {DAY_LIST.map((day) => (
+                      <DayLabel
+                        htmlFor={day}
+                        key={day+"L"}
+                      >
+                        <input type="checkbox"
+                          id={day}
+                          key={day}
+                          onChange={e => checkDayHandler(e)}
+                          value={day}
+                          hidden
+                        />
+                        {day}
+                      </DayLabel>
+                    ))}
                     {/* {dayList.map((day) => {
                       if (isButtonClicked) { // 클릭된 상태면
                         setisButtonClicked(false); // 클릭해제 상태로 바꿈
@@ -470,16 +646,6 @@ export default function HospitalInfo() {
                           >{day}</Button>
                       )
                     })} */}
-                  </Row>
-                  <Row>시간 선택</Row>
-                  <Row>
-                    {timeList.map((time) => (
-                      <Button
-                        id={time}
-                        key={time}
-                        onClick={onClickTime}
-                      >{time}:00</Button>
-                    ))}
                   </Row>
                   <Row style={{ marginTop: "1rem" }}>
                     <SubTitle>시간당 예약가능 고객 수</SubTitle>
@@ -593,14 +759,14 @@ export default function HospitalInfo() {
                         padding: ".5rem .5rem"
                       }}
                     >
-                      <Col>
-                        <Row>서비스명: {item.serviceName}</Row>
-                        <Row>서비스 가격: {item.servicePrice}</Row>
-                        <Row>서비스 설명: {item.serviceDesc}</Row>
-                        <Row>서비스 동시 수용가능인원수: {item.
+                      <Col key={index+"Col1"}>
+                        <Row key={index+"N"}>서비스명: {item.serviceName}</Row>
+                        <Row key={index+"P"}>서비스 가격: {item.servicePrice}</Row>
+                        <Row key={index+"D"}>서비스 설명: {item.serviceDesc}</Row>
+                        <Row key={index+"C"}>서비스 동시 수용가능인원수: {item.
                       serviceCapacity}</Row>
                       </Col>
-                      <Col>
+                      {/* <Col> */}
                         {/* 시간 관계상 수정 기능은 추후 추가 */}
                         {/* <Row>
                           <Button>수정</Button>
@@ -609,7 +775,7 @@ export default function HospitalInfo() {
                         {/* <Row>
                           <Button onClick={deleteServiceHandler(index)}>삭제</Button>
                         </Row> */}
-                      </Col>
+                      {/* </Col> */}
                     </Row>
                   ))}
                 </Col>
