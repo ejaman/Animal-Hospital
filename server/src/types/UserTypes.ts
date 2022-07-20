@@ -12,6 +12,7 @@ export interface UserInfo {
     password : string,
     phoneNumber : string,
     address : UserAddress,
+    pet? : object[],
     role ? : string,
     userStatus?  : string,
     
@@ -24,6 +25,7 @@ export interface UserData {
     password : string,
     phoneNumber : string,
     address : UserAddress,
+    pet? : object[],
     role ? : string,
     userStatus?  : string,
 }
