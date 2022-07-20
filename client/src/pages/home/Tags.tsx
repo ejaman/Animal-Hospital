@@ -85,7 +85,7 @@ export default function Tags({setFiltered, setTotal, limit, page, setPage}: ITag
     console.log(tagData);
     setFiltered(filterData);
     setParamsTag(tagData[tag]?.name); // TODO: 새로고침 하면 값 못 받는 문제
-    setSearchParams({page: '2', perPage: '4', tagName: paramsTag});
+    setSearchParams({page: '1', perPage: '4', tagName: paramsTag});
   }, []);
 
   useEffect(() => {

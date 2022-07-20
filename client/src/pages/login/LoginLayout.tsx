@@ -53,11 +53,13 @@ function LoginLayout() {
       try {
         const result = await CustomAxiosPost.post("/api/login", logins);
         const { token, role, userStatus } = result.data.userToken;
+        console.log(result);
         setUser({
           ...user,
           role,
           userStatus,
         });
+        console.log(user)
 
         // 만일 토큰이 존재하면 로그인에 성공한거니까 access 토큰을 storage에 저장한후에 로그인 성공 메시지 남기고 페이지 이동
         if (token) {
