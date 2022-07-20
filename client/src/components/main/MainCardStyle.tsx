@@ -1,17 +1,28 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const MainCardWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0 80px 0 80px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 324px);
+  justify-content: center;
+  justify-items: center;
+  padding-top: 20px;
+  grid-row-gap: 20px;
 `;
 
-const MainCardContainer = styled.div`
+const MainCardContainer = styled(Link)`
   width: 300px;
   height: 385px;
   margin: 24px;
   border-radius: 12px;
   box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+  &:hover {
+    text-decoration: none;
+    color: black;
+  }
 `;
 
 const MainCardContent = styled.div`

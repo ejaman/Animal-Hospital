@@ -1,4 +1,5 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import {
   MainCardContainer,
   MainCardContent,
@@ -7,31 +8,52 @@ import {
   MainCardWrapper,
   MainCardImg,
 } from './MainCardStyle';
-import { sampleData } from './MainData';
 import MainKeyWord from './MainKeyWord';
 
+export interface IData {
+  starRating: number,
+  name: string,
+  address: {
+    postalCode: string,
+    address1: string,
+    address2: string
+  },
+  phoneNumber: string,
+  businessHours: number[],
+  holiday: string[],
+  tag: string[],
+  keyword: string[],
+  image: string[],
+  hospitalCapacity: number
+}
+
+interface IProps {
+  offset: number,
+  limit: number,
+  filtered: IData[],
+}
+
 // main페이지에 사용할 컴포넌트
-function MainCard() {
-  // 추후에는 서버에서 데이터를 받아서 데이터를 뿌리겠습니다.
-  const sampleDataProps = sampleData.map((items) => {
+function MainCard({offset, limit, filtered}: IProps) {
+  const dataProps = filtered.slice(offset, offset+limit).map((items) => {
     return (
-      <MainCardContainer>
+      <MainCardContainer to={`hospital/${items.name}/detail`}>
         <MainCardImg
-          src={items.imageUrl}
+          src={items.image[0]}
           alt=""
           width="300px"
           height="285px"
         ></MainCardImg>
         <MainCardContent>
-          <MainCardName>{items.hospitalName}</MainCardName>
-          <MainCardAdress>{items.address}</MainCardAdress>
-          <MainKeyWord mainKeyWord={items.keyWord} />
+          <MainCardName>{items.name}</MainCardName>
+          <MainCardAdress>{items.address.address1} {items.address.address2}</MainCardAdress>
+          <MainKeyWord mainKeyWord={items.keyword} />
         </MainCardContent>
       </MainCardContainer>
     );
   });
 
-  return <MainCardWrapper>{sampleDataProps}</MainCardWrapper>;
+  return <MainCardWrapper>{dataProps}</MainCardWrapper>;
 }
 
 export default MainCard;

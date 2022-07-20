@@ -15,23 +15,37 @@ import Detail from "./pages/detail/Detail";
 import AdminHospitalList from "./pages/admin-hplist/AdminHospitalList";
 import PetInformation from "./pages/pet-information/PetInformation";
 
+import LayoutSearch from "./components/LayoutSearch";
+import LayoutMypage from "./components/LayoutMypage";
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="detail" element={<Detail />} />
+        {/* 헤더 푸터 x */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/user-mypage" element={<UserMypage />} />
-        <Route path="/user-info" element={<UserInfo />} />
-        <Route path="/petinfo" element={<PetInformation />} />
-        <Route path="/pet-info" element={<PetInfo />} />
-        <Route path="/hospital-mypage" element={<HospitalMypage />} />
-        <Route path="/hospital-info" element={<HospitalInfo />} />
-        <Route path="/admin-mypage" element={<AdminMypage />} />
-        <Route path="/admin-userlist" element={<AdminUserList />} />
-        <Route path="/admin-hplist" element={<AdminHospitalList />} />a
+
+        {/* 헤더 푸터 검색창 버전 */}
+        <Route element={<LayoutSearch />}>
+          <Route path="/" element={<Home />} />
+          <Route path="detail" element={<Detail />} />
+          <Route path="/hospital/:hospitalName/detail" element={<Detail />} />
+          <Route path="/hospital/:hospitalName/Services" element={<Detail />} />
+        </Route>
+
+        {/* 헤더 푸터 검색창x 버전 */}
+        <Route element={<LayoutMypage />}>
+          <Route path="/user-mypage" element={<UserMypage />} />
+          <Route path="/user-info" element={<UserInfo />} />
+          <Route path="/pet-info" element={<PetInfo />} />
+          <Route path="/petinfo" element={<PetInformation />} />
+          <Route path="/hospital-mypage" element={<HospitalMypage />} />
+          <Route path="/hospital-info" element={<HospitalInfo />} />
+          <Route path="/admin-mypage" element={<AdminMypage />} />
+          <Route path="/admin-userlist" element={<AdminUserList />} />
+          <Route path="/admin-hplist" element={<AdminHospitalList />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

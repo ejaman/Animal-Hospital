@@ -1,3 +1,4 @@
+
 import { reviewService, userService } from '../services';
 import { Request, Response, NextFunction } from 'express';
 import * as _ from 'lodash';
@@ -150,6 +151,7 @@ export async function getReviewCTR (req: Request,
         const userRole = req.userRole;
         const review = await reviewService.getEachReview(reviewId);
         
+
         // 사용자 및 삭제 대상 병원 확인
         if(userRole === "admin"||userId === currentUserId && targetHospital === review.targetHospital){
           const deleteResult = await reviewService.deleteReviewData(reviewId);
@@ -158,9 +160,11 @@ export async function getReviewCTR (req: Request,
           res.status(400).json({message : "잘못된 삭제 시도입니다."})
         }
   
+
     } catch (error) {
         next(error)
     }
+
 
   }
 
