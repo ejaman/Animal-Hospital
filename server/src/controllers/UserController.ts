@@ -94,7 +94,7 @@ export async function loginPassportCTR (req:Request, res:Response, next : NextFu
                         // const userToken = await userService.getUserToken({ email, password });
                         const secretKey = process.env.JWT_SECRET_KEY || 'secret-key';
                         const token = jwt.sign(
-                            {userId : user._id, role : user.role},
+                            {userId : user._id, role : user.role, userStatus : user.userStatus},
                             secretKey,
                             {expiresIn : '10d'}
                         )
@@ -198,20 +198,36 @@ export async function ExpireUserCTR (req : Request, res : Response, next : NextF
 
 export async function loginKakaoCTR (req : Request, res : Response, next : NextFunction){
     try {
-        // const {email}  = req.body;
-        // const userToken = await userService.getUserTokenWithKakao(email);
-        // res.status(200).json(userToken);
-
-        passport.authenticate('kakao', (err, user) =>{
+       
+        passport.authenticate('kakao', (err, user ,info) =>{
             console.log('passport.authenticate(kakao)실행');
             if(!user) {
+                logger.warn(info.message);
                 return res.redirect('http://localhost:5100/api/login');
             }
-            req.logIn(user, function(err) {
+            req.login(user, async(err)=> {
                 console.log('kakao-callback user : ', user);
-                return res.redirect('http://localhost:5100')
-            });
+                if(err){
+                    next(err);
+                    return;
+                }
 
+                const accessToken = await userService.getAccessToken(
+                    user._id,
+                    user.role,
+                    user.userStatus
+                )
+
+                await userService.saveRefreshToken(user._id);
+
+                return res.status(200).json({
+                    userToken : {
+                        accessToken,
+                        role : user.role,
+                        userStatus : user.userStatus
+                    }
+                })       
+            });
         })(req,res);
         
     } catch (error) {
