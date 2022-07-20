@@ -279,6 +279,20 @@ class HospitalService {
     );
     return users;
   }
+
+  async findByIds(hospIds: string[]): Promise<HospitalInfo[]> {
+    const HospInfoes: HospitalInfo[] = [];
+    for (let hospId of hospIds) {
+      const hospInfo = await this.hospitalModel.findById(hospId);
+      if (!hospInfo) {
+        throw new Error(
+          '해당 병원태그코드 내역이 없습니다. 다시 한 번 확인해 주세요.'
+        );
+      }
+      HospInfoes.push(hospInfo);
+    }
+    return HospInfoes;
+  }
 }
 
 const hospitalService = new HospitalService(hospitalModel);

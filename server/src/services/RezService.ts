@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {
+  SearchOptions,
   ReservationInfo,
   ReservationModel,
   ReservationRegisterData,
@@ -11,7 +12,7 @@ import { hospRegStatusService, hospStatusService } from './index';
 class ReservationService {
   constructor(private reservationModel: ReservationModel) {}
 
-  // 일반 회원가입
+  // 예약등록
   async creat(
     rezRegisterData: ReservationRegisterData
   ): Promise<ReservationInfo> {
@@ -21,6 +22,28 @@ class ReservationService {
     );
 
     return createdNewReservation;
+  }
+
+  async getReservations(
+    page: number,
+    perPage: number,
+    searchOptions: SearchOptions
+  ): Promise<ReservationInfo[]> {
+    const reservations = await this.reservationModel.findList(
+      page,
+      perPage,
+      searchOptions
+    );
+    return reservations;
+  }
+
+  async countTotalReservations(searchOptions: SearchOptions): Promise<number> {
+    const total = await this.reservationModel.countReservations(searchOptions);
+
+    if (total < 1) {
+      throw new Error('예약이 없습니다.');
+    }
+    return total;
   }
 }
 
