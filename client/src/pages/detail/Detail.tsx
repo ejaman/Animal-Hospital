@@ -27,11 +27,16 @@ function Detail() {
   const { hospitalName } = useParams();
   const [hospitalInfo, setHospitalInfo] = useState<any>({});
 
-  useEffect(() => {
-    CustomAxiosGet.get(`/hospital/${hospitalName}/detail`).then((res) =>
+  const fetchGetData = async () => {
+    await CustomAxiosGet.get(`/hospital/${hospitalName}/detail`).then((res) =>
       setHospitalInfo(res.data.data.hospDetailInfo)
     );
+  };
+  useEffect(() => {
+    fetchGetData();
   }, []);
+
+  console.log(hospitalInfo);
 
   return (
     <MainContainer>
@@ -41,16 +46,22 @@ function Detail() {
       </Header>
       <ImgContainer>
         <MainImg
-          src="http://www.designtwoply.com/wp-content/uploads/2019/09/designtwoply0000.jpg"
+          width="680px"
+          height="433.66px"
+          src={hospitalInfo.image && hospitalInfo.image[0]}
           alt="img"
         />
         <div>
           <RightTopImg
-            src="http://www.designtwoply.com/wp-content/uploads/2019/09/designtwoply-project-126-4.jpg"
+            width="320px"
+            height="216.83px"
+            src={hospitalInfo.image && hospitalInfo.image[1]}
             alt="img"
           />
           <RightBottomImg
-            src="http://www.designtwoply.com/wp-content/uploads/2019/09/designtwoply-project-126-5.jpg"
+            width="320px"
+            height="213.33px"
+            src={hospitalInfo.image && hospitalInfo.image[2]}
             alt="img"
           />
         </div>

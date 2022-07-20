@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import * as _ from 'lodash';
 import { hospTagService } from '../services';
-import {} from '../middlewares';
 import { upload } from '../utils';
+import { HttpError } from '../middlewares';
 
 const hospTagRouter = Router();
 
@@ -35,7 +35,8 @@ hospTagRouter.post('/', upload.single('image'), async (req, res, next) => {
       image = (req.file as Express.MulterS3.File).location;
     } else {
       if (_.isEmpty(req.body)) {
-        throw new Error(
+        throw new HttpError(
+          400,
           'headers의 Content-Type을 application/json으로 설정해주세요'
         );
       }
@@ -44,7 +45,7 @@ hospTagRouter.post('/', upload.single('image'), async (req, res, next) => {
     const { name } = req.body;
 
     if (!name) {
-      throw new Error('이름은 필수로 입력하셔야 합니다.');
+      throw new HttpError(400, '이름은 필수로 입력하셔야 합니다.');
     }
 
     const createData = {
@@ -71,7 +72,8 @@ hospTagRouter.patch(
         image = (req.file as Express.MulterS3.File).location;
       } else {
         if (_.isEmpty(req.body)) {
-          throw new Error(
+          throw new HttpError(
+            400,
             'headers의 Content-Type을 application/json으로 설정해주세요'
           );
         }
