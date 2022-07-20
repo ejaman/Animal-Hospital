@@ -7,7 +7,6 @@ import TagList from './TagList';
 export default function Home() {  
   const [page, setPage] = useState<number>(1);
   const limit = 4;
-  const offset = (page-1) * limit;
   const [total, setTotal] = useState<number>(0);
   const [filtered, setFiltered] = useState<IData[]>([]);
 
@@ -20,8 +19,6 @@ export default function Home() {
         page={page}
         setPage={(page: number) => setPage(page)} />
       <MainCard
-        offset={offset}
-        limit={limit}
         filtered={filtered} />
       <Pagination
         total={total}
