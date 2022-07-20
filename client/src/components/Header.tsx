@@ -3,8 +3,11 @@ import styled, {css} from 'styled-components';
 import {Link} from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faCircleUser} from '@fortawesome/free-solid-svg-icons';
+import { TUser, userState } from '../state/UserState';
 
 import Search from './Search';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { hospitalLoginState } from '../state/HospitalState';
 
 const HeaderContainer = styled.div`
   width: 100%;
@@ -63,16 +66,8 @@ interface IProfile {
 }
 
 const ProfileBtnbox = styled.div<IProfile>`
+  z-index: 1;
   transition: 0.3s all ease-in-out;
-  animation: fade 0.3s 1 ease-in-out;
-  @keyframes fade {
-    from {
-      opacity: ${props => props.profile ? 0 : 1};
-    }
-    to {
-      opacity: ${props => props.profile ? 1 : 0};
-    }
-  }
   background-color: white;
   border: 1px solid black;
   width: 100px;
@@ -118,18 +113,13 @@ export default function Header({searchBox}: ISearch) {
   const [isLogin, setIsLogin] = useState<boolean>(!!localStorage.getItem('token'));
   // const [isLogin, setIsLogin] = useState<boolean>(true); // 로그인 되었다고 가정한 가데이터
   const [profile, setProfile] = useState<boolean>(false); // 계정 아이콘 클릭 여부 체크
-  const [role, setRole] = useState<string>(''); // TODO: 롤 따라서 마이페이지 이동
-  
+  const [role, setRole] = useRecoilState<TUser>(userState); // TODO: 롤 따라서 마이페이지 이동]
+  const hospital = useRecoilValue(hospitalLoginState);
   const haveSearch = searchBox;
 
   useEffect(() => {
     // TODO: role 정한 것 반영
   }, [])
-
-  // TODO: 마이페이지 클릭 시 role에 맞춰서 마이페이지 이동
-  function handleNavigateMypage() {
-
-  }
 
   // 로그아웃 클릭 시 로그아웃
   function handleLogout() {
@@ -147,14 +137,15 @@ export default function Header({searchBox}: ISearch) {
           </LogoContainer>
           {haveSearch && <Search />}
           <BtnContainer>
-            {!isLogin ?
+            {!isLogin && hospital.hospitalName==='' ?
               <LoginBtn to='/login'>로그인</LoginBtn> :
               <Profile icon={faCircleUser} size='3x' onClick={() => setProfile((cur => !cur))} />
             }
             {profile &&
               <ProfileBtnbox profile={profile}>
-                <Link to='/user-mypage'>
-                  <ProfileBtn num='first' onClick={handleNavigateMypage}>마이페이지</ProfileBtn>
+                <Link to={role.role === 'basic-user' ? '/user-mypage' :
+                (role.role === 'admin' ? 'admin-mypage' : 'hospital-mypage')}>
+                  <ProfileBtn num='first'>마이페이지</ProfileBtn>
                 </Link>
                 <Link to='/'>
                   <ProfileBtn num='last' onClick={handleLogout}>로그아웃</ProfileBtn>

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import {Link, useSearchParams} from 'react-router-dom';
+import {useSearchParams} from 'react-router-dom';
 import axios from 'axios';
+import { ITagsProps } from './TagList';
+import { IData } from '../../components/main/MainCard';
 
 // import overnight from '../../';
 
@@ -30,14 +32,10 @@ const TagWrapper = styled.div<ITagValue>`
 
   &:hover {
     color: black;
-    border-bottom: 3px solid ${props => props.theme.palette.gray};
+    border-bottom: 3px solid ${props => props.idx !== props.tag && props.theme.palette.gray};
     ${TagImg} {
       filter: contrast(1);
     }
-  }
-
-  &:focus {
-    border-bottom: 3px solid black;
   }
 `;
 
@@ -57,16 +55,13 @@ interface ITagData {
   __v: number
 }
 
-interface IProps {
-  setTagState: (tag: string) => void;
-}
-
-export default function Tags({setTagState}: IProps) {
+export default function Tags({setFiltered, setTotal, limit, page, setPage}: ITagsProps) {
 
   const [tagData, setTagData] = useState<ITagData[]>([]); // 태그 데이터 모음
-  const [tag, setTag] = useState<number>(2); // 클릭 된 태그의 인덱스
+  const [tag, setTag] = useState<number>(0); // 클릭 된 태그의 인덱스
   const [searchParams, setSearchParams] = useSearchParams();
-  const [paramsTag, setParamsTag] = useState<string>('강이지전문');
+  const [paramsTag, setParamsTag] = useState<string>('24시');
+  const [filterData, setFilterData] = useState<IData[]>([]);
   
 
   useEffect(() => {
@@ -77,26 +72,37 @@ export default function Tags({setTagState}: IProps) {
         }
       });
       setTagData([...res.data]);
-      console.log(res);
+    }
+    async function initialList() {
+      const res = await axios.get(`http://localhost:5100/hospital/list/main?page=1&perPage=4&tagName=24시`);
+      const data = await res.data.data.hospitals;
+
+      setFilterData(data);
     }
     getData();
-    // console.log(tagData);
-    // setParamsTag(tagData[tag]?.name); // TODO: 새로고침 하면 값 못 받는 문제
-    setSearchParams({page: '2', perPage: '4', tagName: paramsTag});
+    initialList();
+
+    console.log(tagData);
+    setFiltered(filterData);
+    setParamsTag(tagData[tag]?.name); // TODO: 새로고침 하면 값 못 받는 문제
+    setSearchParams({page: '1', perPage: '4', tagName: paramsTag});
   }, []);
 
   useEffect(() => {
-    const paramsData = searchParams.get('tagName');
-    paramsData && setParamsTag(paramsData);
-  }, [searchParams])
-
-  useEffect(() => {
-    setTagState(paramsTag);
-  }, [paramsTag])
+    (async function getNewData() {
+      const res = await axios.get(`http://localhost:5100/hospital/list/main?page=${page}&perPage=${limit}&tagName=${paramsTag}`); // TODO: tagName=tagState로 변경. page 변경
+      const data = await res.data.data.hospitals;
+      setFilterData(data);
+      setFiltered(filterData);
+      setTotal(data.length);
+    })();
+  }, [paramsTag, page])
 
   function handleTagClick(category: ITagData ,idx: number) {
-    setTag(idx);
+    setParamsTag(category.name);
     setSearchParams({page: '1', perPage: '4', tagName: category.name});
+    setTag(idx);
+    setPage(1);
   }
 
   return (
