@@ -58,6 +58,26 @@ export class UserModel {
         const updatedStatus = updatedUser.userStatus;
         return updatedStatus;
     }
+
+    async updateRefreshToken(userId : string, refreshToken : string) {
+        const filter = {_id : userId};
+        const updatedUser = await User.findOneAndUpdate(filter, {
+            $set : {
+                refreshToken
+            }
+        })
+        return updatedUser;
+    }
+
+    async deleteRefreshToken(userId : string){
+        const filter = {_id : userId};
+        const updatedUser = await User.findOneAndUpdate(filter, {
+            $unset : {
+                refreshToken: ""
+            }
+        })
+        return updatedUser;
+    }
 }
 
 const userModel = new UserModel();

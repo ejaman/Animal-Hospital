@@ -14,6 +14,7 @@ import passport from 'passport';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import { passportLocalConfig } from './passport/LocalStrategy';
+import { passportKakaoConfig } from './passport/KakaoStrategy';
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 passportLocalConfig();
+passportKakaoConfig();
 
 app.use('/hospitalStatus', hospStatusRouter);
 app.use('/hospitalRegStatus', hospRegStatusRouter);
