@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import DaumPostcode from "react-daum-postcode";
 import Modal from "react-modal";
-import axios from "axios";
 import { UserInfoType, Data, Address } from "./Interface";
 import {
   MainContainer,
@@ -19,6 +20,7 @@ import { ModalStyle } from "../../components/ModalStyle";
 
 const token = localStorage.getItem("token");
 function UserInfo() {
+  const navigate = useNavigate();
   // 받아온 정보를 저장하는 state
   const [userInfo, setUserInfo] = useState<UserInfoType>({
     userName: "",
@@ -26,6 +28,7 @@ function UserInfo() {
     email: "",
     password: "",
     phoneNumber: "",
+    userStatus: "",
   });
   // address 관련
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -111,6 +114,7 @@ function UserInfo() {
       .patch(
         `http://localhost:5100/api/expiration
       `,
+        { userStatus: `${userInfo.userStatus}` },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -119,7 +123,8 @@ function UserInfo() {
       )
       .then((res) => {
         console.log(res);
-        alert("탈퇴완료 🥲");
+        alert("00님 탈퇴가 완료되었습니다 🥲");
+        // navigate("/");
       });
   };
   return (
