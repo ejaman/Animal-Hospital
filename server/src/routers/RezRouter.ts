@@ -1,13 +1,23 @@
 import { Router } from 'express';
 import * as _ from 'lodash';
-import { reservationService, hospitalService } from '../services';
+import {
+  reservationService,
+  hospitalService,
+  userService,
+  petService,
+  rezStatusService,
+} from '../services';
 import {
   adminOnly,
   HospLoginRequired,
   onlyHospOwner,
   loginRequired,
 } from '../middlewares';
-import { ReservationInfo, ReservationRegisterData } from '../db';
+import {
+  hospServiceModel,
+  ReservationInfo,
+  ReservationRegisterData,
+} from '../db';
 import mongoose, { model } from 'mongoose';
 
 const reservationRouter = Router();
@@ -46,6 +56,59 @@ reservationRouter.post('/register', loginRequired, async (req, res, next) => {
         newReservation,
       },
       message: '예약하셨습니다.',
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+reservationRouter.get('/user/list', loginRequired, async (req, res, next) => {
+  try {
+    const page = Number(req.query.page || 1);
+    const perPage = Number(req.query.perPage || 10);
+
+    const userId = req.currentUserId;
+
+    const userInfo = await userService.getUserData(userId);
+
+    const searchOptions = { customer: userId };
+
+    const totalReservations = await reservationService.countTotalReservations(
+      searchOptions
+    );
+
+    const Reservations = await reservationService.getReservations(
+      page,
+      perPage,
+      searchOptions
+    );
+
+    const hospIds = Reservations.map((data) => data.hospital.toString());
+    const petIds = Reservations.map((data) => data.pet.toString());
+    const rezStatuses = Reservations.map((data) => data.rezStatus.toString());
+    console.log(petIds);
+
+    const hospInfoes = await hospitalService.findByIds(hospIds);
+    const petInfoes = await petService.findByIds(petIds);
+    const rezStatusInfoes = await rezStatusService.findByIds(rezStatuses);
+
+    const totalPage = Math.ceil(totalReservations / perPage);
+
+    res.status(200).json({
+      data: {
+        searchOptions: searchOptions,
+        ReservationsInfo: {
+          Reservations: Reservations,
+          hospInfoes: hospInfoes,
+          petInfoes: petInfoes,
+          rezStatusInfoes: rezStatusInfoes,
+        },
+        page: page,
+        perPage: perPage,
+        totalPage: totalPage,
+        totalHospitals: totalReservations,
+      },
+      message: '',
     });
   } catch (error) {
     next(error);

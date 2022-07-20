@@ -78,6 +78,20 @@ class RezStatusService {
       message: `${isExist.name} 예약 상태코드 삭제를 성공하였습니다.`,
     };
   }
+
+  async findByIds(rezStatusIds: string[]): Promise<RezStatusInfo[]> {
+    const RezStatusInfoes: RezStatusInfo[] = [];
+    for (let rezStatusId of rezStatusIds) {
+      const RezStatusInfo = await this.rezStatusModel.findById(rezStatusId);
+      if (!RezStatusInfo) {
+        throw new Error(
+          '예약 상태코드 내역이 없습니다. 다시 한 번 확인해 주세요.'
+        );
+      }
+      RezStatusInfoes.push(RezStatusInfo);
+    }
+    return RezStatusInfoes;
+  }
 }
 
 const rezStatusService = new RezStatusService(rezStatusModel);

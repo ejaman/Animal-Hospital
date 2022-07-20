@@ -1,98 +1,112 @@
-import { PetData, PetInfo, petModel, PetModel,  } from "../db";
+import { PetData, PetInfo, petModel, PetModel } from '../db';
 
 interface PetInfoRequired {
-    owner : string,
-    petId : string
+  owner: string;
+  petId: string;
 }
 class PetService {
-    constructor(
-        private petModel : PetModel) {}
+  constructor(private petModel: PetModel) {}
 
-    //펫 정보 등록
-    async addPet(petInfo : PetInfo) : Promise<PetData>{
-        const {owner, species, breed, name, age, sex, weight,medicalHistory, vaccination, neutralized, image} = petInfo;
-        
-        const createdPet = await this.petModel.create(petInfo);
-        return createdPet;
+  //펫 정보 등록
+  async addPet(petInfo: PetInfo): Promise<PetData> {
+    const {
+      owner,
+      species,
+      breed,
+      name,
+      age,
+      sex,
+      weight,
+      medicalHistory,
+      vaccination,
+      neutralized,
+      image,
+    } = petInfo;
 
+    const createdPet = await this.petModel.create(petInfo);
+    return createdPet;
+  }
+
+  //펫 정보 수정
+  async setPet(
+    petInfoRequired: PetInfoRequired,
+    toUpdate: Partial<PetInfo>
+  ): Promise<PetData | null> {
+    const { owner, petId } = petInfoRequired;
+    if (!owner) {
+      throw new Error('로그인한 펫 주인이 맞는지 확인해주세요.');
+    } else if (!petId) {
+      throw new Error('정보를 수정하려는 pet을 골라주세요.');
     }
 
-    //펫 정보 수정
-    async setPet(
-        petInfoRequired : PetInfoRequired,
-        toUpdate : Partial<PetInfo>
-        ) : Promise<PetData | null> {
+    let pet = await this.petModel.findByPetId(petId);
 
-        
-        const {owner, petId} = petInfoRequired;
-        if (!owner){
-            throw new Error("로그인한 펫 주인이 맞는지 확인해주세요.")
-        } else if(!petId) {
-            throw new Error("정보를 수정하려는 pet을 골라주세요.")
-        }
+    pet = await this.petModel.update({ petId, update: toUpdate });
 
-        let pet = await this.petModel.findByPetId(petId);
+    return pet;
+  }
 
-        pet = await this.petModel.update({petId, update : toUpdate});
+  // 펫 정보(사용자의 펫 전체) 조회
+  async getUserPetData(ownerId: string): Promise<PetData[]> {
+    const pets = await this.petModel.findById(ownerId);
 
-        return pet;
-       
-        }
-
-
-    // 펫 정보(사용자의 펫 전체) 조회 
-    async getUserPetData ( ownerId : string) : Promise<PetData[]> {
-
-        const pets = await this.petModel.findById(ownerId);
-
-        if(!ownerId) {
-            throw new Error("가입 내역이 없습니다. 이메일을 다시 확인해주세요.")
-        }
-
-        if(!pets){
-            throw new Error("조회되는 펫 정보가 없습니다.")
-        }
-
-        return pets;
-
-        
-
+    if (!ownerId) {
+      throw new Error('가입 내역이 없습니다. 이메일을 다시 확인해주세요.');
     }
 
-    //개별 펫 정보 조회
-    async getPetData ( petId : string) : Promise<PetData> {
-
-        const pet = await this.petModel.findByPetId(petId);
-
-        if(!pet){
-            throw new Error("조회되는 펫 정보가 없습니다.")
-        }
-
-        return pet;
+    if (!pets) {
+      throw new Error('조회되는 펫 정보가 없습니다.');
     }
 
-    //펫 정보 삭제
-    async deletePetData(petId : string) : Promise<{message : string}> {
-        
-        let pet = await this.petModel.findByPetId(petId);
+    return pets;
+  }
 
-        if(!pet){
-            throw new Error("펫 정보를 찾을 수 없습니다. 다시 한번 확인해 주세요.")
-        }
+  //개별 펫 정보 조회
+  async getPetData(petId: string): Promise<PetData> {
+    const pet = await this.petModel.findByPetId(petId);
 
-        const {deletedCount} = await this.petModel.deleteById(petId);
-
-        if(deletedCount ===0){
-            throw new Error("펫 정보 삭제에 실패했습니다")
-        }
-
-        return {message: `${petId} 펫 정보가 삭제되었습니다`}
-
+    if (!pet) {
+      throw new Error('조회되는 펫 정보가 없습니다.');
     }
 
+    return pet;
+  }
+
+  //펫 정보 삭제
+  async deletePetData(petId: string): Promise<{ message: string }> {
+    let pet = await this.petModel.findByPetId(petId);
+
+    if (!pet) {
+      throw new Error('펫 정보를 찾을 수 없습니다. 다시 한번 확인해 주세요.');
+    }
+
+    const { deletedCount } = await this.petModel.deleteById(petId);
+
+    if (deletedCount === 0) {
+      throw new Error('펫 정보 삭제에 실패했습니다');
+    }
+
+    return { message: `${petId} 펫 정보가 삭제되었습니다` };
+  }
+
+  // 펫 ID 배열에 담긴 것들을 조회
+  async findByIds(petIds: string[]): Promise<PetData[]> {
+    const petInfoes: PetData[] = [];
+    console.log(petIds);
+    for (let petId of petIds) {
+      const petInfo = await this.petModel.findByPetId(petId);
+      console.log(petInfo);
+      if (!petInfo) {
+        throw new Error('펫 정보를 찾을 수 없습니다. 다시 한번 확인해 주세요.');
+      }
+
+      petInfoes.push(petInfo);
+    }
+
+    return petInfoes;
+  }
 }
-
 
 const petService = new PetService(petModel);
 
-export {petService};
+export { petService };
