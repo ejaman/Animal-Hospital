@@ -6,8 +6,9 @@ import {faCircleUser} from '@fortawesome/free-solid-svg-icons';
 import { TUser, userState } from '../state/UserState';
 
 import Search from './Search';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { hospitalLoginState } from '../state/HospitalState';
+import { CustomAxiosGet } from '../common/CustomAxios';
 
 const HeaderContainer = styled.div`
   width: 100%;
@@ -111,19 +112,26 @@ interface ISearch {
 
 export default function Header({searchBox}: ISearch) {
   const [isLogin, setIsLogin] = useState<boolean>(!!localStorage.getItem('token'));
-  // const [isLogin, setIsLogin] = useState<boolean>(true); // 로그인 되었다고 가정한 가데이터
   const [profile, setProfile] = useState<boolean>(false); // 계정 아이콘 클릭 여부 체크
-  const [role, setRole] = useRecoilState<TUser>(userState); // TODO: 롤 따라서 마이페이지 이동]
+  const [role, setRole] = useRecoilState<TUser>(userState);
   const hospital = useRecoilValue(hospitalLoginState);
   const haveSearch = searchBox;
+  const resetState = useResetRecoilState(hospitalLoginState);
 
   useEffect(() => {
     // TODO: role 정한 것 반영
   }, [])
-
   // 로그아웃 클릭 시 로그아웃
   function handleLogout() {
-    localStorage.removeItem('token');
+    
+    async function logoutHospital() {
+      const res = await CustomAxiosGet.get('localhost:5100/hospital/logout');
+      console.log(res);
+      resetState();
+    }
+
+    !!localStorage.getItem('token') ? localStorage.removeItem('token') : logoutHospital()
+
     setIsLogin(false);
     setProfile(false);
   }
@@ -145,7 +153,7 @@ export default function Header({searchBox}: ISearch) {
               <ProfileBtnbox profile={profile}>
                 <Link to={role.role === 'basic-user' ? '/user-mypage' :
                 (role.role === 'admin' ? 'admin-mypage' : 'hospital-mypage')}>
-                  <ProfileBtn num='first'>마이페이지</ProfileBtn>
+                  <ProfileBtn num='first' onClick={() => setProfile(false)}>마이페이지</ProfileBtn>
                 </Link>
                 <Link to='/'>
                   <ProfileBtn num='last' onClick={handleLogout}>로그아웃</ProfileBtn>

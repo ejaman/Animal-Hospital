@@ -63,26 +63,29 @@ export default function Tags({setFiltered, setTotal, limit, page, setPage}: ITag
   const [paramsTag, setParamsTag] = useState<string>('24시');
   const [filterData, setFilterData] = useState<IData[]>([]);
   
+  async function getData() {
+    const res = await axios.get('http://localhost:5100/hospitalTag/list', {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    setTagData([...res.data]);
+    initialList();
+  }
+  
+  async function initialList() {
+    const res = await axios.get(`http://localhost:5100/hospital/list/main?page=1&perPage=${limit}&tagName=${paramsTag}`);
+    const data = await res.data.data.hospitals;
+
+    setFilterData(data);
+  }
+  
+  console.log(tagData, filterData);
 
   useEffect(() => {
-    async function getData() {
-      const res = await axios.get('http://localhost:5100/hospitalTag/list', {
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-      setTagData([...res.data]);
-    }
-    async function initialList() {
-      const res = await axios.get(`http://localhost:5100/hospital/list/main?page=1&perPage=4&tagName=24시`);
-      const data = await res.data.data.hospitals;
-
-      setFilterData(data);
-    }
     getData();
-    initialList();
+    // initialList();
 
-    console.log(tagData);
     setPage(1);
     setFiltered(filterData);
     setParamsTag(tagData[tag]?.name); // TODO: 새로고침 하면 값 못 받는 문제
