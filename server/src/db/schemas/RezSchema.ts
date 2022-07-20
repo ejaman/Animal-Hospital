@@ -37,6 +37,7 @@ const ReservationSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'rezStatus',
       required: false,
+      default: '62d7b8a03b57514d19909adb',
     },
     message: {
       type: String,
