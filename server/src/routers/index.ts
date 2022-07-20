@@ -5,3 +5,5 @@ export * from './HospStatusRouter';
 export * from './HospRegStatusRouter';
 export * from './HospTagRouter';
 export * from './HospRouter';
+export * from './RezStatusRouter';
+export * from './RezRouter';
