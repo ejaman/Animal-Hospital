@@ -17,6 +17,7 @@ import PetInformation from "./pages/pet-information/PetInformation";
 
 import LayoutSearch from "./components/LayoutSearch";
 import LayoutMypage from "./components/LayoutMypage";
+import UserReserve from "./pages/user-reserv/UserReserve";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
         <Route element={<LayoutMypage />}>
           <Route path="/user-mypage" element={<UserMypage />} />
           <Route path="/user-info" element={<UserInfo />} />
+          <Route path="/user-reservation" element={<UserReserve />} />
           <Route path="/pet-info" element={<PetInfo />} />
           <Route path="/petinfo" element={<PetInformation />} />
           <Route path="/hospital-mypage" element={<HospitalMypage />} />
