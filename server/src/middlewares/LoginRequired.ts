@@ -27,7 +27,7 @@ async function loginRequired (req : Request, res : Response, next: NextFunction)
             throw new Error("탈퇴한 사용자입니다.")
             return;
         }
-        //로그인한 유저의 userId를 request객체의 속성으로 보내줌
+        //로그인한 유저의 userId,userStatus, userRole 를 request객체의 속성으로 보내줌
         req.currentUserId = userId;
         req.userStatus = userStatus;
         req.userRole = role;
