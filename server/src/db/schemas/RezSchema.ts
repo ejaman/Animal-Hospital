@@ -8,7 +8,8 @@ const ReservationSchema = new Schema(
       required: true,
     },
     hospital: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'hospitals',
       required: true,
     },
     service: {
@@ -21,7 +22,7 @@ const ReservationSchema = new Schema(
     },
     pet: {
       type: Schema.Types.ObjectId,
-      ref: 'hospitals',
+      ref: 'pets',
       required: true,
     },
     rezDate: {
