@@ -1,5 +1,5 @@
 // react와 vanilla js 혼종인 파일이다. 리액트로 서서히 바꿔나가자
-// 정보 수정 시 validation 추가, 회원 탈퇴 시 비밀번호 확인 추가
+// 우선순위 높은 남은 기능들: 정보 수정 시 validation 추가, 회원 탈퇴 시 비밀번호 확인 추가
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import DaumPostcode from "react-daum-postcode";
 import Modal from "react-modal";
@@ -30,11 +30,15 @@ import {
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { hospitalLoginState } from "../../state/HospitalState";
+import { useNavigate } from "react-router-dom";
 
 export default function HospitalInfo() { 
   const [info, setInfo] = useRecoilState(hospitalLoginState);
   console.log(info);
   // 폼 내용들은 입력 시마다 내용이 곧바로 저장되므로 추후 debouncing 적용 예정
+
+  let navigate = useNavigate();
+
   /* elements */
   const $HashWrapOuter = document.querySelector('.HashWrapOuter');
   const $HashWrapInner = document.createElement('div');
@@ -70,7 +74,7 @@ export default function HospitalInfo() {
   });
   const [serviceList, setServiceList] = useState<any[]>([]);
   const [keyword, setKeyword] = useState<string[]|undefined>([]);
-  const [newKeyword, setNewKeyword] = useState('');
+  const [newKeyword, setNewKeyword] = useState("");
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
   /* address modal */
@@ -79,8 +83,9 @@ export default function HospitalInfo() {
   const [isPassOpen, setIsPassOpen] = useState<boolean>(false);
 
   /* password */
-  const currentPwRef = useRef<HTMLInputElement>(null);
-  const newPwRef = useRef<HTMLInputElement>(null);
+  const [currPassword, setCurrPassword] = useState<string>("");
+  // const currentPwRef = useRef<HTMLInputElement>(null);
+  // const newPwRef = useRef<HTMLInputElement>(null);
   
   /* constants */
   const AVAILABLE_KEYWORD_LENGTH = 10;
@@ -116,7 +121,9 @@ export default function HospitalInfo() {
       ...hospitalServiceInfo,
       [e.currentTarget.name]: e.currentTarget.value
     }
+    const currPassData = e.currentTarget.value
     setHospitalInfo(hospitalData);
+    setCurrPassword(currPassData);
     // setHospitalServiceInfo(hospitalServiceData);
   };
  
@@ -300,12 +307,20 @@ export default function HospitalInfo() {
     })
   }
 
-  const withdrawButtonHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const withdrawButtonHandler = async(e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log('병원 회원 탈퇴가 진행될 것입니다...')
+    console.log("현재 비밀번호:", currPassword);
+    const data = { "currentPassword": currPassword };
+    const response = await axios.patch("http://localhost:5100/hospital/withdrawal", data, {
+      withCredentials: true
+    });
+    console.log(response);
+    console.log('병원 회원 탈퇴가 진행됩니다.')
+    alert("탈퇴되었습니다.");
+    navigate("/login");
   }
 
-  const onhandleUpdate = async (event: React.MouseEvent<HTMLElement>) => {
+  const onhandleUpdate = async(event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     const data = { ...hospitalInfo };
     await axios.patch('http://localhost:5100/hospital', data, { withCredentials: true });
@@ -320,25 +335,7 @@ export default function HospitalInfo() {
   // useEffect(() => {
   //   // 임시 데이터 (api 추가 후 삭제 예정)
   //   setHospitalInfo({
-  //     "name": "이이진진수수 동동물물병병원원",
-  //     "email": "sarangS2hospital@gmail.com",
-  //     "director": "이진수",
-  //     "password": "12345",
-  //     "address": {
-  //       "postalCode": "13477",
-  //       "address1": "경기 성남시 분당구 판교공원로5길 15",
-  //       "address2": "이진수 동물병원"
-  //     },
-  //     "phoneNumber": "010-0000-0000",
-  //     "businessHours": [""],
-  //     "businessNumber": "546521354",
-  //     "licenseNumber": "XXXXXXXXX",
-  //     "holiday": [""],
-  //     "hospitalCapacity": 3,
-  //     "tag": [""],
-  //     "keyword": [""],
-  //     // "image": "https://o-oa.com/wp-content/uploads/2020/05/LJS_01.jpg",
-  //     "image": ""
+  //     ~~hospitalInfo는 get 완료했고 길어서 자름. service도 완성하면 주석 삭제~
   //   });
   //   setHospitalServiceInfo(
   //   {
@@ -363,6 +360,7 @@ export default function HospitalInfo() {
         //응답 실패
         console.error("응답 실패", error);
       }
+      // 서비스 api 완성되면 서비스 get 요청도 추가
     }
     getData();
   }, []);
@@ -423,7 +421,7 @@ export default function HospitalInfo() {
               </Row>
               <Row>
                 <Container>
-                  <InputLabel>비밀번호</InputLabel>
+                  <InputLabel>새 비밀번호</InputLabel>
                   {/* <input ref={newPwRef} placeholder="새 비밀번호" />
                   <input ref={currentPwRef} placeholder="현재 비밀번호" /> */}
                   <InfoInput
@@ -432,12 +430,12 @@ export default function HospitalInfo() {
                     type="password"
                     autoComplete="current-password"
                     defaultValue=""
-                    disabled
                   />
-                  <InfoBtn
+                  {/* 유저 정보 페이지와의 통일감을 위해 현재 비밀번호 input과 수정 버튼은 아래에 */}
+                  {/* <InfoBtn
                     style={{ marginLeft: "0.5rem" }}
                     onClick={buttonHandler}
-                  >변경</InfoBtn>
+                  >변경</InfoBtn> */}
                 </Container>
               </Row>
               <Row>
@@ -676,7 +674,14 @@ export default function HospitalInfo() {
                     </Container>
                   </Row>
                   <Row>
-                    <InfoBtn onClick={ onhandleUpdate }>저장하기</InfoBtn>
+                    <InfoBtn 
+                      style={{
+                        marginLeft: "0.5rem",
+                        marginBottom: "1.5rem",
+                        margin: "auto"
+                      }}
+                      onClick={ onhandleUpdate }
+                    >저장</InfoBtn>
                   </Row>
                   {/* <Row>
                     <Button onClick={() => {
@@ -818,7 +823,11 @@ export default function HospitalInfo() {
           }}>
             <Container style={{ margin: "auto" }}>
               <InputLabel style={{ marginBottom: "1rem" }}>비밀번호를 입력해주세요.</InputLabel>
-              <InfoInput />
+              <InfoInput
+                type="password"
+                name="currPassword"
+                onChange={onChange}
+              />
             </Container>
             <InfoBtn onClick={withdrawButtonHandler}>확인</InfoBtn>
           </HospitalContainer>
