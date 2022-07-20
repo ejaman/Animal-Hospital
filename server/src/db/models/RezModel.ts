@@ -3,6 +3,10 @@ import { ReservationSchema } from '../schemas/RezSchema';
 
 const Reservation = model('reservations', ReservationSchema);
 
+interface SearchOptions {
+  [key: string]: string | mongoose.Types.ObjectId;
+}
+
 export interface ReservationRegisterData {
   customer: mongoose.Types.ObjectId;
   hospital: mongoose.Types.ObjectId;
@@ -34,6 +38,23 @@ export class ReservationModel {
       rezRegisterData
     )) as ReservationInfo;
     return createdNewReservation;
+  }
+
+  async findList(
+    page: number,
+    perPage: number,
+    searchOptions: SearchOptions
+  ): Promise<ReservationInfo[]> {
+    const reservations = (await Reservation.find(searchOptions)
+      .sort({ createdAt: -1 })
+      .skip(perPage * (page - 1))
+      .limit(perPage)) as ReservationInfo[];
+    return reservations;
+  }
+
+  async countReservations(searchOptions: SearchOptions): Promise<number> {
+    const counts = await Reservation.countDocuments(searchOptions);
+    return counts;
   }
 }
 
