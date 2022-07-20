@@ -28,6 +28,7 @@ const BookingButton = styled.button`
 `;
 
 const PetSelectTitle = styled(CalendarTitle)``;
+
 const PetSelect = () => {
   const navigate = useNavigate();
   // pets의 state를 하나 만들어준다.

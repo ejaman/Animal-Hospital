@@ -20,6 +20,7 @@ import {
   RightBottomImg,
   RightTopImg,
 } from "./DetailStyle";
+import HospitalService from "./HospitalService";
 import PetSelect from "./PetSelect";
 
 function Detail() {
@@ -32,7 +33,6 @@ function Detail() {
     );
   }, []);
 
-  console.log(hospitalInfo);
   return (
     <MainContainer>
       <Header>
@@ -85,6 +85,7 @@ function Detail() {
             {hospitalInfo.businessHours && (
               <TimeButton time={hospitalInfo.businessHours} />
             )}
+            <HospitalService />
             <PetSelect />
           </Reservation>
         </ReservationContainer>
