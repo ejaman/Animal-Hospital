@@ -83,6 +83,7 @@ export default function Tags({setFiltered, setTotal, limit, page, setPage}: ITag
     initialList();
 
     console.log(tagData);
+    setPage(1);
     setFiltered(filterData);
     setParamsTag(tagData[tag]?.name); // TODO: 새로고침 하면 값 못 받는 문제
     setSearchParams({page: '1', perPage: '4', tagName: paramsTag});
@@ -91,16 +92,20 @@ export default function Tags({setFiltered, setTotal, limit, page, setPage}: ITag
   useEffect(() => {
     (async function getNewData() {
       const res = await axios.get(`http://localhost:5100/hospital/list/main?page=${page}&perPage=${limit}&tagName=${paramsTag}`); // TODO: tagName=tagState로 변경. page 변경
-      const data = await res.data.data.hospitals;
-      setFilterData(data);
-      setFiltered(filterData);
-      setTotal(data.length);
+      const {data} = await res.data;
+      setFilterData(data.hospitals);
+      setSearchParams({page: page.toString(), perPage: limit.toString(), tagName: paramsTag});
+      setTotal(data.totalHospitals);
     })();
   }, [paramsTag, page])
 
+  useEffect(() => {
+    setFiltered(filterData);
+  }, [filterData])
+
   function handleTagClick(category: ITagData ,idx: number) {
     setParamsTag(category.name);
-    setSearchParams({page: '1', perPage: '4', tagName: category.name});
+    setSearchParams({page: '1', perPage: limit.toString(), tagName: category.name});
     setTag(idx);
     setPage(1);
   }
