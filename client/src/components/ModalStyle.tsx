@@ -8,6 +8,6 @@ export const ModalStyle = {
     height: "600px",
     padding: "0",
     margin: "auto",
-    overflow: "hidden",
+    overflow: "auto",
   },
 };
