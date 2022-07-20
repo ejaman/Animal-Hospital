@@ -1,9 +1,17 @@
 import styled from "styled-components";
 import { theme } from '../../styles/Colors';
 
-const SubTitle = styled.span`
-  font-size: 16px;
-`
+const HospitalContainer = styled.div`
+max-width: 1000px;
+margin: 2rem auto;
+`;
+
+const Container = styled.span`
+  border-bottom: 1px solid #ebebeb;
+  margin: 1rem 0rem;
+  padding: 1rem 0rem;
+`;
+
 /* 사진 추가 css */
 
 const UploadFileLabel = styled.label`
@@ -90,7 +98,7 @@ const TimeLabel = styled.label`
 /* keyword css */
 const KeywordInput = styled.div`
   margin: 24px 24px;
-  border-bottom: 2px solid ${theme.palette.gray};
+  border-bottom: 2px solid ${theme.palette.lightgray};
   color: rgb(52, 58, 64);
   display: flex;
   flex-wrap: wrap;
@@ -131,4 +139,4 @@ const KeywordInput = styled.div`
   }
 `
 
-export { SubTitle, UploadFileLabel, UploadFileInput, CategoryLabel, DayLabel, TimeLabel, KeywordInput };
+export { HospitalContainer, Container, UploadFileLabel, UploadFileInput, CategoryLabel, DayLabel, TimeLabel, KeywordInput };
