@@ -31,6 +31,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="detail" element={<Detail />} />
           <Route path="/hospital/:hospitalName/detail" element={<Detail />} />
+          <Route path="/hospital/:hospitalName/Services" element={<Detail />} />
         </Route>
 
         {/* 헤더 푸터 검색창x 버전 */}

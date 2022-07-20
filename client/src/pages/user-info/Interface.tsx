@@ -9,6 +9,7 @@ export interface UserInfoType {
   password: string;
   phoneNumber: string;
   userStatus: string;
+
 }
 export interface Address {
   postalCode: string;

@@ -20,6 +20,7 @@ import {
   RightBottomImg,
   RightTopImg,
 } from "./DetailStyle";
+import HospitalService from "./HospitalService";
 import PetSelect from "./PetSelect";
 
 function Detail() {
@@ -32,7 +33,6 @@ function Detail() {
     );
   }, []);
 
-  console.log(hospitalInfo);
   return (
     <MainContainer>
       <Header>
@@ -82,7 +82,10 @@ function Detail() {
           <Reservation>
             <CalendarUi />
             {/* TODO: time 타입 오류 해결되면 진행하겠습니다. */}
-            {/* <TimeButton time={hospitalInfo.businessHours} /> */}
+            {hospitalInfo.businessHours && (
+              <TimeButton time={hospitalInfo.businessHours} />
+            )}
+            <HospitalService />
             <PetSelect />
           </Reservation>
         </ReservationContainer>

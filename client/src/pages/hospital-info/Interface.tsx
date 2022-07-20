@@ -10,13 +10,13 @@ export interface HospitalInfoType {
     address2: string;
   };
   phoneNumber: string;
-  businessHours: string;
+  businessHours: string[];
   businessNumber: string;
   licenseNumber: string;
-  holiday: [string];
+  holiday: string[];
   hospitalCapacity?: number;
-  tag: string;
-  keyword: [string];
+  tag: string[]|undefined;
+  keyword: string[];
   image: string;
 }
 export interface HospitalServiceInfoType {
@@ -24,4 +24,10 @@ export interface HospitalServiceInfoType {
   servicePrice: number;
   serviceDesc: string;
   serviceCapacity: number;
+}
+
+export interface Data {
+  address: string;
+  zonecode: string;
+  roadAddress: string;
 }

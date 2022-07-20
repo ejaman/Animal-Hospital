@@ -10,14 +10,7 @@ import {
 } from './MainCardStyle';
 import MainKeyWord from './MainKeyWord';
 
-interface IProps {
-  tagState: string,
-  offset: number,
-  limit: number,
-  setTotal: (total: number) => void,
-}
-
-interface IData {
+export interface IData {
   starRating: number,
   name: string,
   address: {
@@ -34,22 +27,15 @@ interface IData {
   hospitalCapacity: number
 }
 
+interface IProps {
+  offset: number,
+  limit: number,
+  filtered: IData[],
+}
+
 // main페이지에 사용할 컴포넌트
-function MainCard({tagState, offset, limit, setTotal}: IProps) {
-  // 추후에는 서버에서 데이터를 받아서 데이터를 뿌리겠습니다.
-  const [filterData, setFilterData] = useState<IData[]>([]);
-
-  useEffect(() => {
-    async function getData() {
-      const res = await axios.get(`http://localhost:5100/hospital/list/main?page=2&perPage=4&tagName=강아지전문`); // TODO: tagName=tagState로 변경. page 변경
-      const data = await res.data.data.hospitals;
-      setFilterData([...data]);
-      setTotal(data.length);
-    }
-    getData();
-  }, [])
-
-  const dataProps = filterData.slice(offset, offset+limit).map((items) => {
+function MainCard({offset, limit, filtered}: IProps) {
+  const dataProps = filtered.slice(offset, offset+limit).map((items) => {
     return (
       <MainCardContainer to={`hospital/${items.name}/detail`}>
         <MainCardImg
