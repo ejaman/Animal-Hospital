@@ -8,6 +8,7 @@ import { Button, Form, Row, Col} from "antd";
 import { theme } from '../../styles/Colors';
 import {
   HospitalContainer,
+  Container,
   UploadFileLabel,
   UploadFileInput,
   CategoryLabel,
@@ -18,7 +19,6 @@ import {
 import { ModalStyle } from "../../components/ModalStyle";
 import {
   Title,
-  Container,
   InputLabel,
   InfoInput,
   InfoBtn,
@@ -34,28 +34,28 @@ export default function HospitalInfo() {
 
   // 폼 내용들은 입력 시마다 내용이 곧바로 저장되므로 추후 debouncing 적용 예정
 
-  useEffect(() => {
-    async function getData() {
-      try {
-        //응답 성공
-        if (info.hospitalState === "추가정보 미기입") { // 초기 수정 필요할 때
-          // api
-          const API_URL = 'localhost:5100/hospital/addtional-info';
-          const response = await axios.get(API_URL);
-          console.log("응답 성공", response);
-        } else { // 초기 수정 완료s
-          // 
-          const API_URL = 'localhost:5100/hospital/';
-          const response = await axios.get(API_URL);
-         console.log("응답 성공", response);
-        }
-      } catch (error) {
-        //응답 실패
-        console.error("응답 실패", error);
-      }
-    }
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   async function getData() {
+  //     try {
+  //       //응답 성공
+  //       if (info.hospitalState === "추가정보 미기입") { // 초기 수정 필요할 때
+  //         // api
+  //         const API_URL = 'localhost:5100/hospital/addtional-info';
+  //         const response = await axios.get(API_URL);
+  //         console.log("응답 성공", response);
+  //       } else { // 초기 수정 완료s
+  //         // 
+  //         const API_URL = 'localhost:5100/hospital/';
+  //         const response = await axios.get(API_URL);
+  //        console.log("응답 성공", response);
+  //       }
+  //     } catch (error) {
+  //       //응답 실패
+  //       console.error("응답 실패", error);
+  //     }
+  //   }
+  //   getData();
+  // }, []);
   
 
   /* elements */
@@ -387,90 +387,102 @@ export default function HospitalInfo() {
           <Col span={12}>
             <Form name="hospitalInfoForm">
               <Row>
-                <InputLabel>병원명</InputLabel>
-                <InfoInput
-                  name="name"
-                  style={{
-                    width: "12rem",
-                    marginBottom: "1rem",
-                    marginLeft: "0.5rem"
-                  }}
-                  type="text"
-                  defaultValue={hospitalInfo?.name || ""}
-                  onChange={onChange}
-                />
+                <Container>
+                  <InputLabel>병원명</InputLabel>
+                  <InfoInput
+                    name="name"
+                    style={{
+                      width: "12rem",
+                      marginLeft: "0.5rem"
+                    }}
+                    type="text"
+                    defaultValue={hospitalInfo?.name || ""}
+                    onChange={onChange}
+                  />
+                </Container>
               </Row>
               <Row>
-                <InputLabel>이름</InputLabel>
-                <InfoInput
-                  name="director"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.director || ""}
-                  onChange={onChange}
-                />
+                <Container>
+                  <InputLabel>이름</InputLabel>
+                  <InfoInput
+                    name="director"
+                    style={{ marginLeft: "0.5rem" }}
+                    type="text"
+                    defaultValue={hospitalInfo?.director || ""}
+                    onChange={onChange}
+                  />
+                </Container>
               </Row>
               <Row>
-                <InputLabel>이메일</InputLabel>
-                <InfoInput
-                  name="email"
-                  style={{
-                    width: "12rem",
-                    marginBottom: "1rem",
-                    marginLeft: "0.5rem"
-                  }}
-                  type="text"
-                  defaultValue={hospitalInfo?.email}
-                  autoComplete="username"
-                  disabled
-                />
+                <Container>
+                  <InputLabel>이메일</InputLabel>
+                  <InfoInput
+                    name="email"
+                    style={{
+                      width: "12rem",
+                      marginLeft: "0.5rem"
+                    }}
+                    type="text"
+                    defaultValue={hospitalInfo?.email}
+                    autoComplete="username"
+                    disabled
+                  />
+                </Container>
               </Row>
               <Row>
-                <InputLabel>비밀번호</InputLabel>
-                {/* <input ref={newPwRef} placeholder="새 비밀번호" />
-                <input ref={currentPwRef} placeholder="현재 비밀번호" /> */}
-                <InfoInput
-                  name="password"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="password"
-                  autoComplete="current-password"
-                  defaultValue=""
-                  disabled
-                />
-                <InfoBtn
-                  style={{ marginLeft: "0.5rem" }}
-                  onClick={buttonHandler}
-                >변경</InfoBtn>
+                <Container>
+                  <InputLabel>비밀번호</InputLabel>
+                  {/* <input ref={newPwRef} placeholder="새 비밀번호" />
+                  <input ref={currentPwRef} placeholder="현재 비밀번호" /> */}
+                  <InfoInput
+                    name="password"
+                    style={{ marginLeft: "0.5rem" }}
+                    type="password"
+                    autoComplete="current-password"
+                    defaultValue=""
+                    disabled
+                  />
+                  <InfoBtn
+                    style={{ marginLeft: "0.5rem" }}
+                    onClick={buttonHandler}
+                  >변경</InfoBtn>
+                </Container>
               </Row>
               <Row>
-                <InputLabel>병원 연락처</InputLabel>
-                <InfoInput
-                  name="phoneNumber"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.phoneNumber || ""}
-                  onChange={onChange}
-                />
+                <Container>
+                  <InputLabel>병원 연락처</InputLabel>
+                  <InfoInput
+                    name="phoneNumber"
+                    style={{ marginLeft: "0.5rem" }}
+                    type="text"
+                    defaultValue={hospitalInfo?.phoneNumber || ""}
+                    onChange={onChange}
+                  />
+                </Container>
               </Row>
               <Row>
-                <InputLabel>사업자 등록번호</InputLabel>
-                <InfoInput
-                  name="businessNumber"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.businessNumber || ""}
-                  onChange={onChange}
-                />
+                <Container>
+                  <InputLabel>사업자 등록번호</InputLabel>
+                  <InfoInput
+                    name="businessNumber"
+                    style={{ marginLeft: "0.5rem" }}
+                    type="text"
+                    defaultValue={hospitalInfo?.businessNumber || ""}
+                    onChange={onChange}
+                  />
+                </Container>
               </Row>
               <Row>
-                <InputLabel>면허번호</InputLabel>
-                <InfoInput
-                  name="licenseNumber"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.licenseNumber || ""}
-                  onChange={onChange}
-                />
+                <Container>
+                  <InputLabel>면허번호</InputLabel>
+                  <InfoInput
+                    name="licenseNumber"
+                    style={{ marginLeft: "0.5rem" }}
+                    type="text"
+                    defaultValue={hospitalInfo?.licenseNumber || ""}
+                    onChange={onChange}
+                  />
+                </Container>
               </Row>
               <Row>
                 <InputLabel>병원 사진</InputLabel>
@@ -493,57 +505,58 @@ export default function HospitalInfo() {
               </Row>
               <div style={{ marginBottom: "0.5rem" }} />
               <Row>
-                <Col>
-                  <Row>
-                    <InputLabel style={{ marginBottom: "0.5rem" }}>주소</InputLabel>
-                  </Row>
-                  <Row>
-                    <InfoInput
-                      name="postalCode"
-                      style={{
-                        marginBottom: "0.5rem",
-                        marginLeft: "0.5rem",
-                        width: "6rem"
-                      }}
-                      type="text"
-                      defaultValue={hospitalInfo?.address?.postalCode || ""}
-                      onChange={onChangeAddress}
-                    />
-                  </Row>
-                  <Row>
-                    <InfoInput
-                      name="address1"
-                      style={{
-                        marginBottom: "0.5rem",
-                        marginLeft: "0.5rem",
-                        width: "20rem"
-                      }}
-                      type="text"
-                      defaultValue={hospitalInfo?.address?.address1}
-                      onChange={onChangeAddress}
-                    />
-                  </Row>
-                  <Row>
-                    <InfoInput
-                      name="address2"
-                      style={{
-                        marginBottom: "1rem",
-                        marginLeft: "0.5rem",
-                        width: "18rem"
-                      }}
-                      type="text"
-                      defaultValue={hospitalInfo?.address?.address2}
-                      onChange={onChangeAddress}
-                    />
-                    <InfoBtn
-                    style={{ marginLeft: "0.5rem" }}
-                    onClick={onOpenClick}
-                  >수정</InfoBtn>
-                  </Row>
-                </Col>
-                <Modal isOpen={isOpen} ariaHideApp={false} style={ModalStyle}>
-                  <DaumPostcode onComplete={completeHandler} />
-                </Modal>
+                <Container>
+                  <Col>
+                    <Row>
+                      <InputLabel style={{ marginBottom: "0.5rem" }}>주소</InputLabel>
+                    </Row>
+                    <Row>
+                      <InfoInput
+                        name="postalCode"
+                        style={{
+                          marginBottom: "0.5rem",
+                          marginLeft: "0.5rem",
+                          width: "6rem"
+                        }}
+                        type="text"
+                        defaultValue={hospitalInfo?.address?.postalCode || ""}
+                        onChange={onChangeAddress}
+                      />
+                    </Row>
+                    <Row>
+                      <InfoInput
+                        name="address1"
+                        style={{
+                          marginBottom: "0.5rem",
+                          marginLeft: "0.5rem",
+                          width: "20rem"
+                        }}
+                        type="text"
+                        defaultValue={hospitalInfo?.address?.address1}
+                        onChange={onChangeAddress}
+                      />
+                    </Row>
+                    <Row>
+                      <InfoInput
+                        name="address2"
+                        style={{
+                          marginLeft: "0.5rem",
+                          width: "18rem"
+                        }}
+                        type="text"
+                        defaultValue={hospitalInfo?.address?.address2}
+                        onChange={onChangeAddress}
+                      />
+                      <InfoBtn
+                      style={{ marginLeft: "0.5rem" }}
+                      onClick={onOpenClick}
+                    >수정</InfoBtn>
+                    </Row>
+                  </Col>
+                  <Modal isOpen={isOpen} ariaHideApp={false} style={ModalStyle}>
+                    <DaumPostcode onComplete={completeHandler} />
+                  </Modal>
+                </Container>
               </Row>
               <Row>
                 <InputLabel style={{ marginBottom: "0.5rem" }}>카테고리</InputLabel>
@@ -660,14 +673,16 @@ export default function HospitalInfo() {
                     })} */}
                   </Row>
                   <Row style={{ marginTop: "1rem" }}>
-                    <InputLabel>시간당 예약가능 고객 수</InputLabel>
-                    <InfoInput
-                      name="hospitalCapacity"
-                      style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                      type="text"
-                      defaultValue={hospitalInfo?.hospitalCapacity || 0}
-                      onChange={onChange}
-                    />
+                    <Container>
+                      <InputLabel>시간당 예약가능 고객 수</InputLabel>
+                      <InfoInput
+                        name="hospitalCapacity"
+                        style={{ marginLeft: "0.5rem" }}
+                        type="text"
+                        defaultValue={hospitalInfo?.hospitalCapacity || 0}
+                        onChange={onChange}
+                      />
+                    </Container>
                   </Row>
                   <Row>
                     <Button onClick={() => {
@@ -689,7 +704,7 @@ export default function HospitalInfo() {
                 >서비스 추가</InputLabel>
               </Row>
               <Row>
-                <div>
+                <Container>
                   <label>서비스명</label>
                   <InfoInput
                     name="serviceName"
@@ -699,10 +714,10 @@ export default function HospitalInfo() {
                       marginBottom: "0.5rem"
                     }}
                   />
-                </div>
+                </Container>
               </Row>
               <Row>
-                <div>
+                <Container>
                   <label>서비스 가격</label>
                   <InfoInput
                     name="servicePrice"
@@ -712,10 +727,10 @@ export default function HospitalInfo() {
                       marginBottom: "0.5rem"
                     }}
                   />
-                </div>
+                </Container>
               </Row>
               <Row>
-                <div>
+                <Container>
                   <label>서비스 설명</label>
                   <InfoInput
                     name="serviceDesc"
@@ -725,12 +740,12 @@ export default function HospitalInfo() {
                       marginBottom: "0.5rem"
                     }}
                   />
-                </div>
+                </Container>
               </Row>
               <Row>
-                <div>
+                <Container>
                   <label>서비스 동시 수용가능인원수</label>
-                  <input
+                  <InfoInput
                     name="serviceCapacity"
                     onChange={onChange}
                     style={{
@@ -738,7 +753,7 @@ export default function HospitalInfo() {
                       marginBottom: "0.5rem"
                     }}
                   />
-                </div>
+                </Container>
               </Row>
               <Row>
               <InfoBtn
@@ -753,6 +768,7 @@ export default function HospitalInfo() {
               <Row>
                 <InputLabel
                   style={{
+                    marginTop: "2rem",
                     marginBottom: "1rem",
                     margin: "auto",
                     fontWeight: "bold"
@@ -760,7 +776,7 @@ export default function HospitalInfo() {
                 >제공중인 서비스 목록</InputLabel>
               </Row>
               <Row>
-                <Col>
+                <Col style={{ margin: "auto" }}>
                   {serviceList?.map((item, index) => (
                     <Row
                       key={index}
