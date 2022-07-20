@@ -9,6 +9,7 @@ import {
   hospRegStatusRouter,
   hospTagRouter,
   hospitalRouter,
+  rezStatusRouter,
 } from './routers';
 
 const app = express();
@@ -31,6 +32,7 @@ app.use('/hospital', hospitalRouter);
 app.use('/api', userRouter);
 app.use('/pet', petRouter);
 app.use('/review', reviewRouter);
+app.use('/reservationStatus', rezStatusRouter);
 
 // app.use('*', ) //errorHandler로 무조건 400처리하면 안됨
 
