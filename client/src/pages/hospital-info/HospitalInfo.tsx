@@ -34,28 +34,27 @@ export default function HospitalInfo() {
 
   // 폼 내용들은 입력 시마다 내용이 곧바로 저장되므로 추후 debouncing 적용 예정
 
-  // useEffect(() => {
-  //   async function getData() {
-  //     try {
-  //       //응답 성공
-  //       if (info.hospitalState === "추가정보 미기입") { // 초기 수정 필요할 때
-  //         // api
-  //         const API_URL = 'localhost:5100/hospital/addtional-info';
-  //         const response = await axios.get(API_URL);
-  //         console.log("응답 성공", response);
-  //       } else { // 초기 수정 완료s
-  //         // 
-  //         const API_URL = 'localhost:5100/hospital/';
-  //         const response = await axios.get(API_URL);
-  //        console.log("응답 성공", response);
-  //       }
-  //     } catch (error) {
-  //       //응답 실패
-  //       console.error("응답 실패", error);
-  //     }
-  //   }
-  //   getData();
-  // }, []);
+  useEffect(() => {
+    async function getData() {
+      try {
+        //응답 성공
+        if (info.hospitalState === "추가정보 미기입") { // 초기 수정 필요할 때
+          // api
+          const API_URL = 'localhost:5100/hospital/addtional-info';
+          const response = await axios.get(API_URL);
+          console.log("응답 성공", response);
+        } else { // 초기 수정 완료
+          const API_URL = 'localhost:5100/hospital/';
+          const response = await axios.get(API_URL);
+         console.log("응답 성공", response);
+        }
+      } catch (error) {
+        //응답 실패
+        console.error("응답 실패", error);
+      }
+    }
+    getData();
+  }, []);
   
   /* elements */
   const $HashWrapOuter = document.querySelector('.HashWrapOuter');
