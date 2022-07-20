@@ -9,6 +9,10 @@ export interface Address {
   address2: string;
 }
 
+export interface SearchOptions {
+  [key: string]: string | mongoose.Types.ObjectId;
+}
+
 export interface addressCoordinate {
   x: string;
   y: string;
@@ -44,11 +48,27 @@ export interface HospitalInfo {
   refreshToken?: string;
   hospStatus?: mongoose.Types.ObjectId;
   hospRegStatus?: mongoose.Types.ObjectId;
+  starRating?: number;
   _id: mongoose.Types.ObjectId;
 }
 
 export interface ToUpdate {
   hospitalId: mongoose.Types.ObjectId;
+  update: {
+    [key: string]:
+      | string
+      | number
+      | Address
+      | addressCoordinate
+      | number[]
+      | string[]
+      | object[]
+      | mongoose.Types.ObjectId;
+  };
+}
+
+export interface ToUpdateByName {
+  hospitalName: string;
   update: {
     [key: string]:
       | string
@@ -121,6 +141,52 @@ export class HospitalModel {
       option
     )) as HospitalInfo;
     return updatedHospital;
+  }
+
+  async updateByName(
+    hospitalName: string,
+    update: Partial<HospitalInfo>
+  ): Promise<HospitalInfo> {
+    const filter = { name: hospitalName };
+    const option = { returnOriginal: false };
+
+    const updatedHospital = (await Hospital.findOneAndUpdate(
+      filter,
+      update,
+      option
+    )) as HospitalInfo;
+    return updatedHospital;
+  }
+
+  async countHospitals(searchOptions: SearchOptions): Promise<number> {
+    const counts = await Hospital.countDocuments(searchOptions);
+    return counts;
+  }
+
+  async findByOption(
+    page: number,
+    perPage: number,
+    searchOptions: SearchOptions
+  ): Promise<HospitalInfo[]> {
+    const users = (await Hospital.find(searchOptions, {
+      _id: 0,
+      email: 0,
+      password: 0,
+      director: 0,
+      addressCoordinate: 0,
+      businessNumber: 0,
+      licenseNumber: 0,
+      refreshToken: 0,
+      hospStatus: 0,
+      hospRegStatus: 0,
+      createdAt: 0,
+      updatedAt: 0,
+      __v: 0,
+    })
+      .sort({ createdAt: -1 })
+      .skip(perPage * (page - 1))
+      .limit(perPage)) as HospitalInfo[];
+    return users;
   }
 }
 

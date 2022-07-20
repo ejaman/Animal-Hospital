@@ -85,6 +85,10 @@ userRouter.post(
         res.status(302).redirect('/api/user'); 
       } else {
         const userToken = await userService.getUserToken({ email, password });
+        const role = userToken.role;
+        const userStatus = userToken.userStatus;
+        console.log(role)
+        console.log(userStatus)
 
   
         res.status(201).json({ userToken }); //userId, role, userStatus

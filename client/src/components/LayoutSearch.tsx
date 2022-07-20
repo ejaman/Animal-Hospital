@@ -16,10 +16,11 @@ const ContentWrapper = styled.div`
 `
 
 export default function LayoutSearch() {
+
   return (
     <>
       <Wrapper>
-        <Header />
+        <Header searchBox={true} />
         <ContentWrapper>
           <Outlet />
         </ContentWrapper>

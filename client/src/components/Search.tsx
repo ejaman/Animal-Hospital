@@ -106,8 +106,8 @@ export default function Search() {
         {(keyItems.length !== 0 && search.length !== 0) &&
           <AutoSearchContainer>
             <AutoSearchWrap>
-              {keyItems.map((item: string) => {
-                return <AutoSearchData to='/login'>{item}</AutoSearchData>
+              {keyItems.map((item: string, idx) => {
+                return <AutoSearchData key={idx} to='/login'>{item}</AutoSearchData>
               })}
             </AutoSearchWrap>
           </AutoSearchContainer>
