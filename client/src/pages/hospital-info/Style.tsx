@@ -1,9 +1,11 @@
 import styled from "styled-components";
 import { theme } from '../../styles/Colors';
 
-const SubTitle = styled.span`
-  font-size: 16px;
-`
+const HospitalContainer = styled.div`
+max-width: 1000px;
+margin: 2rem auto;
+`;
+
 /* 사진 추가 css */
 
 const UploadFileLabel = styled.label`
@@ -131,4 +133,4 @@ const KeywordInput = styled.div`
   }
 `
 
-export { SubTitle, UploadFileLabel, UploadFileInput, CategoryLabel, DayLabel, TimeLabel, KeywordInput };
+export { HospitalContainer, UploadFileLabel, UploadFileInput, CategoryLabel, DayLabel, TimeLabel, KeywordInput };

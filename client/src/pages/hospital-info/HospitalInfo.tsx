@@ -1,12 +1,13 @@
 // react와 vanilla js 혼종인 파일이다. 리액트로 서서히 바꿔나가자
-import React, { useState, useCallback, useEffect, useRef, MouseEvent } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import DaumPostcode from "react-daum-postcode";
 import Modal from "react-modal";
 import { HospitalInfoType, HospitalServiceInfoType, Data } from "./Interface";
 import "antd/dist/antd.min.css";
-import { Button, Form, Typography, Row, Col} from "antd";
+import { Button, Form, Row, Col} from "antd";
 import { theme } from '../../styles/Colors';
 import {
+  HospitalContainer,
   UploadFileLabel,
   UploadFileInput,
   CategoryLabel,
@@ -17,7 +18,6 @@ import {
 import { ModalStyle } from "../../components/ModalStyle";
 import {
   Title,
-  MainContainer,
   Container,
   InputLabel,
   InfoInput,
@@ -379,18 +379,10 @@ export default function HospitalInfo() {
 
   return (
     <div style={{ margin: "0 2rem 2rem 2rem" }}>
-      <div className="ant-typography">
-        <Title>병원정보</Title>
-      </div>
-      <div
-        // style={{
-        //   borderStyle: "solid",
-        //   borderColor: `${theme.palette.orange}`,
-        //   borderWidth: "10px",
-        //   borderRadius: "5%",
-        //   padding: "1rem 2rem 1rem 2rem"
-        // }}
-      >
+      <HospitalContainer>
+        <div className="ant-typography">
+          <Title>병원정보</Title>
+        </div>
         <Row>
           <Col span={12}>
             <Form name="hospitalInfoForm">
@@ -803,7 +795,7 @@ export default function HospitalInfo() {
             </Form>
           </Col>
         </Row>
-      </div>
+      </HospitalContainer>
       <DeactivateContainer>
         <p>Animal Hospital에서 탈퇴하고 싶으신가요?</p>
         <DeactiveBtn onClick={withdrawButtonHandler}>탈퇴하기</DeactiveBtn>
