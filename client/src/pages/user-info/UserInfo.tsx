@@ -122,9 +122,9 @@ function UserInfo() {
         }
       )
       .then((res) => {
-        console.log(res);
-        alert("00님 탈퇴가 완료되었습니다 🥲");
-        // navigate("/");
+        alert(`${userInfo.userName}님 탈퇴가 완료되었습니다 🥲`);
+        localStorage.removeItem("token");
+        navigate("/");
       });
   };
   return (
