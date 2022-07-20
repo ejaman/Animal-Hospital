@@ -38,6 +38,10 @@ const Logo = styled(Link)`
   }
 `;
 
+const LogoImg = styled.img`
+  width: 140px;
+`
+
 const BtnContainer = styled.div`
   position: relative;
 `;
@@ -141,7 +145,9 @@ export default function Header({searchBox}: ISearch) {
       <div>
         <HeaderContainer>
           <LogoContainer>
-            <Logo to='/'>펫닥터</Logo>
+            <Logo to='/'>
+              <LogoImg src='/logo.jpg' />
+            </Logo>
           </LogoContainer>
           {haveSearch && <Search />}
           <BtnContainer>
