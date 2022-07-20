@@ -23,12 +23,5 @@ function errorHandler(
   res.status(error.statusCode).json({ result: 'error', message: error.message });
 }
 
-function blockEmptyObject (obj : Object) : void {
-  if(_.isEmpty(obj)){
-    throw new HttpError(
-      400,
-      "body가 비어있거나 header의 Content-Type이 'application/json'인지 확인해주세요"
-    )
-  }
-}
-export { errorHandler, blockEmptyObject };
+
+export { errorHandler };
