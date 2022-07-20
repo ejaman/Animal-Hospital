@@ -13,7 +13,7 @@ export interface UserInfo {
     phoneNumber : string,
     address : UserAddress,
     role ? : string,
-    userStatus  : string,
+    userStatus?  : string,
     
 }
 
@@ -25,7 +25,7 @@ export interface UserData {
     phoneNumber : string,
     address : UserAddress,
     role ? : string,
-    userStatus  : string,
+    userStatus?  : string,
 }
 
 export interface StatusInfoRequired {
