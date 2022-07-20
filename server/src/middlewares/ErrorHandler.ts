@@ -3,16 +3,16 @@ import * as _ from 'lodash';
 // 에러 미들웨어는 항상 (설령 안 쓰더라도)
 // error~next의 4개 인자를 설정해 주어야 함.
 
-export class CustomError extends Error {
+export class HttpError extends Error {
   statusCode : number;
-  constructor(message : string, statusCode : number = 500 ) {
+  constructor(statusCode : number = 500, message : string ) {
     super(message);
     this.statusCode = statusCode;
 
   }
 }
 function errorHandler(
-  error: CustomError,
+  error: HttpError,
   req: Request,
   res: Response,
   next: NextFunction
@@ -25,12 +25,10 @@ function errorHandler(
 
 function blockEmptyObject (obj : Object) : void {
   if(_.isEmpty(obj)){
-    throw new CustomError(
-      "body가 비어있거나 header의 Content-Type이 'application/json'인지 확인해주세요",
-      400
+    throw new HttpError(
+      400,
+      "body가 비어있거나 header의 Content-Type이 'application/json'인지 확인해주세요"
     )
   }
-
 }
-
 export { errorHandler, blockEmptyObject };

@@ -5,7 +5,7 @@ import {
 import {UserInfo, UserData, StatusInfoRequired, LoginInfo, LoginResult, UserInfoRequired} from '../types/UserTypes';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import {CustomError} from '../middlewares';
+import {HttpError} from '../middlewares';
 
 
 enum UserStatus {
@@ -54,8 +54,8 @@ class UserService {
     const user = await this.userModel.findByEmail(email);
 
     if (!user) {
-      throw new CustomError(
-        '해당 이메일의 가입 내역을 찾을 수 없습니다. 다시 한 번 확인해주세요.',400
+      throw new HttpError(
+        400, '해당 이메일의 가입 내역을 찾을 수 없습니다. 다시 한 번 확인해주세요.'
       );
     }
 
@@ -63,7 +63,7 @@ class UserService {
     const isPWCorrect = await bcrypt.compare(password, hashedPassword);
 
     if (!isPWCorrect) {
-      throw new CustomError('비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.', 400);
+      throw new HttpError(400, '비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.');
     }
 
     const secretKey = process.env.JWT_SECRET_KEY || 'secret-key';
@@ -83,7 +83,7 @@ class UserService {
     const user = await this.userModel.findById(userId);
 
     if (!user) {
-      throw new CustomError('가입 내역이 없습니다. 다시 한 번 확인해 주세요!.', 400);
+      throw new HttpError(400, '가입 내역이 없습니다. 다시 한 번 확인해 주세요!.');
     }
     return user;
   }
@@ -105,8 +105,8 @@ class UserService {
     );
 
     if (!isPasswordCorrect) {
-      throw new CustomError(
-        '현재 비밀번호가 일치하지 않습니다. 다시 한 번 확인해 주세요.', 400
+      throw new HttpError(
+        400,'현재 비밀번호가 일치하지 않습니다. 다시 한 번 확인해 주세요.'
       );
     }
 
@@ -139,9 +139,8 @@ class UserService {
         correctPasswordHash
       );
       if (!isPasswordCorrect) {
-        throw new CustomError(
-          '비밀번호가 일치하지 않습니다. 다시 한 번 확인해 주세요.',
-          400
+        throw new HttpError(
+          400, '비밀번호가 일치하지 않습니다. 다시 한 번 확인해 주세요.',
         );
       }
 
@@ -181,7 +180,7 @@ class UserService {
   async blockExpiredUser(email: string): Promise<boolean> {
     const user = await this.userModel.findByEmail(email);
     if (!user) {
-      throw new CustomError('유저를 찾을 수 없습니다.',400);
+      throw new HttpError(400, '유저를 찾을 수 없습니다.');
     }
     const userStatus = user.userStatus;
 
