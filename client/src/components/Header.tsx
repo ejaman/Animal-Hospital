@@ -125,7 +125,7 @@ export default function Header({searchBox}: ISearch) {
   function handleLogout() {
     
     async function logoutHospital() {
-      const res = await CustomAxiosGet.get('localhost:5100/hospital/logout');
+      const res = await CustomAxiosGet.get('/hospital/logout');
       console.log(res);
       resetState();
     }
