@@ -1,15 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
-import * as _ from 'lodash'; 
+import * as _ from 'lodash';
 // 에러 미들웨어는 항상 (설령 안 쓰더라도)
 // error~next의 4개 인자를 설정해 주어야 함.
 
-
 export class HttpError extends Error {
-  statusCode : number;
-  constructor(statusCode : number = 500, message : string ) {
+  statusCode: number;
+  constructor(statusCode: number = 500, message: string) {
     super(message);
     this.statusCode = statusCode;
-
   }
 }
 function errorHandler(
@@ -24,3 +22,4 @@ function errorHandler(
   res.status(400).json({ result: 'error', message: error.message });
 }
 
+export { errorHandler };
