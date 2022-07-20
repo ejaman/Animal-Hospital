@@ -1,8 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
-import { CalendarTitle } from '../../pages/detail/Calendar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClockFour } from '@fortawesome/free-solid-svg-icons';
+import React from "react";
+import styled from "styled-components";
+import { CalendarTitle } from "../../pages/detail/Calendar";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClockFour } from "@fortawesome/free-solid-svg-icons";
 
 const TimeWrapper = styled.div`
   margin-top: 20px;
@@ -35,31 +35,19 @@ const TimeButtonWrapper = styled.div`
   padding: 10px;
 `;
 
-const TimeButton = () => {
-  // 임시 데이터를 만들었습니다. 추후에 백엔드에서 통신 후 가져오겠습니다.
-  const DataProps: string[] = [
-    '09',
-    '10',
-    '11',
-    '12',
-    '13',
-    '14',
-    '15',
-    '16',
-    '17',
-    '18',
-    '19',
-    '20',
-  ];
+type TTimeProps = {
+  time: number[];
+};
 
-  const timeButtonItems = DataProps.map((item, index) => (
+const TimeButton = ({ time }: TTimeProps) => {
+  const timeButtonItems = time.map((item, index) => (
     <TimeContainer key={index}>{item}:00</TimeContainer>
   ));
 
   return (
     <TimeWrapper>
-      <div style={{ marginBottom: '20px' }}>
-        <FontAwesomeIcon style={{ fontSize: '20px' }} icon={faClockFour} />
+      <div style={{ marginBottom: "20px" }}>
+        <FontAwesomeIcon style={{ fontSize: "20px" }} icon={faClockFour} />
         <TimeTitle>시간</TimeTitle>
       </div>
       <TimeButtonWrapper>{timeButtonItems}</TimeButtonWrapper>
