@@ -28,14 +28,12 @@ export interface IData {
 }
 
 interface IProps {
-  offset: number,
-  limit: number,
   filtered: IData[],
 }
 
 // main페이지에 사용할 컴포넌트
-function MainCard({offset, limit, filtered}: IProps) {
-  const dataProps = filtered.slice(offset, offset+limit).map((items) => {
+function MainCard({filtered}: IProps) {
+  const dataProps = filtered.map((items) => {
     return (
       <MainCardContainer to={`hospital/${items.name}/detail`}>
         <MainCardImg
