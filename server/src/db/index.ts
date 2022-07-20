@@ -23,3 +23,4 @@ export * from './models/HospTagModel';
 export * from './models/HospModel';
 export * from './models/HospServiceModel';
 export * from './models/RezStatusModel';
+export * from './models/RezModel';

@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import { errorLogger, errorHandler } from './middlewares';
 import {
   userRouter,
@@ -10,6 +11,7 @@ import {
   hospTagRouter,
   hospitalRouter,
   rezStatusRouter,
+  reservationRouter,
 } from './routers';
 
 const app = express();
@@ -17,7 +19,7 @@ const app = express();
 // CORS 에러 방지
 
 app.use(cors({ credentials: true, origin: 'http://localhost:3030' }));
-
+app.use(cookieParser());
 // Content-Type: application/json 형태의 데이터를 인식하고 핸들링할 수 있게 함.
 app.use(express.json());
 
@@ -33,6 +35,7 @@ app.use('/api', userRouter);
 app.use('/pet', petRouter);
 app.use('/review', reviewRouter);
 app.use('/reservationStatus', rezStatusRouter);
+app.use('/reservation', reservationRouter);
 
 // app.use('*', ) //errorHandler로 무조건 400처리하면 안됨
 

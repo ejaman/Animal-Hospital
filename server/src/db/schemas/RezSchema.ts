@@ -42,6 +42,7 @@ const ReservationSchema = new Schema(
     message: {
       type: String,
       required: false,
+      default: '',
     },
   },
   {
