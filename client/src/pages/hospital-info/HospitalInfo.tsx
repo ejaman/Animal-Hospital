@@ -57,7 +57,6 @@ export default function HospitalInfo() {
   //   getData();
   // }, []);
   
-
   /* elements */
   const $HashWrapOuter = document.querySelector('.HashWrapOuter');
   const $HashWrapInner = document.createElement('div');
@@ -102,7 +101,7 @@ export default function HospitalInfo() {
   /* password */
   const currentPwRef = useRef<HTMLInputElement>(null);
   const newPwRef = useRef<HTMLInputElement>(null);
-
+  
   /* constants */
   const AVAILABLE_KEYWORD_LENGTH = 10;
   const AVAILABLE_KEYWORD_COUNTS = 3;
@@ -137,8 +136,8 @@ export default function HospitalInfo() {
       ...hospitalServiceInfo,
       [e.currentTarget.name]: e.currentTarget.value
     }
-    setHospitalInfo(hospitalData);
-    setHospitalServiceInfo(hospitalServiceData);
+    // setHospitalInfo(hospitalData);
+    // setHospitalServiceInfo(hospitalServiceData);
   };
  
   const onChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -332,7 +331,6 @@ export default function HospitalInfo() {
       return { ...prev, businessHours: businessHoursList }
     })
   }
-
 
   const withdrawButtonHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -645,7 +643,6 @@ export default function HospitalInfo() {
                         {day}
                       </DayLabel>
                     ))}
-                
                     {/* {dayList.map((day) => {
                       if (isButtonClicked) { // 클릭된 상태면
                         setisButtonClicked(false); // 클릭해제 상태로 바꿈

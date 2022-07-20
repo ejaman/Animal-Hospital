@@ -50,7 +50,7 @@ const UserSelectBtn = styled.button<IButtonProps>`
 
 const HospitalSelectBtn = styled(UserSelectBtn)<IButtonProps>`
   margin-right: 0;
-  background-color: ${props => props.isHospital ? props => props.theme.palette.blue : 'white'};
+  background-color: ${props => props.isHospital ? props.theme.palette.blue : 'white'};
   color: ${props => props.isHospital ? 'white' : props.theme.palette.blue};
   font-weight: ${props => props.isHospital ? 'bold' : 'normal'};
 `

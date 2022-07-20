@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { CalendarTitle } from "../pages/detail/Calendar";
+import { CalendarTitle } from "../../pages/detail/Calendar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClockFour } from "@fortawesome/free-solid-svg-icons";
 
@@ -35,40 +35,12 @@ const TimeButtonWrapper = styled.div`
   padding: 10px;
 `;
 
-const BookingButtonContainer = styled.div``;
-const BookingButton = styled.button`
-  width: 328px;
-  height: 52px;
-  background-color: #00d780;
-  color: #fff;
-  border-radius: 5px;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-`;
-
-interface TSelectTime {
+type TTimeProps = {
   time: number[];
-}
+};
 
-const TimeButton = ({ time }: TSelectTime) => {
-  // 임시 데이터를 만들었습니다. 추후에 백엔드에서 통신 후 가져오겠습니다.
-  const DataProps: string[] = [
-    "09",
-    "10",
-    "11",
-    "12",
-    "13",
-    "14",
-    "15",
-    "16",
-    "17",
-    "18",
-    "19",
-    "20",
-  ];
-
-  const timeButtonItems = time.map((item, index: number) => (
+const TimeButton = ({ time }: TTimeProps) => {
+  const timeButtonItems = time.map((item, index) => (
     <TimeContainer key={index}>{item}:00</TimeContainer>
   ));
 
@@ -78,12 +50,7 @@ const TimeButton = ({ time }: TSelectTime) => {
         <FontAwesomeIcon style={{ fontSize: "20px" }} icon={faClockFour} />
         <TimeTitle>시간</TimeTitle>
       </div>
-      <TimeButtonWrapper>
-        {timeButtonItems}
-        <BookingButtonContainer>
-          <BookingButton>예약 하기</BookingButton>
-        </BookingButtonContainer>
-      </TimeButtonWrapper>
+      <TimeButtonWrapper>{timeButtonItems}</TimeButtonWrapper>
     </TimeWrapper>
   );
 };
