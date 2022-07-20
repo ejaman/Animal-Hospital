@@ -24,3 +24,4 @@ function errorHandler(
   res.status(400).json({ result: 'error', message: error.message });
 }
 
+export {errorHandler};
