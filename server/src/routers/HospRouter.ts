@@ -642,6 +642,51 @@ hospitalRouter.get('/list/main', async (req, res, next) => {
   }
 });
 
+//pagination 변수
+//page : 현재 페이지
+//perPage : 페이지 당 게시글개수
+hospitalRouter.get('/admin/list/', async (req, res, next) => {
+  try {
+    const page = Number(req.query.page || 1);
+    const perPage = Number(req.query.perPage || 10);
+
+    let searchOptions = {};
+    if (req.query.option == 'name') {
+      searchOptions = { name: req.query.content };
+    } else if (req.query.option == 'hospStatus') {
+      searchOptions = { hospStatus: req.query.content };
+    } else if (req.query.option == 'hospRegStatus') {
+      searchOptions = { hospRegStatus: req.query.content };
+    }
+
+    const totalHospitals = await hospitalService.countTotalHospitals(
+      searchOptions
+    );
+
+    const hospitals = await hospitalService.getHospitalsByAdmin(
+      page,
+      perPage,
+      searchOptions
+    );
+
+    const totalPage = Math.ceil(totalHospitals / perPage);
+
+    res.status(200).json({
+      data: {
+        searchOptions: searchOptions,
+        hospitals: hospitals,
+        page: page,
+        perPage: perPage,
+        totalPage: totalPage,
+        totalHospitals: totalHospitals,
+      },
+      message: '',
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 hospitalRouter.get('/detail', HospLoginRequired, async (req, res, next) => {
   try {
     const hospInfo = await hospitalService.findHospitalByName(

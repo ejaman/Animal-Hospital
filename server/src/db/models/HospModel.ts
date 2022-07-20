@@ -188,6 +188,32 @@ export class HospitalModel {
       .limit(perPage)) as HospitalInfo[];
     return users;
   }
+
+  async findByOptionFromAdmin(
+    page: number,
+    perPage: number,
+    searchOptions: SearchOptions
+  ): Promise<HospitalInfo[]> {
+    const users = (await Hospital.find(searchOptions, {
+      _id: 0,
+      director: 0,
+      password: 0,
+      addressCoordinate: 0,
+      businessHours: 0,
+      holiday: 0,
+      hospitalCapacity: 0,
+      tag: 0,
+      keyword: 0,
+      image: 0,
+      refreshToken: 0,
+      starRating: 0,
+      __v: 0,
+    })
+      .sort({ createdAt: -1 })
+      .skip(perPage * (page - 1))
+      .limit(perPage)) as HospitalInfo[];
+    return users;
+  }
 }
 
 const hospitalModel = new HospitalModel();
