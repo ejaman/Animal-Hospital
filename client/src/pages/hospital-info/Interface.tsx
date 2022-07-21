@@ -17,7 +17,7 @@ export interface HospitalInfoType {
   hospitalCapacity?: number;
   tag: string[]|undefined;
   keyword: string[];
-  image: string;
+  image: string[];
 }
 export interface HospitalServiceInfoType {
   serviceName: string;

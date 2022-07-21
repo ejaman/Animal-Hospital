@@ -64,7 +64,7 @@ export default function HospitalInfo() {
     hospitalCapacity: 0,
     tag: [],
     keyword: [],
-    image: ""
+    image: []
   });
   const [hospitalServiceInfo, setHospitalServiceInfo] = useState<HospitalServiceInfoType>({
     serviceName: "",
@@ -102,7 +102,7 @@ export default function HospitalInfo() {
       if (reader) {
         reader.onload = () => {
         setHospitalInfo(prev => {
-          return { ...prev, image: reader.result as string}
+          return { ...prev, image: [...hospitalInfo.image, reader.result as string]}
         });
         resolve();
         };
@@ -491,7 +491,7 @@ export default function HospitalInfo() {
                   />
                 </div>
                 <div>
-                  {hospitalInfo.image && <img src={hospitalInfo.image} width="280px" alt="" />}
+                  {hospitalInfo.image && hospitalInfo.image.map((img) => (<img src={img} width="280px" alt="" />))}
                 </div>
               </Row>
               <div style={{ marginBottom: "0.5rem" }} />
