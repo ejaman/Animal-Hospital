@@ -1,5 +1,6 @@
 import {reviewModel, ReviewModel} from '../db'
 import {ReviewInfo, ReviewData} from '../types/ReviewTypes';
+import {HttpError} from '../middlewares';
 class ReviewService {
     constructor(private reviewModel : ReviewModel){}
 
@@ -48,7 +49,7 @@ class ReviewService {
         const {deletedCount} = await this.reviewModel.deleteReview(reviewId);
 
         if(deletedCount === 0) {
-            throw new Error(`${reviewId} 리뷰를 삭제하지 못했습니다.`)
+            throw new HttpError(400, `${reviewId} 리뷰를 삭제하지 못했습니다.`)
         }
 
         return { result : 'success'};

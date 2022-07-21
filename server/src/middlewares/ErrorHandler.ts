@@ -1,7 +1,28 @@
 import { NextFunction, Request, Response } from 'express';
-
+import * as _ from 'lodash';
 // 에러 미들웨어는 항상 (설령 안 쓰더라도)
 // error~next의 4개 인자를 설정해 주어야 함.
+
+export class HttpError extends Error {
+  statusCode: number;
+  constructor(statusCode: number = 500, message: string) {
+    super(message);
+    this.statusCode = statusCode;
+  }
+}
+function httpErrorHandler(
+  error: HttpError,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  // 터미널에 노란색으로 출력됨.
+  console.log('\x1b[33m%s\x1b[0m', error.stack);
+
+  res
+    .status(error.statusCode)
+    .json({ result: 'error', message: error.message });
+}
 
 function errorHandler(
   error: Error,
@@ -12,7 +33,7 @@ function errorHandler(
   // 터미널에 노란색으로 출력됨.
   console.log('\x1b[33m%s\x1b[0m', error.stack);
 
-  res.status(400).json({ result: 'error', message: error.message });
+  res.status(500).json({ result: 'error', message: error.message });
 }
 
-export { errorHandler };
+export { errorHandler, httpErrorHandler };

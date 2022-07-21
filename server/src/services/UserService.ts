@@ -1,34 +1,22 @@
+import { userModel, UserModel } from '../db';
 import {
-  userModel,
-  UserModel,
   UserInfo,
   UserData,
   StatusInfoRequired,
-} from '../db';
+  LoginInfo,
+  LoginResult,
+  UserInfoRequired,
+} from '../types/UserTypes';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
-interface LoginInfo {
-  email: string;
-  password: string;
-}
-
-interface LoginResult {
-  token: string;
-  role: string;
-  userStatus: string;
-}
-
-interface UserInfoRequired {
-  email: string;
-  currentPassword: string;
-}
+import { HttpError } from '../middlewares';
 
 enum UserStatus {
   NORMAL = 'normal',
   EXPIRED = 'expired',
 }
 
+const jwtSecretkey = process.env.JWT_SECRET_KEY as string;
 class UserService {
   constructor(private userModel: UserModel) {}
 
@@ -43,14 +31,6 @@ class UserService {
       role,
       userStatus,
     } = userInfo;
-    const user = await this.userModel.findByEmail(email);
-
-    // 이메일 중복 확인
-    if (user) {
-      throw new Error(
-        '현재 이 이메일은 사용 중입니다. 다른 이메일을 입력해 주세요.'
-      );
-    }
 
     //비밀번호 해쉬화
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -76,7 +56,8 @@ class UserService {
     const user = await this.userModel.findByEmail(email);
 
     if (!user) {
-      throw new Error(
+      throw new HttpError(
+        400,
         '해당 이메일의 가입 내역을 찾을 수 없습니다. 다시 한 번 확인해주세요.'
       );
     }
@@ -85,7 +66,10 @@ class UserService {
     const isPWCorrect = await bcrypt.compare(password, hashedPassword);
 
     if (!isPWCorrect) {
-      throw new Error('비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.');
+      throw new HttpError(
+        400,
+        '비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.'
+      );
     }
 
     const secretKey = process.env.JWT_SECRET_KEY || 'secret-key';
@@ -105,7 +89,10 @@ class UserService {
     const user = await this.userModel.findById(userId);
 
     if (!user) {
-      throw new Error('가입 내역이 없습니다. 다시 한 번 확인해 주세요!.');
+      throw new HttpError(
+        400,
+        '가입 내역이 없습니다. 다시 한 번 확인해 주세요!.'
+      );
     }
     return user;
   }
@@ -127,7 +114,8 @@ class UserService {
     );
 
     if (!isPasswordCorrect) {
-      throw new Error(
+      throw new HttpError(
+        400,
         '현재 비밀번호가 일치하지 않습니다. 다시 한 번 확인해 주세요.'
       );
     }
@@ -161,7 +149,8 @@ class UserService {
         correctPasswordHash
       );
       if (!isPasswordCorrect) {
-        throw new Error(
+        throw new HttpError(
+          400,
           '비밀번호가 일치하지 않습니다. 다시 한 번 확인해 주세요.'
         );
       }
@@ -170,6 +159,16 @@ class UserService {
       return true;
     } else {
       return false;
+    }
+  }
+
+  //중복이메일있는지 확인
+  async isSameEmail(email: string): Promise<boolean> {
+    const user = await this.userModel.findByEmail(email);
+    if (!user) {
+      return false;
+    } else {
+      return true;
     }
   }
 
@@ -192,32 +191,67 @@ class UserService {
   async blockExpiredUser(email: string): Promise<boolean> {
     const user = await this.userModel.findByEmail(email);
     if (!user) {
-      throw new Error('유저를 찾을 수 없습니다.');
+      throw new HttpError(400, '유저를 찾을 수 없습니다.');
     }
     const userStatus = user.userStatus;
 
     if (userStatus === UserStatus.EXPIRED) {
       return true;
-
     } else {
       return false;
     }
   }
 
-
   //권한 없는 리뷰작성자 차단
-  async blockUnauthorized (userId : string) : Promise<boolean>{
+  async blockUnauthorized(userId: string): Promise<boolean> {
     const user = await this.userModel.findById(userId);
     console.log(user.role);
 
-    if(user && user.role==="basic-user") {
-      
-     return true
-
+    if (user && user.role === 'basic-user') {
+      return true;
     } else {
       return false;
     }
+  }
 
+  async getAccessToken(userId: string, role: string, userStatus: string) {
+    return jwt.sign(
+      { userId: userId, role: role, userStatus: userStatus },
+      jwtSecretkey,
+      { expiresIn: '3h' }
+    );
+  }
+
+  async saveRefreshToken(userId: string) {
+    const refreshToken = jwt.sign({}, jwtSecretkey, { expiresIn: '14d' });
+    const savedInfo = await this.userModel.updateRefreshToken(
+      userId,
+      refreshToken
+    );
+    if (!savedInfo) {
+      throw new Error('존재하지 않는 계정입니다.');
+    }
+    return savedInfo;
+  }
+
+  async clearRefreshToken(userId: string) {
+    return await this.userModel.deleteRefreshToken(userId);
+  }
+
+  async findByIds(userIds: string[]): Promise<UserData[]> {
+    const userInfoes: UserData[] = [];
+    console.log(userIds);
+    for (let userId of userIds) {
+      const userInfo = await this.userModel.findById(userId);
+      console.log(userInfo);
+      if (!userInfo) {
+        throw new Error('계정을 찾을 수 없습니다. 다시 한번 확인해 주세요.');
+      }
+
+      userInfoes.push(userInfo);
+    }
+
+    return userInfoes;
   }
 }
 

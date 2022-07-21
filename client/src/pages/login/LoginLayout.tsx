@@ -59,7 +59,7 @@ function LoginLayout() {
           role,
           userStatus,
         });
-        console.log(user)
+        console.log(user);
 
         // 만일 토큰이 존재하면 로그인에 성공한거니까 access 토큰을 storage에 저장한후에 로그인 성공 메시지 남기고 페이지 이동
         if (token) {
@@ -100,6 +100,10 @@ function LoginLayout() {
       }
     }
   };
+  const handleKakaoLogin = async (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    window.location.href = "http://localhost:5100/api/login/kakao";
+  };
 
   return (
     <form>
@@ -111,7 +115,6 @@ function LoginLayout() {
           onChange={handleLoginState}
           label="이메일을 입력해주세요"
           variant="outlined"
-          required
           autoFocus
           sx={{ mb: 1 }}
         />
@@ -122,7 +125,6 @@ function LoginLayout() {
           onChange={handleLoginState}
           label="비밀번호를 입력해주세요"
           variant="outlined"
-          required
           sx={{ mb: 1 }}
         />
         <UserCheckBox>
@@ -146,6 +148,7 @@ function LoginLayout() {
           variant="contained"
           type="submit"
           sx={{ mb: 1, bgcolor: "#fae100", color: "black" }}
+          onClick={handleKakaoLogin}
         >
           카카오 로그인
         </KakaoButton>

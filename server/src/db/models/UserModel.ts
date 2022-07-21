@@ -1,42 +1,16 @@
-import mongoose, {model} from 'mongoose';
+import mongoose, {model, Types} from 'mongoose';
 import { UserSchema } from "../schemas/UserSchema";
+import {UserAddress, UserInfo, UserData, StatusInfoRequired} from '../../types/UserTypes';
 
 const User = model('users', UserSchema);
-
-// export type Role = 'basic-user' | 'hispital' | 'admin';
-
-export interface UserAddress {
-    postalCode?: string;
-    address1?: string;
-    address2?: string;
-}
-
-export interface UserInfo {
-    userName : string,
-    email : string,
-    password : string,
-    phoneNumber : string,
-    address : UserAddress,
-    role ? : string,
-    userStatus  : string,
-    
-}
-
-export interface UserData extends UserInfo{
-    _id : mongoose.Types.ObjectId
-}
-
 interface ToUpdate {
     email : string,
     update : {
-        [key: string] : string | UserAddress;
+        [key: string] : string | UserAddress |object[];
     }
 }
 
-export interface StatusInfoRequired {
-    userId : string,
-    userStatus : string
-}
+
 export class UserModel {
     async findByEmail(email : string) : Promise<UserData | null> {
         const user = await User.findOne({email});
@@ -83,6 +57,26 @@ export class UserModel {
         }
         const updatedStatus = updatedUser.userStatus;
         return updatedStatus;
+    }
+
+    async updateRefreshToken(userId : string, refreshToken : string) {
+        const filter = {_id : userId};
+        const updatedUser = await User.findOneAndUpdate(filter, {
+            $set : {
+                refreshToken
+            }
+        })
+        return updatedUser;
+    }
+
+    async deleteRefreshToken(userId : string){
+        const filter = {_id : userId};
+        const updatedUser = await User.findOneAndUpdate(filter, {
+            $unset : {
+                refreshToken: ""
+            }
+        })
+        return updatedUser;
     }
 }
 

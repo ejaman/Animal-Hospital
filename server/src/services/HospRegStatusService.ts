@@ -4,6 +4,8 @@ import {
   hospRegStatusModel,
 } from '../db';
 
+import { HttpError } from '../middlewares';
+
 interface ToUpdate {
   hospRegStatusId: string;
   update: {
@@ -19,7 +21,8 @@ class HospRegStatusService {
       hospRegStatusId
     );
     if (!hospRegStatus) {
-      throw new Error(
+      throw new HttpError(
+        400,
         '해당 병원 가입 상태코드 내역이 없습니다. 다시 한 번 확인해 주세요.'
       );
     }
@@ -36,7 +39,8 @@ class HospRegStatusService {
       hospRegStatusName
     );
     if (!hospRegStatus) {
-      throw new Error(
+      throw new HttpError(
+        400,
         '해당 병원 가입 상태코드 내역이 없습니다. 다시 한 번 확인해 주세요.'
       );
     }
@@ -46,7 +50,8 @@ class HospRegStatusService {
   async create(hospRegStatusName: string): Promise<HospRegStatusInfo> {
     const isExist = await this.hospRegStatusModel.findByName(hospRegStatusName);
     if (isExist) {
-      throw new Error(
+      throw new HttpError(
+        400,
         '이 이름으로 생성된 병원 가입 상태코드가 있습니다. 다른 이름을 지어주세요.'
       );
     }
@@ -62,7 +67,8 @@ class HospRegStatusService {
   }: ToUpdate): Promise<HospRegStatusInfo> {
     const isExist = await this.hospRegStatusModel.findById(hospRegStatusId);
     if (!isExist) {
-      throw new Error(
+      throw new HttpError(
+        400,
         '해당 병원 가입 상태코드 내역이 없습니다. 다시 한 번 확인해 주세요.'
       );
     }
@@ -77,7 +83,8 @@ class HospRegStatusService {
   async deleteById(hospRegStatusId: string): Promise<{ message: string }> {
     const isExist = await this.hospRegStatusModel.findById(hospRegStatusId);
     if (!isExist) {
-      throw new Error(
+      throw new HttpError(
+        400,
         '해당 병원 가입 상태코드 내역이 없습니다. 다시 한 번 확인해 주세요.'
       );
     }
@@ -86,7 +93,8 @@ class HospRegStatusService {
     );
     // 삭제에 실패한 경우, 에러 메시지 반환
     if (deletedCount === 0) {
-      throw new Error(
+      throw new HttpError(
+        400,
         `${isExist.name} 병원 가입 상태코드 삭제를 실패하였습니다.`
       );
     }

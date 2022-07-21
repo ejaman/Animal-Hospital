@@ -6,7 +6,12 @@ import {
   hospStatusService,
   hospTagService,
 } from '../services';
-import { adminOnly, HospLoginRequired, onlyHospOwner } from '../middlewares';
+import {
+  adminOnly,
+  HospLoginRequired,
+  onlyHospOwner,
+  HttpError,
+} from '../middlewares';
 import { upload } from '../utils';
 import mongoose, { model } from 'mongoose';
 
@@ -16,7 +21,8 @@ hospitalRouter.post('/register', async (req, res, next) => {
   try {
     // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
     if (_.isEmpty(req.body)) {
-      throw new Error(
+      throw new HttpError(
+        400,
         'headers의 Content-Type을 application/json으로 설정해주세요'
       );
     }
@@ -60,21 +66,21 @@ hospitalRouter.post('/register', async (req, res, next) => {
       !businessNumber ||
       !licenseNumber
     ) {
-      throw new Error('필수 항목이 빠졌습니다. 다시 확인해주세요.');
+      throw new HttpError(400, '필수 항목이 빠졌습니다. 다시 확인해주세요.');
     }
 
     // 이메일 폼 검증
     let regexEmail =
       /^(([^<>()[\]\.,;:\s@"]+(\.[^<>()[\]\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!regexEmail.test(email)) {
-      throw new Error('이메일 형식이 올바르지 않습니다.');
+      throw new HttpError(400, '이메일 형식이 올바르지 않습니다.');
     }
 
     //패스워드 폼 검증
     let regexPassword =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,20}$/;
     if (!regexPassword.test(password)) {
-      throw new Error('비밀번호 형식이 올바르지 않습니다.');
+      throw new HttpError(400, '비밀번호 형식이 올바르지 않습니다.');
     }
 
     // //이메일 인증 로직
@@ -138,7 +144,8 @@ hospitalRouter.post('/login', async function (req, res, next) {
   try {
     // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
     if (_.isEmpty(req.body)) {
-      throw new Error(
+      throw new HttpError(
+        400,
         'headers의 Content-Type을 application/json으로 설정해주세요'
       );
     }
@@ -187,7 +194,8 @@ hospitalRouter.patch(
         console.log(image);
       } else {
         if (_.isEmpty(req.body)) {
-          throw new Error(
+          throw new HttpError(
+            400,
             'headers의 Content-Type을 application/json으로 설정해주세요'
           );
         }
@@ -213,7 +221,7 @@ hospitalRouter.patch(
         let regexPassword =
           /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,20}$/;
         if (!regexPassword.test(password)) {
-          throw new Error('비밀번호 형식이 올바르지 않습니다.');
+          throw new HttpError(400, '비밀번호 형식이 올바르지 않습니다.');
         }
       }
 
@@ -222,7 +230,10 @@ hospitalRouter.patch(
 
       // currentPassword 없을 시, 진행 불가
       if (!currentPassword) {
-        throw new Error('정보를 변경하려면, 현재의 비밀번호가 필요합니다.');
+        throw new HttpError(
+          400,
+          '정보를 변경하려면, 현재의 비밀번호가 필요합니다.'
+        );
       }
 
       const hospitalId = req.currentHospId;
@@ -278,7 +289,8 @@ hospitalRouter.patch(
         console.log(image);
       } else {
         if (_.isEmpty(req.body)) {
-          throw new Error(
+          throw new HttpError(
+            400,
             'headers의 Content-Type을 application/json으로 설정해주세요'
           );
         }
@@ -310,14 +322,17 @@ hospitalRouter.patch(
           keyword
         )
       ) {
-        throw new Error('기입하지 않은 정보가 있습니다. 다시 확인해주세요');
+        throw new HttpError(
+          400,
+          '기입하지 않은 정보가 있습니다. 다시 확인해주세요'
+        );
       }
 
       if (password) {
         let regexPassword =
           /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,20}$/;
         if (!regexPassword.test(password)) {
-          throw new Error('비밀번호 형식이 올바르지 않습니다.');
+          throw new HttpError(400, '비밀번호 형식이 올바르지 않습니다.');
         }
       }
 
@@ -326,7 +341,10 @@ hospitalRouter.patch(
 
       // currentPassword 없을 시, 진행 불가
       if (!currentPassword) {
-        throw new Error('정보를 변경하려면, 현재의 비밀번호가 필요합니다.');
+        throw new HttpError(
+          400,
+          '정보를 변경하려면, 현재의 비밀번호가 필요합니다.'
+        );
       }
 
       const hospitalId = req.currentHospId;
@@ -384,7 +402,8 @@ hospitalRouter.patch(
   async (req, res, next) => {
     try {
       if (_.isEmpty(req.body)) {
-        throw new Error(
+        throw new HttpError(
+          400,
           'headers의 Content-Type을 application/json으로 설정해주세요'
         );
       }
@@ -397,7 +416,7 @@ hospitalRouter.patch(
 
       // currentPassword 없을 시, 진행 불가
       if (!currentPassword) {
-        throw new Error('탈퇴할려면, 현재의 비밀번호가 필요합니다.');
+        throw new HttpError(400, '탈퇴할려면, 현재의 비밀번호가 필요합니다.');
       }
 
       const hospitalId = req.currentHospId;
@@ -432,7 +451,7 @@ hospitalRouter.get('/:hospitalName/Services', async (req, res, next) => {
     const hospital = await hospitalService.findHospitalByName(hospitalName);
 
     if (!hospital) {
-      throw new Error('찾고자 하는 병원이 없습니다.');
+      throw new HttpError(400, '찾고자 하는 병원이 없습니다.');
     }
 
     const hospitalId = hospital._id;
@@ -453,7 +472,7 @@ hospitalRouter.get(
       const hospital = await hospitalService.findHospitalByName(hospitalName);
 
       if (!hospital) {
-        throw new Error('찾고자 하는 병원이 없습니다.');
+        throw new HttpError(400, '찾고자 하는 병원이 없습니다.');
       }
 
       const hospService = await hospServiceService.findById(hospServiceId);
@@ -472,7 +491,8 @@ hospitalRouter.post(
     try {
       // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
       if (_.isEmpty(req.body)) {
-        throw new Error(
+        throw new HttpError(
+          400,
           'headers의 Content-Type을 application/json으로 설정해주세요'
         );
       }
@@ -507,7 +527,8 @@ hospitalRouter.patch(
     try {
       // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
       if (_.isEmpty(req.body)) {
-        throw new Error(
+        throw new HttpError(
+          400,
           'headers의 Content-Type을 application/json으로 설정해주세요'
         );
       }
@@ -714,7 +735,8 @@ hospitalRouter.patch(
   async (req, res, next) => {
     try {
       if (_.isEmpty(req.body)) {
-        throw new Error(
+        throw new HttpError(
+          400,
           'headers의 Content-Type을 application/json으로 설정해주세요'
         );
       }

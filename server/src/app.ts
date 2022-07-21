@@ -13,6 +13,11 @@ import {
   rezStatusRouter,
   reservationRouter,
 } from './routers';
+import passport from 'passport';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
+import { passportLocalConfig } from './passport/LocalStrategy';
+import { passportKakaoConfig } from './passport/KakaoStrategy';
 
 const app = express();
 
@@ -26,6 +31,20 @@ app.use(express.json());
 // Content-Type: application/x-www-form-urlencoded 형태의 데이터를 인식하고 핸들링할 수 있게 함.
 
 app.use(express.urlencoded({ extended: false }));
+app.use(session({
+  
+    secret : "team14-animal-hospital",
+    resave : false,
+    saveUninitialized : true,
+    store : MongoStore.create({
+      mongoUrl : process.env.MONGODB_URL
+    })
+}
+))
+app.use(passport.initialize());
+app.use(passport.session());
+passportLocalConfig();
+passportKakaoConfig();
 
 app.use('/hospitalStatus', hospStatusRouter);
 app.use('/hospitalRegStatus', hospRegStatusRouter);
@@ -34,8 +53,10 @@ app.use('/hospital', hospitalRouter);
 app.use('/api', userRouter);
 app.use('/pet', petRouter);
 app.use('/review', reviewRouter);
+
 app.use('/reservationStatus', rezStatusRouter);
 app.use('/reservation', reservationRouter);
+
 
 // app.use('*', ) //errorHandler로 무조건 400처리하면 안됨
 
