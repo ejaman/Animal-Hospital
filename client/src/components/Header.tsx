@@ -125,6 +125,9 @@ export default function Header({searchBox}: ISearch) {
 
   const token = localStorage.getItem('token');
 
+  useEffect(() => {
+    !token && hospital.hospitalName==='' && setIsLogin(false);
+  }, [token, hospital]);
 
   // 로그아웃 클릭 시 로그아웃
   async function handleLogout() {
