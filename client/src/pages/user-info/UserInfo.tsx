@@ -17,6 +17,10 @@ import {
   Divider,
 } from "../../components/InfoForm";
 import { ModalStyle } from "../../components/ModalStyle";
+import { CustomAxiosGet } from "../../common/CustomAxios";
+import { useResetRecoilState } from "recoil";
+import { userState } from '../../state/UserState';
+import { hospitalLoginState } from '../../state/HospitalState';
 
 const token = localStorage.getItem("token");
 function UserInfo() {
@@ -110,6 +114,21 @@ function UserInfo() {
         // 현재 비밀번호 위치를 수정 옆으로?
       });
   };
+
+  // 로그아웃 함수
+  const hospitalResetState = useResetRecoilState(hospitalLoginState);
+  const userResetState = useResetRecoilState(userState);
+  async function handleLogout() {
+    if(token) {
+      localStorage.removeItem('token');
+      userResetState();
+    }
+    else {
+      await CustomAxiosGet.get('/hospital/logout');
+        hospitalResetState();
+    }
+  }
+
   const expiration = async () => {
     //TODO
     // console.log(token);
@@ -126,7 +145,7 @@ function UserInfo() {
       )
       .then((res) => {
         alert(`${userInfo.userName}님 탈퇴가 완료되었습니다 🥲`);
-        localStorage.removeItem("token");
+        handleLogout();
         navigate("/");
       });
   };

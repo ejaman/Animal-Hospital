@@ -118,7 +118,7 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
         }
 
         try {
-          const result = await axios.post('http://localhost:5100/hostpital/register', JSON.stringify(data), {
+          const result = await axios.post('http://localhost:5100/hospital/register', JSON.stringify(data), {
             headers: {
               'Content-Type': 'application/json',
             },
@@ -154,6 +154,7 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
         }
       }
 
+      alert(`회원가입이 완료되었습니다:)`);
       navigate('/login');
   }
 

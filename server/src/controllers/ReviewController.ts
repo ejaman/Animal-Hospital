@@ -144,3 +144,15 @@ export async function getReviewCTR (req: Request,
 
   }
 
+export async function getHospitalRatingCTR(req: Request, res: Response, next: NextFunction
+  ){
+    try{
+        
+        const avgReview = await reviewService.getHospitalRating();
+        res.status(200).json(avgReview);
+
+
+    } catch (error){
+      next(error)
+    }
+  }

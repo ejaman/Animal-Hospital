@@ -24,14 +24,14 @@ async function kakaoVerify (
             const kakaoNickname = profile._json && profile._json.kakaoNickname;
             const kakaoPassword = 'kakaoPassword';
             const hashedPassword = await bcrypt.hash(kakaoPassword, 10);
-            const userInfo = {
+            const userInfomation = {
+                userName : kakaoNickname,
                 email : kakaoEmail,
                 password : hashedPassword,
-                userName : kakaoNickname,
                 InCaseOAuth : 'kakao'
             }
 
-            const user = await userModel.create(userInfo);
+            const user = await userModel.create(userInfomation);
             done(null, user);
             return;
         }

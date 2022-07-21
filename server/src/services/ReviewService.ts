@@ -23,6 +23,12 @@ class ReviewService {
         return reviews;
     }
 
+    //병원 회원의 자기병원에 대한 평점 평균 
+    async getHospitalRating() : Promise<any[]>{
+        const rating = await this.reviewModel.getHospitalRating();
+        return rating;
+    }
+
     //관리자의 모든 리뷰 조회
     async getAllReviews():Promise<ReviewInfo[]>{
         const reviews = await this.reviewModel.findAll();

@@ -53,21 +53,24 @@ function LoginLayout() {
       try {
         const result = await CustomAxiosPost.post("/api/login", logins);
         const { token, role, userStatus } = result.data.userToken;
-        console.log(result);
+
         setUser({
           ...user,
           role,
           userStatus,
         });
-        console.log(user);
 
-        // 만일 토큰이 존재하면 로그인에 성공한거니까 access 토큰을 storage에 저장한후에 로그인 성공 메시지 남기고 페이지 이동
-        if (token) {
-          localStorage.setItem("token", token);
-          alert("로그인에 성공하였습니다.");
-          navigate("/");
+        if (userStatus === "expired") {
+          console.log("여길 안지나감?");
+          alert("탈퇴한 유저 입니다.");
+          return;
         }
+
+        localStorage.setItem("token", token);
+        alert("로그인에 성공하였습니다.");
+        navigate("/");
       } catch (e) {
+        console.log(e);
         alert("아이디 또는 비밀번호 오류입니다.");
       }
     } else {
@@ -100,6 +103,7 @@ function LoginLayout() {
       }
     }
   };
+
   const handleKakaoLogin = async (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     window.location.href = "http://localhost:5100/api/login/kakao";
@@ -152,9 +156,11 @@ function LoginLayout() {
         >
           카카오 로그인
         </KakaoButton>
-        <RegisterButton variant="outlined" type="submit">
-          <Link to="/register">회원 가입</Link>
-        </RegisterButton>
+        <Link to="/register">
+          <RegisterButton variant="outlined" type="submit">
+            회원 가입
+          </RegisterButton>
+        </Link>
       </LoginWrapper>
     </form>
   );
