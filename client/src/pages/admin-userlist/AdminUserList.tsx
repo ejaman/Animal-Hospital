@@ -28,16 +28,17 @@ function AdminUserList() {
   const [sort, serSort] = useState<string>();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5100/api/userlist", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-        setDatas(res.data);
-      });
+    token &&
+      axios
+        .get("http://localhost:5100/api/userlist", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          setDatas(res.data);
+        });
   }, []);
 
   const SearchLists = search

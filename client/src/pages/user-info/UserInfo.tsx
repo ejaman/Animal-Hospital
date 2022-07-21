@@ -41,19 +41,19 @@ function UserInfo() {
   const currentPwRef = useRef<HTMLInputElement>(null);
   const newPwRef = useRef<HTMLInputElement>(null);
 
-  // 데이터가 있을 때 && 연산자
   // 처음 한 번만 서버 통신
   useEffect(() => {
-    axios
-      .get("http://localhost:5100/api/user", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        setUserInfo(res.data);
-        setAddr(res.data.address);
-      });
+    token &&
+      axios
+        .get("http://localhost:5100/api/user", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          setUserInfo(res.data);
+          setAddr(res.data.address);
+        });
   }, []);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
