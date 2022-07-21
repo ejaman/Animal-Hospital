@@ -329,12 +329,16 @@ export default function HospitalInfo() {
     const data = { "currentPassword": currPassword };
     // const data = currPassword;
     console.log(currPassword);
-    await axios.patch('http://localhost:5100/hospital/', data, {
-      withCredentials: true
-    });
-    console.log(data);
-    console.log("성공적으로 저장되었습니다.");
-    navigate("/hospital-info");
+    try {
+      await axios.patch('http://localhost:5100/hospital/', data, {
+        withCredentials: true
+      });
+      console.log(data);
+      console.log("성공적으로 저장되었습니다.");
+      navigate("/hospital-info");
+    } catch {
+      alert("비밀번호가 틀렸습니다.");
+    }
   }
   // PROBLEM: 서비스 삭제 버튼 눌렀을 때 타입 오류 뜸
   // function deleteServiceHandler(e:React.MouseEvent<Element>, index) {
@@ -437,7 +441,7 @@ export default function HospitalInfo() {
                     name="password"
                     style={{ marginLeft: "0.5rem" }}
                     type="password"
-                    autoComplete="current-password"
+                    // autoComplete="current-password"
                     defaultValue=""
                   />
                   {/* 유저 정보 페이지와의 통일감을 위해 현재 비밀번호 input과 수정 버튼은 아래에 */}
@@ -704,11 +708,6 @@ export default function HospitalInfo() {
                       onClick={ onhandleUpdate }
                     >저장</InfoBtn>
                   </Row>
-                  {/* <Row>
-                    <Button onClick={() => {
-                      console.log(hospitalInfo)
-                    }}>개발자 확인 버튼</Button>
-                  </Row> */}
                 </Col>
               </Row>
             </div>
