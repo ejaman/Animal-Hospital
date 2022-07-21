@@ -65,7 +65,7 @@ export default function Register () {
       justifyContent: "center"}}>
       <Container>
         <Title title='회원가입' />
-        <Welcome>동물병원에 오신 것을 환영합니다:)</Welcome>
+        <Welcome>펫닥터 방문을 환영합니다:)</Welcome>
         <BtnContainer>
           <UserSelectBtn isHospital={isHospital} onClick={() => setIsHospital(false)}>
             일반 회원
