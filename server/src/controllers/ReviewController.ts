@@ -2,6 +2,8 @@
 import { reviewService, userService } from '../services';
 import { Request, Response, NextFunction } from 'express';
 import * as _ from 'lodash';
+import { blockInvalidRequest } from './Utils';
+import { HttpError } from '../middlewares';
 
 export async function postReviewCTR(
   req: Request,
@@ -9,32 +11,24 @@ export async function postReviewCTR(
   next: NextFunction
 ) {
   try {
-    if (_.isEmpty(req.body)) {
-      throw new Error(
-        "body가 비어있거나 header의 Content-Type이 'application/json'인지 확인해주세요"
-      );
-    }
+   
+    blockInvalidRequest(req.body)
     const { userId, targetHospital, date, content, like } = req.body;
     const currentUserId = req.currentUserId;
     const isPermittedUser = await userService.blockUnauthorized(userId);
   
+    //오피스아워 반영. 
+    if(!isPermittedUser || currentUserId !== userId){
+
+        //TODO : 리다이렉션경로 재설정하기(프론트)
+        throw new HttpError(403, "접근권한이 없거나 로그인한 사용자와 작성자가 일치하지 않습니다")
+
+    } 
+
+    const reviewInfo = { userId, targetHospital, date, content, like };
+    const newReview = await reviewService.addReview(reviewInfo);
+    res.status(201).json(newReview);
     
-    if(!isPermittedUser){
-
-        //TODO : 리다이렉션경로 재설정하기
-        res.status(400).json({message: "리뷰 작성 권한이 없습니다."})
-
-    } else if(currentUserId !== userId){
-
-        //TODO : 리다이렉션경로 재설정하기
-        res.status(400).json({message : "로그인한 사용자와 작성자가 일치하지 않습니다."});
-
-    } else {
-
-        const reviewInfo = { userId, targetHospital, date, content, like };
-        const newReview = await reviewService.addReview(reviewInfo);
-        res.status(201).json(newReview);
-    }
     
     
   } catch (error) {
@@ -42,21 +36,19 @@ export async function postReviewCTR(
   }
 }
 
-//각 병원페이지에서의 자기 리뷰 조회
+//각 병원페이지에서의 해당병원 리뷰 
 export async function getReviewCTR (req: Request,
     res: Response,
     next: NextFunction
   ) {
     try {
-        if (_.isEmpty(req.body)) {
-          throw new Error(
-            "body가 비어있거나 header의 Content-Type이 'application/json'인지 확인해주세요"
-          );
-        }
-         const {hospitalId} = req.body;
-        
-         const hospitalReview = await reviewService.getReviewsByHospital(hospitalId); 
-         res.status(200).json(hospitalReview);    
+       
+        blockInvalidRequest(req.body);
+
+        const {hospitalId} = req.body;
+      
+        const hospitalReview = await reviewService.getReviewsByHospital(hospitalId); 
+        res.status(200).json(hospitalReview);    
 
     } catch (error) {
         next(error)
@@ -98,16 +90,10 @@ export async function getReviewCTR (req: Request,
     }
   
   // 일반 회원의 리뷰 수정
-  export async function updateReviewCTR (req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  export async function updateReviewCTR (req: Request,  res: Response, next: NextFunction) {
     try {
-        if (_.isEmpty(req.body)) {
-            throw new Error(
-              "body가 비어있거나 header의 Content-Type이 'application/json'인지 확인해주세요"
-            );
-          }
+        
+        blockInvalidRequest(req.body)
 
         const { reviewId, userId, targetHospital, date, content, like } = req.body;
 
@@ -116,37 +102,27 @@ export async function getReviewCTR (req: Request,
         
         if(userId !== currentUserId || userRole==="admin"){
           res.status(401).json({message : "잘못된 접근입니다."})
-        } else {
-          const toUpdate = {
-            ...(date && {date}),
-            ...(content && {content}),
-            ...(like && {like})
-          }
+        } 
+        const toUpdate = {
+          ...(date && {date}),
+          ...(content && {content}),
+          ...(like && {like})
+        }
 
 
-          const updatedReview = await reviewService.updateReview(reviewId, toUpdate);
-          res.status(200).json(updatedReview);
-        }       
-        
-
-    } catch (error) {
+        const updatedReview = await reviewService.updateReview(reviewId, toUpdate);
+        res.status(200).json(updatedReview);
+        } catch (error) {
         next(error)
-    }
+        }
+      }
 
-  }
-
-  export async function deleteReviewCTR (req: Request,
-    res: Response,
-    next: NextFunction
+  export async function deleteReviewCTR (req: Request, res: Response, next: NextFunction
   ) {
     try {
-        if (_.isEmpty(req.body)) {
-            throw new Error(
-              "body가 비어있거나 header의 Content-Type이 'application/json'인지 확인해주세요"
-            );
-          }
-
         const {reviewId, userId, targetHospital} = req.body;
+        const requiredParams = ['reviewId', 'userId', 'targetHospital'];
+        blockInvalidRequest(req.body);
         const currentUserId = req.currentUserId;
         const userRole = req.userRole;
         const review = await reviewService.getEachReview(reviewId);

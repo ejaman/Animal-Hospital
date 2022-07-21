@@ -1,31 +1,8 @@
 import mongoose, {model} from 'mongoose';
 import { UserSchema } from "../schemas/UserSchema";
+import {UserAddress, UserInfo, UserData, StatusInfoRequired} from '../../types/UserTypes';
 
 const User = model('users', UserSchema);
-
-// export type Role = 'basic-user' | 'hispital' | 'admin';
-
-export interface UserAddress {
-    postalCode?: string;
-    address1?: string;
-    address2?: string;
-}
-
-export interface UserInfo {
-    userName : string,
-    email : string,
-    password : string,
-    phoneNumber : string,
-    address : UserAddress,
-    role ? : string,
-    userStatus  : string,
-    
-}
-
-export interface UserData extends UserInfo{
-    _id : mongoose.Types.ObjectId
-}
-
 interface ToUpdate {
     email : string,
     update : {
@@ -33,10 +10,7 @@ interface ToUpdate {
     }
 }
 
-export interface StatusInfoRequired {
-    userId : string,
-    userStatus : string
-}
+
 export class UserModel {
     async findByEmail(email : string) : Promise<UserData | null> {
         const user = await User.findOne({email});
