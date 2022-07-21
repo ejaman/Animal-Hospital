@@ -123,18 +123,19 @@ export default function Header({searchBox}: ISearch) {
   const HospitalResetState = useResetRecoilState(hospitalLoginState);
   const UserResetState = useResetRecoilState(userState);
 
-  function userLogout() {
-    localStorage.removeItem('token');
-    UserResetState();
-  }
+  const token = localStorage.getItem('token');
+
 
   // 로그아웃 클릭 시 로그아웃
   async function handleLogout() {
-    !!localStorage.getItem('hospitalLoginState') && await CustomAxiosGet.get('/hospital/logout');
-
-    role.role === 'basic-user' && userLogout();
-    !!localStorage.getItem('hospitalLoginState') && HospitalResetState();
-    role.role === 'admin' && userLogout();
+    if(token) {
+      localStorage.removeItem('token');
+      UserResetState();
+    }
+    else {
+      await CustomAxiosGet.get('/hospital/logout');
+      HospitalResetState();
+    }
     
     alert(`로그아웃이 완료되었습니다:)`);
     setIsLogin(false);
