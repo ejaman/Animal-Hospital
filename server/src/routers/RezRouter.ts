@@ -169,4 +169,55 @@ reservationRouter.get(
   }
 );
 
+reservationRouter.get('/admin/list', adminOnly, async (req, res, next) => {
+  try {
+    const page = Number(req.query.page || 1);
+    const perPage = Number(req.query.perPage || 10);
+
+    const searchOptions = {};
+
+    const totalReservations = await reservationService.countTotalReservations(
+      searchOptions
+    );
+
+    const Reservations = await reservationService.getReservations(
+      page,
+      perPage,
+      searchOptions
+    );
+
+    const hospitalIds = Reservations.map((data) => data.hospital.toString());
+    const customerIds = Reservations.map((data) => data.customer.toString());
+    const petIds = Reservations.map((data) => data.pet.toString());
+    const rezStatuses = Reservations.map((data) => data.rezStatus.toString());
+
+    const hospitalInfoes = await hospitalService.findByIds(hospitalIds);
+    const customerInfoes = await userService.findByIds(customerIds);
+    const petInfoes = await petService.findByIds(petIds);
+    const rezStatusInfoes = await rezStatusService.findByIds(rezStatuses);
+
+    const totalPage = Math.ceil(totalReservations / perPage);
+
+    res.status(200).json({
+      data: {
+        searchOptions: searchOptions,
+        ReservationsInfo: {
+          Reservations: Reservations,
+          hospitalInfoes: hospitalInfoes,
+          customerInfoes: customerInfoes,
+          petInfoes: petInfoes,
+          rezStatusInfoes: rezStatusInfoes,
+        },
+        page: page,
+        perPage: perPage,
+        totalPage: totalPage,
+        totalHospitals: totalReservations,
+      },
+      message: '',
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export { reservationRouter };
