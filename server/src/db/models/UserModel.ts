@@ -1,6 +1,6 @@
 import mongoose, {model, Types} from 'mongoose';
 import { UserSchema } from "../schemas/UserSchema";
-import {UserAddress, UserInfo, UserData, StatusInfoRequired} from '../../types/UserTypes';
+import {UserAddress, UserInfo, UserData, StatusInfoRequired, UserStatus} from '../../types/UserTypes';
 
 const User = model('users', UserSchema);
 interface ToUpdate {
@@ -46,7 +46,7 @@ export class UserModel {
         return users;
     }
 
-    async updateStatus({userId} : StatusInfoRequired) : Promise<string> {
+    async statusExpired({userId} : StatusInfoRequired) : Promise<string> {
         const filter = {_id : userId};
         const option = {returnOriginal : false};
         const updatedUser = await User.findOneAndUpdate(filter, {userStatus : 'expired'}, option);
@@ -57,6 +57,20 @@ export class UserModel {
         }
         const updatedStatus = updatedUser.userStatus;
         return updatedStatus;
+    }
+
+    async updateUserStatus(statusInfoRequired : StatusInfoRequired) : Promise<UserData>{
+        const {userId, userStatus} = statusInfoRequired;
+        const filter = {_id : userId};
+        const toUpdate = userStatus===UserStatus.EXPIRED ? UserStatus.NORMAL : UserStatus.EXPIRED;
+        console.log(toUpdate);
+        const option = {returnOriginal : false};
+        const updatedUser = await User.findOneAndUpdate(filter, {userStatus : toUpdate}, option );
+        console.log(updatedUser);
+        if(!updatedUser){
+            throw new Error("사용자 상태를 변경할 수 없습니다.")
+        }
+        return updatedUser;
     }
 
     async updateRefreshToken(userId : string, refreshToken : string) {

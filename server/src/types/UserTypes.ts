@@ -1,5 +1,10 @@
 import {Types} from 'mongoose';
 
+export enum UserStatus {
+    NORMAL = 'normal',
+    EXPIRED = 'expired',
+  }
+
 export interface UserAddress {
     postalCode?: string;
     address1?: string;
