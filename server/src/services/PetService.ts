@@ -1,4 +1,5 @@
 import { PetData, PetInfo, petModel, PetModel } from '../db';
+import mongoose, { model } from 'mongoose';
 
 interface PetInfoRequired {
   owner: string;
@@ -92,12 +93,26 @@ class PetService {
   // 펫 ID 배열에 담긴 것들을 조회
   async findByIds(petIds: string[]): Promise<PetData[]> {
     const petInfoes: PetData[] = [];
-    console.log(petIds);
+    console.log('펫아이디느ㅜㄴ?', petIds);
     for (let petId of petIds) {
-      const petInfo = await this.petModel.findByPetId(petId);
+      console.log(petId);
+      let petInfo = await this.petModel.findByPetId(petId);
       console.log(petInfo);
       if (!petInfo) {
-        throw new Error('펫 정보를 찾을 수 없습니다. 다시 한번 확인해 주세요.');
+        petInfo = {
+          _id: new mongoose.Types.ObjectId(petId),
+          owner: '',
+          species: '',
+          breed: '',
+          name: '',
+          age: 0,
+          sex: '',
+          weight: 0,
+          medicalHistory: '',
+          vaccination: '',
+          neutralized: '',
+          image: '',
+        };
       }
 
       petInfoes.push(petInfo);
