@@ -41,6 +41,7 @@ function UserInfo() {
   const currentPwRef = useRef<HTMLInputElement>(null);
   const newPwRef = useRef<HTMLInputElement>(null);
 
+  // 데이터가 있을 때 && 연산자
   // 처음 한 번만 서버 통신
   useEffect(() => {
     axios
