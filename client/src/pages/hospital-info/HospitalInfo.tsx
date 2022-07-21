@@ -1,5 +1,5 @@
 // react와 vanilla js 혼종인 파일이다. 리액트로 서서히 바꿔나가자
-// 우선순위 높은 남은 기능들: 정보 수정 시 validation 추가, 정보 수정 반영
+// 시간관계상 구현 못한 남은 기능들: 정보 수정 시 validation 추가, 비밀번호 수정, 버튼 재렌더링 그 외 코드 주석
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import DaumPostcode from "react-daum-postcode";
 import Modal from "react-modal";
@@ -309,13 +309,18 @@ export default function HospitalInfo() {
     e.preventDefault();
     console.log("현재 비밀번호:", currPassword);
     const data = { "currentPassword": currPassword };
-    const response = await axios.patch("http://localhost:5100/hospital/withdrawal", data, {
+    try {const response = await axios.patch("http://localhost:5100/hospital/withdrawal", data, {
       withCredentials: true
     });
     console.log(response);
     console.log('병원 회원 탈퇴가 진행됩니다.')
     alert("탈퇴되었습니다.");
     navigate("/login");
+    }
+    catch (err) {
+      alert("비밀번호가 틀렸습니다.");
+      setIsPassOpen(!isPassOpen);
+    }
   }
 
   const onhandleUpdate = async(event: React.MouseEvent<HTMLElement>) => {
@@ -427,8 +432,7 @@ export default function HospitalInfo() {
               <Row>
                 <Container>
                   <InputLabel>새 비밀번호</InputLabel>
-                  {/* <input ref={newPwRef} placeholder="새 비밀번호" />
-                  <input ref={currentPwRef} placeholder="현재 비밀번호" /> */}
+                  {/* 유저 페이지와 형식 통일, 추후 기능 추가 */}
                   <InfoInput
                     name="password"
                     style={{ marginLeft: "0.5rem" }}
