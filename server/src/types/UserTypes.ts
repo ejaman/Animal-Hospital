@@ -10,10 +10,12 @@ export interface UserInfo {
     userName : string,
     email : string,
     password : string,
-    phoneNumber : string,
-    address : UserAddress,
+    phoneNumber? : string,
+    address? : UserAddress,
+    pet? : object[],
     role ? : string,
     userStatus?  : string,
+    InCaseOAuth? : string,
     
 }
 
@@ -22,10 +24,13 @@ export interface UserData {
     userName : string,
     email : string,
     password : string,
-    phoneNumber : string,
-    address : UserAddress,
+    phoneNumber? : string,
+    address? : UserAddress,
+    pet? : object[],
     role ? : string,
     userStatus?  : string,
+    InCaseOAuth? : string
+
 }
 
 export interface StatusInfoRequired {

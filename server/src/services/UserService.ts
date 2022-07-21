@@ -13,6 +13,7 @@ enum UserStatus {
   EXPIRED = 'expired',
 }
 
+const jwtSecretkey = process.env.JWT_SECRET_KEY as string;
 class UserService {
   constructor(private userModel: UserModel) {}
 
@@ -207,6 +208,28 @@ class UserService {
     }
 
   }
+
+  async getAccessToken(userId : string, role : string, userStatus : string){
+    return jwt.sign(
+      {userId : userId, role : role, userStatus : userStatus},
+      jwtSecretkey,
+      {expiresIn : '3h'}
+    )
+  }
+
+  async saveRefreshToken(userId : string){
+    const refreshToken = jwt.sign({}, jwtSecretkey, {expiresIn : '14d'});
+    const savedInfo = await this.userModel.updateRefreshToken(userId, refreshToken);
+    if(!savedInfo){
+      throw new Error("존재하지 않는 계정입니다.")
+    }
+    return savedInfo;
+  }
+
+  async clearRefreshToken(userId : string){
+    return await this.userModel.deleteRefreshToken(userId);
+  }
+
 }
 
 const userService = new UserService(userModel);

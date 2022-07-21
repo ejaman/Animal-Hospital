@@ -4,6 +4,13 @@ import { userService } from '../services';
 import { HttpError} from '../middlewares';
 import { blockInvalidRequest } from './Utils';
 
+import passport from 'passport';
+import {Strategy as LocalStrategy} from 'passport-local';
+// import { passportLoginVerify } from '../passport/LocalStrategy';
+import logger from 'jet-logger';
+import jwt from 'jsonwebtoken';
+
+
 
 export async function registerUserCTR (req : Request, res : Response, next : NextFunction) {
     try {
@@ -61,8 +68,49 @@ export async function loginUserCTR (req : Request, res : Response, next : NextFu
         } 
 
         const userToken = await userService.getUserToken({ email, password });
+        
                 
         res.status(201).json({ userToken }); 
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+//passport-local login 위 로그인 코드 대체
+export async function loginPassportCTR (req:Request, res:Response, next : NextFunction){
+    try {
+        
+        passport.authenticate('local', (err, user, info) =>{
+            if(err || !user) {
+                res.status(400).json({
+                    result : 'error',
+                    reason : info.message
+                })
+                return
+            }
+            req.login(user, {session : false} , async(loginError)=>{
+                        if(loginError) {
+                            res.status(400).send(loginError);
+                            return;
+                        }
+                        // const userToken = await userService.getUserToken({ email, password });
+                        const secretKey = process.env.JWT_SECRET_KEY || 'secret-key';
+                        const token = jwt.sign(
+                            {userId : user._id, role : user.role, userStatus : user.userStatus},
+                            secretKey,
+                            {expiresIn : '10d'}
+                        )
+                        res.status(200).json({
+                            userToken : {
+                                token,
+                                role : user.role,
+                                userStatus : user.userStatus
+                            }
+                        })
+                    })
+                    
+        })(req, res ,next)
 
     } catch (error) {
         next(error)
@@ -98,7 +146,8 @@ export async function updateUserInfoCTR (req : Request, res : Response, next : N
             const regixPW = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,20}/;
 
             if(!currentPassword || !regixPW.test(password) ){
-                throw new HttpError(400, "현재 비밀 번호가 없거나 새로운 비밀번호가 규칙에 맞지 않습니다.")
+
+                throw new HttpError(400, "비밀번호가 없거나 비밀번호 규칙에 맞지 않습니다.")
             }
 
             const userInfoRequired = { email, currentPassword };
@@ -149,3 +198,45 @@ export async function ExpireUserCTR (req : Request, res : Response, next : NextF
         next(error)
       }
 }
+
+
+export async function loginKakaoCTR (req : Request, res : Response, next : NextFunction){
+    try {
+       
+        passport.authenticate('kakao', (err, user ,info) =>{
+            console.log('passport.authenticate(kakao)실행');
+            if(!user) {
+                logger.warn(info.message);
+                return res.redirect('http://localhost:5100/api/login');
+            }
+            req.login(user, async(err)=> {
+                console.log('kakao-callback user : ', user);
+                if(err){
+                    next(err);
+                    return;
+                }
+
+                const accessToken = await userService.getAccessToken(
+                    user._id,
+                    user.role,
+                    user.userStatus
+                )
+
+                await userService.saveRefreshToken(user._id);
+
+                return res.status(200).json({
+                    userToken : {
+                        accessToken,
+                        role : user.role,
+                        userStatus : user.userStatus
+                    }
+                })       
+            });
+        })(req,res);
+        
+    } catch (error) {
+        next(error)
+    }
+
+}
+

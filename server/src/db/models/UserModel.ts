@@ -1,4 +1,4 @@
-import mongoose, {model} from 'mongoose';
+import mongoose, {model, Types} from 'mongoose';
 import { UserSchema } from "../schemas/UserSchema";
 import {UserAddress, UserInfo, UserData, StatusInfoRequired} from '../../types/UserTypes';
 
@@ -6,7 +6,7 @@ const User = model('users', UserSchema);
 interface ToUpdate {
     email : string,
     update : {
-        [key: string] : string | UserAddress;
+        [key: string] : string | UserAddress |object[];
     }
 }
 
@@ -57,6 +57,26 @@ export class UserModel {
         }
         const updatedStatus = updatedUser.userStatus;
         return updatedStatus;
+    }
+
+    async updateRefreshToken(userId : string, refreshToken : string) {
+        const filter = {_id : userId};
+        const updatedUser = await User.findOneAndUpdate(filter, {
+            $set : {
+                refreshToken
+            }
+        })
+        return updatedUser;
+    }
+
+    async deleteRefreshToken(userId : string){
+        const filter = {_id : userId};
+        const updatedUser = await User.findOneAndUpdate(filter, {
+            $unset : {
+                refreshToken: ""
+            }
+        })
+        return updatedUser;
     }
 }
 

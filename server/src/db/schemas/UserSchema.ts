@@ -56,7 +56,13 @@ const UserSchema = new Schema (
             type : String,
             required : false,
             default : "normal"
-        }
+        },
+
+        InCaseOAuth : {
+            type : String,
+            required : false,
+            default : 'byEmail'
+        } 
         
   
 },
