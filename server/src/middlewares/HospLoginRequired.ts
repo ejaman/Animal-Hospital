@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import jwt_decode from 'jwt-decode';
 import { hospitalService } from '../services';
+import { HttpError } from './';
 
 async function HospLoginRequired(
   req: Request,
@@ -50,7 +51,7 @@ async function HospLoginRequired(
       const { role, hospitalId } = hospInfo;
 
       if (role !== 'hospital') {
-        throw Error('해당 접근 권한이 없습니다.');
+        throw new HttpError(403, '해당 접근 권한이 없습니다.');
       }
 
       const hospital = await hospitalService.findHospitalById(hospitalId);
@@ -98,7 +99,7 @@ async function HospLoginRequired(
       ) as JwtPayload;
 
       if (role !== 'hospital') {
-        throw Error('해당 접근 권한이 없습니다.');
+        throw new HttpError(403, '해당 접근 권한이 없습니다.');
       }
 
       const hospital = await hospitalService.findHospitalById(hospitalId);

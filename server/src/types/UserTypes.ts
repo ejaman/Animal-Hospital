@@ -30,6 +30,7 @@ export interface UserData {
     role ? : string,
     userStatus?  : string,
     InCaseOAuth? : string
+
 }
 
 export interface StatusInfoRequired {

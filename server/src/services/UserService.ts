@@ -187,6 +187,7 @@ class UserService {
 
     if (userStatus === UserStatus.EXPIRED) {
       return true;
+
     } else {
       return false;
     }
@@ -201,6 +202,7 @@ class UserService {
     if(user && user.role==="basic-user") {
       
      return true
+
     } else {
       return false;
     }

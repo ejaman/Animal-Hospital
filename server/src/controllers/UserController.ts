@@ -3,11 +3,13 @@ import * as _ from 'lodash';
 import { userService } from '../services';
 import { HttpError} from '../middlewares';
 import { blockInvalidRequest } from './Utils';
+
 import passport from 'passport';
 import {Strategy as LocalStrategy} from 'passport-local';
 // import { passportLoginVerify } from '../passport/LocalStrategy';
 import logger from 'jet-logger';
 import jwt from 'jsonwebtoken';
+
 
 
 export async function registerUserCTR (req : Request, res : Response, next : NextFunction) {
@@ -64,6 +66,7 @@ export async function loginUserCTR (req : Request, res : Response, next : NextFu
               result : "failed",
               message : "탈퇴한 회원입니다."})
         } 
+
         const userToken = await userService.getUserToken({ email, password });
         
                 
@@ -143,6 +146,7 @@ export async function updateUserInfoCTR (req : Request, res : Response, next : N
             const regixPW = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%*#?&]{8,20}/;
 
             if(!currentPassword || !regixPW.test(password) ){
+
                 throw new HttpError(400, "비밀번호가 없거나 비밀번호 규칙에 맞지 않습니다.")
             }
 

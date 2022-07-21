@@ -1,5 +1,6 @@
 import { HospServiceInfo, HospServiceModel, hospServiceModel } from '../db';
 import mongoose, { model } from 'mongoose';
+import { HttpError } from '../middlewares';
 
 interface ToUpdate {
   hospServiceId: string;
@@ -14,7 +15,8 @@ class HospServiceService {
   async findById(hospServiceId: string): Promise<HospServiceInfo> {
     const hospService = await this.hospServiceModel.findById(hospServiceId);
     if (!hospService) {
-      throw new Error(
+      throw new HttpError(
+        400,
         '해당 병원서비스 내역이 없습니다. 다시 한 번 확인해 주세요.'
       );
     }
@@ -35,7 +37,8 @@ class HospServiceService {
       hospitalId
     );
     if (!hospService) {
-      throw new Error(
+      throw new HttpError(
+        400,
         '해당 병원서비스 내역이 없습니다. 다시 한 번 확인해 주세요.'
       );
     }
@@ -50,7 +53,8 @@ class HospServiceService {
       createHospServiceData.hospital
     );
     if (isExist) {
-      throw new Error(
+      throw new HttpError(
+        400,
         '이 이름으로 생성된 병원서비스가 있습니다. 다른 이름을 지어주세요.'
       );
     }
@@ -63,7 +67,8 @@ class HospServiceService {
   async update({ hospServiceId, update }: ToUpdate): Promise<HospServiceInfo> {
     const isExist = await this.hospServiceModel.findById(hospServiceId);
     if (!isExist) {
-      throw new Error(
+      throw new HttpError(
+        400,
         '해당 병원서비스 내역이 없습니다. 다시 한 번 확인해 주세요.'
       );
     }
@@ -78,7 +83,8 @@ class HospServiceService {
   async deleteById(hospServiceId: string): Promise<{ message: string }> {
     const isExist = await this.hospServiceModel.findById(hospServiceId);
     if (!isExist) {
-      throw new Error(
+      throw new HttpError(
+        400,
         '해당 병원서비스 내역이 없습니다. 다시 한 번 확인해 주세요.'
       );
     }
@@ -87,7 +93,10 @@ class HospServiceService {
     );
     // 삭제에 실패한 경우, 에러 메시지 반환
     if (deletedCount === 0) {
-      throw new Error(`${isExist.name} 병원서비스 삭제를 실패하였습니다.`);
+      throw new HttpError(
+        400,
+        `${isExist.name} 병원서비스 삭제를 실패하였습니다.`
+      );
     }
 
     return { message: `${isExist.name} 병원서비스 삭제를 성공하였습니다.` };

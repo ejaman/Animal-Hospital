@@ -1,36 +1,43 @@
-import React, { useState, useCallback, useEffect } from 'react';
+// react와 vanilla js 혼종인 파일이다. 리액트로 서서히 바꿔나가자
+// 우선순위 높은 남은 기능들: 정보 수정 시 validation 추가, 회원 탈퇴 시 비밀번호 확인 추가
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import DaumPostcode from "react-daum-postcode";
+import Modal from "react-modal";
+import { HospitalInfoType, HospitalServiceInfoType, Data } from "./Interface";
 import "antd/dist/antd.min.css";
-import { Button, Form, Input, Typography, Row, Col} from "antd";import { theme } from '../../styles/Colors';
-import { SubTitle,
+import { Form, Row, Col } from "antd";
+import { theme } from '../../styles/Colors';
+import {
+  HospitalContainer,
+  Container,
   UploadFileLabel,
   UploadFileInput,
+  CategoryLabel,
+  DayLabel,
+  TimeLabel,
   KeywordInput
 } from "./Style";
-import { HospitalInfoType, HospitalServiceInfoType } from "./Interface";
+import { ModalStyle } from "../../components/ModalStyle";
+import { PasswordModalStyle } from "../../components/PasswordModalStyle";
+import {
+  Title,
+  InputLabel,
+  InfoInput,
+  InfoBtn,
+  DeactivateContainer,
+  DeactiveBtn
+} from "../../components/InfoForm"
 import axios from "axios";
+import { useRecoilState } from "recoil";
+import { hospitalLoginState } from "../../state/HospitalState";
+import { useNavigate } from "react-router-dom";
 
-const { Title } = Typography;
+export default function HospitalInfo() { 
+  const [info, setInfo] = useRecoilState(hospitalLoginState);
+  console.log(info);
+  // 폼 내용들은 입력 시마다 내용이 곧바로 저장되므로 추후 debouncing 적용 예정
 
-export default function HospitalInfo() {
-  /* axios api */
-  // const [datas, setDatas] = useState<[]>([]);
-  // // 병원 api 생기면 주석 풀고 나머지 작성 예정
-  // const API_URL = `http://localhost:5100/api/user`;
-
-  // useEffect(() => {
-  //   if (datas.length) console.log("datas:", datas);
-  // }, [datas]);
-
-  // const getAPI = useCallback(
-  //   async (e: any) => {
-  //     e.preventDefault();
-  //     const result = await axios.get(API_URL);
-  //     console.log("result.data: ", result.data);
-  //   },
-  //   [API_URL]
-  // );
-
-  // office hour: validation 시 e.target.value를 바로 비교하면 밀리지 않게 바로바로 비교 가능
+  let navigate = useNavigate();
 
   /* elements */
   const $HashWrapOuter = document.querySelector('.HashWrapOuter');
@@ -39,25 +46,53 @@ export default function HospitalInfo() {
   const $keywordNumWarning = document.querySelector('.keywordNumWarning');
 
   /* states */
-  const [hospitalInfo, setHospitalInfo] = useState<HospitalInfoType>();
-  const [hospitalServiceInfo, setHospitalServiceInfo] = useState<HospitalServiceInfoType>();
-  const [image, setImage] = useState('');
-  const [keyword, setKeyword] = useState(['']);
-  const [newKeyword, setNewKeyword] = useState('');
-  // const [serviceName, setServiceName] = useState("");
-  // const [servicePrice, setServicePrice] = useState(-999);
-  // const [serviceDesc, setServiceDesc] = useState("");
-  // const [serviceCapacity, setServiceCapacity] = useState(-999);
+  const [hospitalInfo, setHospitalInfo] = useState<HospitalInfoType>({
+    name: "",
+    email: "",
+    director: "",
+    password: "",
+    address: {
+      postalCode: "",
+      address1: "",
+      address2: ""
+    },
+    phoneNumber: "",
+    businessHours: [],
+    businessNumber: "",
+    licenseNumber: "",
+    holiday: [],
+    hospitalCapacity: 0,
+    tag: [],
+    keyword: [],
+    image: ""
+  });
+  const [hospitalServiceInfo, setHospitalServiceInfo] = useState<HospitalServiceInfoType>({
+    serviceName: "",
+    servicePrice: 0,
+    serviceDesc: "",
+    serviceCapacity: 0
+  });
+  const [serviceList, setServiceList] = useState<any[]>([]);
+  const [keyword, setKeyword] = useState<string[]|undefined>([]);
+  const [newKeyword, setNewKeyword] = useState("");
+  const [isChecked, setIsChecked] = useState<boolean>(false);
 
-  /* values */
-  const timeList = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
+  /* address modal */
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  /* password modal */
+  const [isPassOpen, setIsPassOpen] = useState<boolean>(false);
+
+  /* password */
+  const [currPassword, setCurrPassword] = useState<string>("");
+  // const currentPwRef = useRef<HTMLInputElement>(null);
+  // const newPwRef = useRef<HTMLInputElement>(null);
   
-  // const { postalCode, address1, address2 } = jsonData.address;
-  // const email = jsonData.email;
-
   /* constants */
   const AVAILABLE_KEYWORD_LENGTH = 10;
   const AVAILABLE_KEYWORD_COUNTS = 3;
+  const CATEGORY_LIST = ["24시간", "야간진료", "강아지 전문", "고양이 전문", "특수동물", "호텔", "미용", "중성화 전문", "MRI"];
+  const DAY_LIST = ["월", "화", "수", "목", "금", "토", "일"];
+  const TIME_LIST = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
   
   /* image converter */
   const convertFileToBase64 = (file: any) => {
@@ -66,7 +101,9 @@ export default function HospitalInfo() {
     return new Promise((resolve: any) => {
       if (reader) {
         reader.onload = () => {
-        setImage(reader.result as string);
+        setHospitalInfo(prev => {
+          return { ...prev, image: reader.result as string}
+        });
         resolve();
         };
       }
@@ -84,10 +121,19 @@ export default function HospitalInfo() {
       ...hospitalServiceInfo,
       [e.currentTarget.name]: e.currentTarget.value
     }
+    const currPassData = e.currentTarget.value
     setHospitalInfo(hospitalData);
-    setHospitalServiceInfo(hospitalServiceData);
+    setCurrPassword(currPassData);
+    // setHospitalServiceInfo(hospitalServiceData);
   };
-
+ 
+  const onChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setHospitalInfo(prev => {
+      return { ...prev, postalCode: e.target.value }
+    })
+  };
+  
   const onKeyUp = useCallback(
     (e: any) => {
       
@@ -95,200 +141,343 @@ export default function HospitalInfo() {
       setNewKeyword(e.target.value);
 
       /* 키워드 클릭 시 키워드 삭제 */
+      // => 삭제 시 DOM에러 뜸. 아마 디자인용으로 새로 생성한 컴포넌트 때문으로 예상중이나 기능은 정상 작동해서 이후 수정할 예정
       $HashWrapInner.addEventListener('click', () => {
         $HashWrapOuter?.removeChild($HashWrapInner)
         console.log($HashWrapInner.innerHTML)
-        console.log("newKeyword:", newKeyword)
-        setKeyword(keyword.filter((newKeyword: any) => newKeyword))
+        setKeyword(keyword!.filter((newKeyword: any) => newKeyword))
+        setHospitalInfo(prev => {
+          return {
+            ...prev, keyword: keyword as string[]
+          }
+        })
       })
 
       /* enter's key code: 13 */
-      // if (e.keyCode === 13  && e.target.value.trim() !== '') {
       if (e.keyCode === 13 && $keywordNumWarning) {
         if (newKeyword.length > AVAILABLE_KEYWORD_LENGTH) {
           $keywordNumWarning.textContent = `키워드는 ${AVAILABLE_KEYWORD_LENGTH}글자 미만이어야 합니다.`
         }
-        else if ($HashWrapOuter && newKeyword && keyword.length <= AVAILABLE_KEYWORD_COUNTS) {
+        else if ($HashWrapOuter && newKeyword && keyword!.length < AVAILABLE_KEYWORD_COUNTS) {
           $HashWrapInner.innerHTML = '#' + newKeyword;
           $HashWrapOuter.appendChild($HashWrapInner);
-          let copyKeyword = [...keyword];
-          copyKeyword.push(newKeyword);
-          setKeyword(copyKeyword);
-          console.log("Enter Key Pressed. e.target.value:", e.target.value, "keyword:", keyword, "newKeyword:", newKeyword, "copyKeyword(이쪽 데이터를 전달할 예정):", copyKeyword);
+          const keywords = [...keyword!, newKeyword];
+          setHospitalInfo(prev => {
+            return {
+              ...prev, keyword: keywords
+            }
+          })
           $keywordNumWarning.textContent = "키워드가 정상적으로 등록되었습니다."
           setNewKeyword('');
-          console.log("등록 이후 newKeyword", newKeyword)
         }
         else {
           $keywordNumWarning.textContent = `키워드는 ${AVAILABLE_KEYWORD_COUNTS}개까지 등록 가능합니다.`
           setNewKeyword('');
-          console.log("초과 등록 실패 이후 newKeyword", newKeyword)
+          console.log("초과 등록 실패");
         }
       }
     },
     [keyword, newKeyword, $HashWrapInner, $HashWrapOuter, $keywordNumWarning]
   )
-  
-  /* 보낼 서비스 데이터 */
-  let serviceList:Object[] = [];
 
-  // React.FormEvent<HTMLFormElement>
   const onServiceSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log("서비스 추가 버튼 클릭");
     console.log("추가된 서비스:", hospitalServiceInfo);
-    // serviceList = [...serviceList, hospitalServiceInfo];
-    // console.log("serviceList:", serviceList);
+    setServiceList([...serviceList, hospitalServiceInfo]);
+    setHospitalServiceInfo({
+    serviceName: "",
+    servicePrice: 0,
+    serviceDesc: "",
+    serviceCapacity: 0
+  })
+    console.log("serviceList:", serviceList);
   }
+
+  /* onClick handlers */
 
   const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    alert(
-      '버튼이 클릭되었습니다(확인용)'
-    )
+    // alert(
+    //   '버튼이 클릭되었습니다(확인용)'
+    // )
   };
-  
-  const withdrawButtonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+
+  const onOpenClick = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    alert('병원 회원 탈퇴 버튼이 클릭되었습니다(확인용)')
+    setIsOpen(!isOpen);
+  };
+
+  const onPassOpenClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    setIsPassOpen(!isPassOpen);
+  };
+
+
+  const completeHandler = (data: Data) => {
+    setIsOpen(false);
+    const ex = {
+      ...hospitalInfo.address,
+      postalCode: data.zonecode,
+      address1: data.roadAddress
+    }
+    setHospitalInfo(prev => {
+      return {...prev, address: ex}
+    });
+  };
+
+  const checkCategoryHandler = ({ target }: any) => {
+    setIsChecked(!isChecked);
+    checkedCategoryHandler(target.parentNode, target.value, target.checked)
   }
 
+  const checkedCategoryHandler = (box: any, id: any, isChecked: any) => {
+    const categoryList = [...hospitalInfo.tag!];
+    if (isChecked) {
+      categoryList.push(id);
+      box.style.borderColor = theme.palette.blue;
+      box.style.color = theme.palette.blue;
+    } else if (!isChecked && categoryList.find(i => i === id)) {
+      box.style.borderColor = theme.palette.lightgray;
+      box.style.color = "black";
+      const index = categoryList.indexOf(id);
+      if (index !== -1) {
+        categoryList.splice(index, 1);
+      }
+    }
+    if (categoryList[0] === "") {
+      categoryList.splice(0, 1);
+    }
+    setHospitalInfo(prev => {
+      return { ...prev, tag: categoryList }
+    })
+  }
+  
+  const checkDayHandler = ({ target }: any) => {
+    setIsChecked(!isChecked);
+    checkedDayHandler(target.parentNode, target.value, target.checked)
+  }
 
+  const checkedDayHandler = (box: any, id: any, isChecked: any) => {
+    const dayList = [...hospitalInfo.holiday!];
+    if (isChecked) {
+      dayList.push(id);
+      box.style.borderColor = theme.palette.blue;
+      box.style.color = theme.palette.blue;
+    } else if (!isChecked && dayList.find(i => i === id)) {
+      box.style.borderColor = theme.palette.lightgray;
+      box.style.color = "black";
+      const index = dayList.indexOf(id);
+      if (index !== -1) {
+        dayList.splice(index, 1);
+      }
+    }
+    if (dayList[0] === "") {
+      dayList.splice(0, 1);
+    }
+    setHospitalInfo(prev => {
+      return { ...prev, holiday: dayList }
+    })
+  }
+
+  const checkBusinessHoursHandler = ({ target }: any) => {
+    setIsChecked(!isChecked);
+    checkedBusinessHoursHandler(target.parentNode, target.value, target.checked)
+  }
+
+  const checkedBusinessHoursHandler = (box: any, id: any, isChecked: any) => {
+    const businessHoursList = [...hospitalInfo.businessHours!];
+    if (isChecked) {
+      businessHoursList.push(id);
+      box.style.borderColor = theme.palette.blue;
+      box.style.color = theme.palette.blue;
+    } else if (!isChecked && businessHoursList.find(i => i === id)) {
+      box.style.borderColor = theme.palette.lightgray;
+      box.style.color = "black";
+      const index = businessHoursList.indexOf(id);
+      if (index !== -1) {
+        businessHoursList.splice(index, 1);
+      }
+    }
+    if (businessHoursList[0] === "") {
+      businessHoursList.splice(0, 1);
+    }
+    setHospitalInfo(prev => {
+      return { ...prev, businessHours: businessHoursList }
+    })
+  }
+
+  const withdrawButtonHandler = async(e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    console.log("현재 비밀번호:", currPassword);
+    const data = { "currentPassword": currPassword };
+    const response = await axios.patch("http://localhost:5100/hospital/withdrawal", data, {
+      withCredentials: true
+    });
+    console.log(response);
+    console.log('병원 회원 탈퇴가 진행됩니다.')
+    alert("탈퇴되었습니다.");
+    navigate("/login");
+  }
+
+  const onhandleUpdate = async(event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    const data = { ...hospitalInfo };
+    await axios.patch('http://localhost:5100/hospital', data, { withCredentials: true });
+    console.log(data);
+  }
+  // PROBLEM: 서비스 삭제 버튼 눌렀을 때 타입 오류 뜸
+  // function deleteServiceHandler(e:React.MouseEvent<Element>, index) {
+  //   // setServiceList(serviceList.splice(index, 1));
+  //   console.log(index, '서비스가 삭제되었습니다.');
+  // }
+
+  // useEffect(() => {
+  //   // 임시 데이터 (api 추가 후 삭제 예정)
+  //   setHospitalInfo({
+  //     ~~hospitalInfo는 get 완료했고 길어서 자름. service도 완성하면 주석 삭제~
+  //   });
+  //   setHospitalServiceInfo(
+  //   {
+  //     "serviceName": "중성화수술",
+  //     "servicePrice": 200000,
+  //     "serviceDesc": "지이이잉석둑",
+  //     "serviceCapacity": 1
+  //   });
+  // }, []);
   useEffect(() => {
-    // 임시 데이터 (api 추가 후 삭제 예정)
-    setHospitalInfo({
-      "name": "이이진진수수 동동물물병병원원",
-      "email": "sarangS2hospital@gmail.com",
-      "director": "이진수",
-      "password": "12345",
-      "address": {
-        "postalCode": "13477",
-        "address1": "경기 성남시 분당구 판교공원로5길 15",
-        "address2": "이진수 동물병원"
-      },
-      "phoneNumber": "010-0000-0000",
-      "businessHours": "24",
-      "businessNumber": "546521354",
-      "licenseNumber": "XXXXXXXXX",
-      "holiday": [""],
-      "hospitalCapacity": 3,
-      "tag": "",
-      "keyword": ["소동물 전문"],
-      // "image": "https://o-oa.com/wp-content/uploads/2020/05/LJS_01.jpg",
-      "image": ""
-    });
-    setHospitalServiceInfo(
-    {
-      "serviceName": "중성화수술",
-      "servicePrice": 200000,
-      "serviceDesc": "지이이잉석둑",
-      "serviceCapacity": 1
-    });
+    async function getData() {
+      try {
+        //응답 성공
+        // api
+        const API_URL = 'http://localhost:5100/hospital/detail';
+        const response = await axios.get(API_URL, {
+          withCredentials: true
+        });
+        console.log("응답 성공", response);
+        setHospitalInfo(response.data.data.hospDetailInfo);
+      } catch (error) {
+        //응답 실패
+        console.error("응답 실패", error);
+      }
+      // 서비스 api 완성되면 서비스 get 요청도 추가
+    }
+    getData();
   }, []);
+
+  console.log("hospital data:", hospitalInfo);
 
   return (
     <div style={{ margin: "0 2rem 2rem 2rem" }}>
-      <div className="ant-typography">
-        <Title>병원 정보</Title>
-      </div>
-      <div
-        style={{
-          borderStyle: "solid",
-          borderColor: `${theme.palette.orange}`,
-          borderWidth: "10px",
-          borderRadius: "5%",
-          padding: "1rem 2rem 1rem 2rem"
-        }}
-      >
+      <HospitalContainer>
+        <div className="ant-typography">
+          <Title>병원정보</Title>
+        </div>
         <Row>
           <Col span={12}>
             <Form name="hospitalInfoForm">
               <Row>
-                <SubTitle>병원명</SubTitle>
-                <input
-                  name="name"
-                  style={{
-                    marginBottom: "1rem",
-                    marginLeft: "0.5rem"
-                  }}
-                  type="text"
-                  defaultValue={hospitalInfo?.name || ""}
-                  onChange={onChange}
-                />
+                <Container>
+                  <InputLabel>병원명</InputLabel>
+                  <InfoInput
+                    name="name"
+                    style={{
+                      width: "12rem",
+                      marginLeft: "0.5rem"
+                    }}
+                    type="text"
+                    defaultValue={hospitalInfo.name || ""}
+                    onChange={onChange}
+                  />
+                </Container>
               </Row>
               <Row>
-                <SubTitle>이름</SubTitle>
-                <input
-                  name="director"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.director || ""}
-                  onChange={onChange}
-                />
+                <Container>
+                  <InputLabel>이름</InputLabel>
+                  <InfoInput
+                    name="director"
+                    style={{ marginLeft: "0.5rem" }}
+                    type="text"
+                    defaultValue={hospitalInfo.director || ""}
+                    onChange={onChange}
+                  />
+                </Container>
               </Row>
               <Row>
-                <SubTitle>이메일</SubTitle>
-                <input
-                  name="email"
-                  style={{
-                    marginBottom: "1rem",
-                    marginLeft: "0.5rem"
-                  }}
-                  type="text"
-                  defaultValue={hospitalInfo?.email}
-                  autoComplete="username"
-                  disabled
-                />
+                <Container>
+                  <InputLabel>이메일</InputLabel>
+                  <InfoInput
+                    name="email"
+                    style={{
+                      width: "12rem",
+                      marginLeft: "0.5rem"
+                    }}
+                    type="text"
+                    defaultValue={hospitalInfo.email}
+                    autoComplete="username"
+                    disabled
+                  />
+                </Container>
               </Row>
               <Row>
-                <SubTitle>비밀번호</SubTitle>
-                <input
-                  name="password"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="password"
-                  autoComplete="current-password"
-                  defaultValue=""
-                  disabled
-                />
-                <Button
+                <Container>
+                  <InputLabel>새 비밀번호</InputLabel>
+                  {/* <input ref={newPwRef} placeholder="새 비밀번호" />
+                  <input ref={currentPwRef} placeholder="현재 비밀번호" /> */}
+                  <InfoInput
+                    name="password"
+                    style={{ marginLeft: "0.5rem" }}
+                    type="password"
+                    autoComplete="current-password"
+                    defaultValue=""
+                  />
+                  {/* 유저 정보 페이지와의 통일감을 위해 현재 비밀번호 input과 수정 버튼은 아래에 */}
+                  {/* <InfoBtn
                     style={{ marginLeft: "0.5rem" }}
                     onClick={buttonHandler}
-                  >변경</Button>
+                  >변경</InfoBtn> */}
+                </Container>
               </Row>
               <Row>
-                <SubTitle>병원 연락처</SubTitle>
-                <input
-                  name="phoneNumber"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.phoneNumber || ""}
-                  onChange={onChange}
-                />
+                <Container>
+                  <InputLabel>병원 연락처</InputLabel>
+                  <InfoInput
+                    name="phoneNumber"
+                    style={{ marginLeft: "0.5rem" }}
+                    type="text"
+                    defaultValue={hospitalInfo.phoneNumber || ""}
+                    onChange={onChange}
+                  />
+                </Container>
               </Row>
               <Row>
-                <SubTitle>사업자 등록번호</SubTitle>
-                <input
-                  name="businessNumber"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.businessNumber || ""}
-                  onChange={onChange}
-                />
+                <Container>
+                  <InputLabel>사업자 등록번호</InputLabel>
+                  <InfoInput
+                    name="businessNumber"
+                    style={{ marginLeft: "0.5rem" }}
+                    type="text"
+                    defaultValue={hospitalInfo?.businessNumber || ""}
+                    onChange={onChange}
+                  />
+                </Container>
               </Row>
               <Row>
-                <SubTitle>면허번호</SubTitle>
-                <input
-                  name="licenseNumber"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.licenseNumber || ""}
-                  onChange={onChange}
-                />
+                <Container>
+                  <InputLabel>면허번호</InputLabel>
+                  <InfoInput
+                    name="licenseNumber"
+                    style={{ marginLeft: "0.5rem" }}
+                    type="text"
+                    defaultValue={hospitalInfo?.licenseNumber || ""}
+                    onChange={onChange}
+                  />
+                </Container>
               </Row>
               <Row>
-                <SubTitle>병원 사진</SubTitle>
+                <InputLabel>병원 사진</InputLabel>
                 <div style={{ marginBottom: "0.5rem" }} />
-                <div style={{ marginBottom: "0.5rem" }}>
+                <div style={{ marginLeft: "0.5rem", marginBottom: "0.5rem" }}>
                   <UploadFileLabel htmlFor="uploadFile">업로드</UploadFileLabel>
                   <UploadFileInput type="file"
                     id="uploadFile"
@@ -301,43 +490,88 @@ export default function HospitalInfo() {
                   />
                 </div>
                 <div>
-                  {image && <img src={image} width="280px" alt="" />}
+                  {hospitalInfo.image && <img src={hospitalInfo.image} width="280px" alt="" />}
                 </div>
               </Row>
               <div style={{ marginBottom: "0.5rem" }} />
               <Row>
-                <SubTitle>주소</SubTitle>
-                <input
-                  name="postalCode"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.address?.postalCode || ""}
-                />
-                <input
-                  name="address1"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.address?.address1}
-                />
-                <input
-                  name="address2"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.address?.address2}
-                />
-                <Button style={{ marginLeft: "0.5rem" }}>수정</Button>
+                <Container>
+                  <Col>
+                    <Row>
+                      <InputLabel style={{ marginBottom: "0.5rem" }}>주소</InputLabel>
+                    </Row>
+                    <Row>
+                      <InfoInput
+                        name="postalCode"
+                        style={{
+                          marginBottom: "0.5rem",
+                          marginLeft: "0.5rem",
+                          width: "6rem"
+                        }}
+                        type="text"
+                        defaultValue={hospitalInfo?.address?.postalCode || ""}
+                        onChange={onChangeAddress}
+                      />
+                    </Row>
+                    <Row>
+                      <InfoInput
+                        name="address1"
+                        style={{
+                          marginBottom: "0.5rem",
+                          marginLeft: "0.5rem",
+                          width: "20rem"
+                        }}
+                        type="text"
+                        defaultValue={hospitalInfo?.address?.address1}
+                        onChange={onChangeAddress}
+                      />
+                    </Row>
+                    <Row>
+                      <InfoInput
+                        name="address2"
+                        style={{
+                          marginLeft: "0.5rem",
+                          width: "18rem"
+                        }}
+                        type="text"
+                        defaultValue={hospitalInfo?.address?.address2}
+                        onChange={onChangeAddress}
+                      />
+                      <InfoBtn
+                      style={{ marginLeft: "0.5rem" }}
+                      onClick={onOpenClick}
+                    >수정</InfoBtn>
+                    </Row>
+                  </Col>
+                  <Modal isOpen={isOpen} ariaHideApp={false} style={ModalStyle}>
+                    <DaumPostcode onComplete={completeHandler} />
+                  </Modal>
+                </Container>
               </Row>
               <Row>
-                <SubTitle>카테고리</SubTitle>
-                <input
-                  name="tag"
-                  style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                  type="text"
-                  defaultValue={hospitalInfo?.tag || ""}
-                />
+                <InputLabel style={{ marginBottom: "0.5rem" }}>카테고리</InputLabel>
               </Row>
               <Row>
-                <SubTitle>키워드</SubTitle>
+                {CATEGORY_LIST.map((category) => (
+                  <Row key={category+"Row"}>
+                    <CategoryLabel
+                      htmlFor={category}
+                      key={category+"L"}
+                    >
+                      <InfoInput type="checkbox"
+                        id={category}
+                        key={category}
+                        onChange={e => checkCategoryHandler(e)}
+                        value={category}
+                        hidden
+                      />
+                      {category}
+                    </CategoryLabel>
+                  </Row>
+                ))}
+              </Row>
+              <Row>
+                <InputLabel style={{ marginTop: "1rem" }}>키워드</InputLabel>
                 <span
                   style={{
                     marginLeft: "1rem",
@@ -354,7 +588,7 @@ export default function HospitalInfo() {
                       <span key={index}></span>
                     )
                   })} */}
-                  <input
+                  <InfoInput
                     name="keyword"
                     className="HashInput"
                     type="text"
@@ -365,44 +599,95 @@ export default function HospitalInfo() {
               </Row>
               <Row>
                 <Col>
-                  <SubTitle
-                    style={{
-                      marginBottom: "1rem"
-                    }}
-                  >영업시간</SubTitle>
-                  <Row>휴무일 선택</Row>
-                  <Row
-                    style={{ marginBottom: "0.5rem" }}
-                  >
-                    <Button id="Mon">월</Button>
-                    <Button id="Tues">화</Button>
-                    <Button id="Wed">수</Button>
-                    <Button id="Thurs">목</Button>
-                    <Button id="Fri">금</Button>
-                    <Button id="Sat">토</Button>
-                    <Button id="Sun">일</Button>
-                  </Row>
-                  <Row>시간 선택</Row>
+                  <InputLabel>영업시간</InputLabel>
                   <Row>
-                    {timeList.map((time) => (
-                      <Button id={time} key={time}>{time}:00</Button>
+                    {TIME_LIST.map((time) => (
+                      <TimeLabel
+                        htmlFor={time}
+                        key={time+"L"}
+                      >
+                        <input type="checkbox"
+                          id={time}
+                          key={time}
+                          onClick={checkBusinessHoursHandler}
+                          value={time}
+                          hidden
+                        />{time}:00
+                      </TimeLabel>
                     ))}
                   </Row>
+                  <Row style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
+                    <InputLabel>휴무일 선택</InputLabel>
+                    </Row>
+                  <Row>
+                    {DAY_LIST.map((day) => (
+                      <DayLabel
+                        htmlFor={day}
+                        key={day+"L"}
+                      >
+                        <input type="checkbox"
+                          id={day}
+                          key={day}
+                          onChange={e => checkDayHandler(e)}
+                          value={day}
+                          hidden
+                        />
+                        {day}
+                      </DayLabel>
+                    ))}
+                    {/* {dayList.map((day) => {
+                      if (isButtonClicked) { // 클릭된 상태면
+                        setisButtonClicked(false); // 클릭해제 상태로 바꿈
+                        return (
+                          <Button
+                            id={day}
+                            key={day}
+                            onClick={onClickDay}
+                            style={{
+                              borderColor: `${theme.palette.blue}`,
+                              color: `${theme.palette.blue}`
+                            }} 
+                          >{day}</Button>
+                        )
+                      }
+                      // 클릭되지 않았던 상태면
+                      setisButtonClicked(true); // 클릭 상태로 바꿈
+                      return (
+                        <Button
+                          id={day}
+                          key={day}
+                          onClick={onClickDay}
+                          >{day}</Button>
+                      )
+                    })} */}
+                  </Row>
                   <Row style={{ marginTop: "1rem" }}>
-                    <SubTitle>시간당 예약가능 고객 수</SubTitle>
-                    <input
-                      name="hospitalCapacity"
-                      style={{ marginBottom: "1rem", marginLeft: "0.5rem" }}
-                      type="text"
-                      defaultValue={hospitalInfo?.hospitalCapacity || 0}
-                      onChange={onChange}
-                    />
+                    <Container>
+                      <InputLabel>시간당 예약가능 고객 수</InputLabel>
+                      <InfoInput
+                        name="hospitalCapacity"
+                        style={{ marginLeft: "0.5rem" }}
+                        type="text"
+                        defaultValue={hospitalInfo?.hospitalCapacity || 0}
+                        onChange={onChange}
+                      />
+                    </Container>
                   </Row>
                   <Row>
+                    <InfoBtn 
+                      style={{
+                        marginLeft: "0.5rem",
+                        marginBottom: "1.5rem",
+                        margin: "auto"
+                      }}
+                      onClick={ onhandleUpdate }
+                    >저장</InfoBtn>
+                  </Row>
+                  {/* <Row>
                     <Button onClick={() => {
                       console.log(hospitalInfo)
                     }}>개발자 확인 버튼</Button>
-                  </Row>
+                  </Row> */}
                 </Col>
               </Row>
             </Form>
@@ -410,31 +695,30 @@ export default function HospitalInfo() {
           <Col>
             <Form>
               <Row>
-                <SubTitle
+                <InputLabel
                   style={{
                     margin: "auto",
                     fontWeight: "bold"
                   }}
-                >서비스 추가</SubTitle>
+                >서비스 추가</InputLabel>
               </Row>
               <Row>
-                <div>
+                <Container>
                   <label>서비스명</label>
-                  <input
+                  <InfoInput
                     name="serviceName"
                     onChange={onChange}
                     style={{
                       marginLeft: "0.5rem",
                       marginBottom: "0.5rem"
                     }}
-                    
                   />
-                </div>
+                </Container>
               </Row>
               <Row>
-                <div>
+                <Container>
                   <label>서비스 가격</label>
-                  <input
+                  <InfoInput
                     name="servicePrice"
                     onChange={onChange}
                     style={{
@@ -442,12 +726,12 @@ export default function HospitalInfo() {
                       marginBottom: "0.5rem"
                     }}
                   />
-                </div>
+                </Container>
               </Row>
               <Row>
-                <div>
+                <Container>
                   <label>서비스 설명</label>
-                  <input
+                  <InfoInput
                     name="serviceDesc"
                     onChange={onChange}
                     style={{
@@ -455,12 +739,12 @@ export default function HospitalInfo() {
                       marginBottom: "0.5rem"
                     }}
                   />
-                </div>
+                </Container>
               </Row>
               <Row>
-                <div>
+                <Container>
                   <label>서비스 동시 수용가능인원수</label>
-                  <input
+                  <InfoInput
                     name="serviceCapacity"
                     onChange={onChange}
                     style={{
@@ -468,39 +752,87 @@ export default function HospitalInfo() {
                       marginBottom: "0.5rem"
                     }}
                   />
-                </div>
+                </Container>
               </Row>
               <Row>
-              <Button
+              <InfoBtn
                 style={{
                   marginLeft: "0.5rem",
                   marginBottom: "1.5rem",
                   margin: "auto"
                 }}
                 onClick={onServiceSubmit}
-              >추가</Button>
+              >추가</InfoBtn>
               </Row>
               <Row>
-                <SubTitle
+                <InputLabel
                   style={{
+                    marginTop: "2rem",
                     marginBottom: "1rem",
                     margin: "auto",
                     fontWeight: "bold"
                   }}
-                >제공중인 서비스 목록</SubTitle>
-
+                >제공중인 서비스 목록</InputLabel>
+              </Row>
+              <Row>
+                <Col style={{ margin: "auto" }}>
+                  {serviceList?.map((item, index) => (
+                    <Row
+                      key={index}
+                      style={{
+                        border: "2px solid",
+                        borderRadius: "15px",
+                        margin: ".5rem .5rem",
+                        padding: ".5rem .5rem"
+                      }}
+                    >
+                      <Col key={index+"Col1"}>
+                        <Row key={index+"N"}>서비스명: {item.serviceName}</Row>
+                        <Row key={index+"P"}>서비스 가격: {item.servicePrice}</Row>
+                        <Row key={index+"D"}>서비스 설명: {item.serviceDesc}</Row>
+                        <Row key={index+"C"}>서비스 동시 수용가능인원수: {item.
+                      serviceCapacity}</Row>
+                      </Col>
+                      {/* <Col> */}
+                        {/* 시간 관계상 수정 기능은 추후 추가 */}
+                        {/* <Row>
+                          <Button>수정</Button>
+                        </Row> */}
+                        {/* PROBLEM : 서비스 삭제 버튼 눌렀을 때 index에 타입 에러 뜸 */}
+                        {/* <Row>
+                          <Button onClick={deleteServiceHandler(index)}>삭제</Button>
+                        </Row> */}
+                      {/* </Col> */}
+                    </Row>
+                  ))}
+                </Col>
               </Row>
             </Form>
           </Col>
         </Row>
-      </div>
-      <Row>
-          <Button
-            style={{ marginTop: "1rem", marginLeft: "1rem" }}
-            onClick={withdrawButtonHandler}
-          >탈퇴</Button>
-      </Row>
+      </HospitalContainer>
+      <DeactivateContainer>
+        <p>Animal Hospital에서 탈퇴하고 싶으신가요?</p>
+        <DeactiveBtn onClick={onPassOpenClick}>탈퇴하기</DeactiveBtn>
+        <Modal isOpen={isPassOpen} ariaHideApp={false} style={PasswordModalStyle}>
+          <HospitalContainer style={{ 
+            position: "absolute",
+            top: "18%",
+            left: "30%",
+            maxWidth: "16rem"
+          }}>
+            <Container style={{ margin: "auto" }}>
+              <InputLabel style={{ marginBottom: "1rem" }}>비밀번호를 입력해주세요.</InputLabel>
+              <InfoInput
+                type="password"
+                name="currPassword"
+                onChange={onChange}
+              />
+            </Container>
+            <InfoBtn onClick={withdrawButtonHandler}>확인</InfoBtn>
+          </HospitalContainer>
+        </Modal>
+      </DeactivateContainer>
     </div>
   );
 }
-

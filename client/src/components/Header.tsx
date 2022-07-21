@@ -1,10 +1,14 @@
-import React, {useState} from 'react';
-import styled from 'styled-components';
+import React, {useState, useEffect} from 'react';
+import styled, {css} from 'styled-components';
 import {Link} from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faCircleUser} from '@fortawesome/free-solid-svg-icons';
+import { TUser, userState } from '../state/UserState';
 
 import Search from './Search';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
+import { hospitalLoginState } from '../state/HospitalState';
+import { CustomAxiosGet } from '../common/CustomAxios';
 
 const HeaderContainer = styled.div`
   width: 100%;
@@ -33,6 +37,10 @@ const Logo = styled(Link)`
     color: ${props => props.theme.palette.orange};
   }
 `;
+
+const LogoImg = styled.img`
+  width: 140px;
+`
 
 const BtnContainer = styled.div`
   position: relative;
@@ -63,16 +71,8 @@ interface IProfile {
 }
 
 const ProfileBtnbox = styled.div<IProfile>`
+  z-index: 1;
   transition: 0.3s all ease-in-out;
-  animation: fade 0.3s 1 ease-in-out;
-  @keyframes fade {
-    from {
-      opacity: ${props => props.profile ? 0 : 1};
-    }
-    to {
-      opacity: ${props => props.profile ? 1 : 0};
-    }
-  }
   background-color: white;
   border: 1px solid black;
   width: 100px;
@@ -93,10 +93,14 @@ const ProfileBtn = styled.div<IIdx>`
   cursor: pointer;
   padding-left: 6px;
   line-height: 35px;
-  border-top-left-radius: ${props => props.num === 'first' && '10px'};
-  border-top-right-radius: ${props => props.num === 'first' && '10px'};
-  border-bottom-right-radius: ${props => props.num === 'last' && '10px'};
-  border-bottom-left-radius: ${props => props.num === 'last' && '10px'};
+  ${props => props.num === 'first' && css `
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  `}
+  ${props => props.num === 'last' && css `
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+  `}
   font-size: 14px;
   font-weight: 700;
   color: black;
@@ -106,19 +110,32 @@ const ProfileBtn = styled.div<IIdx>`
   }
 `;
 
-export default function Header() {
-  const [isLogin, setIsLogin] = useState<boolean>(localStorage.getItem('token') ? true : false);
-  // const [isLogin, setIsLogin] = useState<boolean>(true); // 로그인 되었다고 가정한 가데이터
+interface ISearch {
+  searchBox: boolean,
+}
+
+export default function Header({searchBox}: ISearch) {
+  const [isLogin, setIsLogin] = useState<boolean>(!!localStorage.getItem('token'));
   const [profile, setProfile] = useState<boolean>(false); // 계정 아이콘 클릭 여부 체크
+  const [role, setRole] = useRecoilState<TUser>(userState);
+  const hospital = useRecoilValue(hospitalLoginState);
+  const haveSearch = searchBox;
+  const resetState = useResetRecoilState(hospitalLoginState);
 
-  // 마이페이지 클릭 시 role에 맞춰서 마이페이지 이동
-  function handleNavigateMypage() {
-
-  }
-
+  useEffect(() => {
+    // TODO: role 정한 것 반영
+  }, [])
   // 로그아웃 클릭 시 로그아웃
   function handleLogout() {
-    localStorage.removeItem('token');
+    
+    async function logoutHospital() {
+      const res = await CustomAxiosGet.get('/hospital/logout');
+      console.log(res);
+      resetState();
+    }
+
+    !!localStorage.getItem('token') ? localStorage.removeItem('token') : logoutHospital()
+
     setIsLogin(false);
     setProfile(false);
   }
@@ -128,16 +145,21 @@ export default function Header() {
       <div>
         <HeaderContainer>
           <LogoContainer>
-            <Logo to='/'>동물병원</Logo>
+            <Logo to='/'>
+              <LogoImg src='/logo.jpg' />
+            </Logo>
           </LogoContainer>
-          <Search />
+          {haveSearch && <Search />}
           <BtnContainer>
-            {!isLogin && <LoginBtn to='/login'>로그인</LoginBtn>}
-            {isLogin && <Profile icon={faCircleUser} size='3x' onClick={() => setProfile((cur => !cur))} />}
+            {!isLogin && hospital.hospitalName==='' ?
+              <LoginBtn to='/login'>로그인</LoginBtn> :
+              <Profile icon={faCircleUser} size='3x' onClick={() => setProfile((cur => !cur))} />
+            }
             {profile &&
               <ProfileBtnbox profile={profile}>
-                <Link to='/user-mypage'>
-                  <ProfileBtn num='first' onClick={handleNavigateMypage}>마이페이지</ProfileBtn>
+                <Link to={role.role === 'basic-user' ? '/user-mypage' :
+                (role.role === 'admin' ? 'admin-mypage' : 'hospital-mypage')}>
+                  <ProfileBtn num='first' onClick={() => setProfile(false)}>마이페이지</ProfileBtn>
                 </Link>
                 <Link to='/'>
                   <ProfileBtn num='last' onClick={handleLogout}>로그아웃</ProfileBtn>

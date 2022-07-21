@@ -8,6 +8,8 @@ export interface UserInfoType {
   email: string;
   password: string;
   phoneNumber: string;
+  userStatus: string;
+
 }
 export interface Address {
   postalCode: string;
