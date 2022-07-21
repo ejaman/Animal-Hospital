@@ -84,8 +84,6 @@ export default function HospitalInfo() {
 
   /* password */
   const [currPassword, setCurrPassword] = useState<string>("");
-  // const currentPwRef = useRef<HTMLInputElement>(null);
-  // const newPwRef = useRef<HTMLInputElement>(null);
   
   /* constants */
   const AVAILABLE_KEYWORD_LENGTH = 10;
@@ -124,7 +122,7 @@ export default function HospitalInfo() {
     const currPassData = e.currentTarget.value
     setHospitalInfo(hospitalData);
     setCurrPassword(currPassData);
-    // setHospitalServiceInfo(hospitalServiceData);
+    setHospitalServiceInfo(hospitalServiceData);
   };
  
   const onChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -322,9 +320,13 @@ export default function HospitalInfo() {
 
   const onhandleUpdate = async(event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    const data = { ...hospitalInfo };
-    await axios.patch('http://localhost:5100/hospital', data, { withCredentials: true });
+    // const data = { ...hospitalInfo };
+    const data = currPassword;
+    await axios.patch('http://localhost:5100/hospital/', data, {
+      withCredentials: true
+    });
     console.log(data);
+    navigate("/hospital-info");
   }
   // PROBLEM: 서비스 삭제 버튼 눌렀을 때 타입 오류 뜸
   // function deleteServiceHandler(e:React.MouseEvent<Element>, index) {
@@ -670,6 +672,17 @@ export default function HospitalInfo() {
                         style={{ marginLeft: "0.5rem" }}
                         type="text"
                         defaultValue={hospitalInfo?.hospitalCapacity || 0}
+                        onChange={onChange}
+                      />
+                    </Container>
+                  </Row>
+                  <Row style={{ marginTop: "1rem" }}>
+                    <Container>
+                      <InputLabel>현재 비밀번호</InputLabel>
+                      <InfoInput
+                        name="currPassword"
+                        style={{ marginLeft: "0.5rem" }}
+                        type="text"
                         onChange={onChange}
                       />
                     </Container>
