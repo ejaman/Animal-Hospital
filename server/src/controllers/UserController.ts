@@ -205,7 +205,7 @@ export async function loginKakaoCTR (req : Request, res : Response, next : NextF
             console.log(req.user);
             if(!user) {
                
-                return res.redirect('http://localhost:5000/api/register');
+                return res.redirect('http://localhost:5100/api/register');
             }
             req.login(user, async(err)=> {
                 console.log('kakao-callback user : ', user);
