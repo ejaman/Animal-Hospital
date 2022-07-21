@@ -1,10 +1,21 @@
 import React from "react";
+import axios from "axios";
 import { Title } from "../../components/InfoForm";
 import { Header } from "../../components/Liststyle";
 import ReserveCard from "./ReserveCard";
 import { Container, Column } from "./ReserveStyle";
-
+const token = localStorage.getItem("token");
 function UserReserve() {
+  axios
+    .get("http://localhost:5100/reservation/user/list?page=2&perPage=3", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => {
+      console.log(res.data);
+    });
+
   return (
     <Container>
       <Title>내 예약 확인하기</Title>
