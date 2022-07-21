@@ -26,19 +26,6 @@ const ModalBtnContainer = styled.div`
   justify-content: flex-end;
 `;
 
-const CheckBtn = styled.button`
-  border: none;
-  border-radius: 10px;
-  padding: 0.5rem;
-  color: white;
-  background-color: ${(props) => props.theme.palette.orange};
-  font-weight: bold;
-  &:hover {
-    transform: scale(1.05);
-    cursor: pointer;
-  }
-`;
-
 const ReservationModalForm = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const isToken = localStorage.getItem("token");
@@ -49,7 +36,7 @@ const ReservationModalForm = () => {
 
   return (
     <div>
-      <Modal isOpen={isOpen} style={ModalStyle} ariaHideApp={false} onRequestClose={() => setIsOpen(false)}>
+      <Modal isOpen={isOpen} style={ModalStyle} ariaHideApp={false}>
         <ReservationWrapper>
           <ReservationTitle>예약 정보 조회</ReservationTitle>
           <ReservationSubTitle>펫 정보</ReservationSubTitle>
@@ -114,7 +101,7 @@ const ReservationModalForm = () => {
           </ModalBtnContainer>
         </ReservationWrapper>
       </Modal>
-      <CheckBtn onClick={handleChangeModalState}>조회﹒수정</CheckBtn>
+      <button onClick={handleChangeModalState}>조회</button>
     </div>
   );
 };
