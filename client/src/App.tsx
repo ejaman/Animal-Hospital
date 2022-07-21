@@ -14,6 +14,8 @@ import AdminUserList from "./pages/admin-userlist/AdminUserList";
 import Detail from "./pages/detail/Detail";
 import AdminHospitalList from "./pages/admin-hplist/AdminHospitalList";
 import PetInformation from "./pages/pet-information/PetInformation";
+import HospitalReserve from "./pages/hospital-reserve/HospitalReserve";
+
 import UserReserve from "./pages/user-reserv/UserReserve";
 import Layout from './components/Layout';
 
@@ -38,6 +40,7 @@ function App() {
           <Route path="/petinfo" element={<PetInformation />} />
           <Route path="/hospital-mypage" element={<HospitalMypage />} />
           <Route path="/hospital-info" element={<HospitalInfo />} />
+          <Route path="/hospital-reservation" element={<HospitalReserve />} />
           <Route path="/admin-mypage" element={<AdminMypage />} />
           <Route path="/admin-userlist" element={<AdminUserList />} />
           <Route path="/admin-hplist" element={<AdminHospitalList />} />

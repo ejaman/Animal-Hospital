@@ -295,9 +295,7 @@ class HospitalService {
     for (let hospId of hospIds) {
       const hospInfo = await this.hospitalModel.findById(hospId);
       if (!hospInfo) {
-        throw new Error(
-          '해당 병원태그코드 내역이 없습니다. 다시 한 번 확인해 주세요.'
-        );
+        throw new Error('해당 병원 내역이 없습니다. 다시 한 번 확인해 주세요.');
       }
       HospInfoes.push(hospInfo);
     }
