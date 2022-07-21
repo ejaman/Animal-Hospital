@@ -13,7 +13,7 @@ export default function ReserveCard() {
 
   async function getData() {
     const res = await CustomAxiosGet.get('/reservation/hospital/list?page=2&perPage=3');
-    console.log(res);
+    console.log(res.data.data.reservationInfo);
   }
 
   getData();
