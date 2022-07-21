@@ -321,11 +321,14 @@ export default function HospitalInfo() {
   const onhandleUpdate = async(event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     // const data = { ...hospitalInfo };
-    const data = currPassword;
+    const data = { "currentPassword": currPassword };
+    // const data = currPassword;
+    console.log(currPassword);
     await axios.patch('http://localhost:5100/hospital/', data, {
       withCredentials: true
     });
     console.log(data);
+    console.log("성공적으로 저장되었습니다.");
     navigate("/hospital-info");
   }
   // PROBLEM: 서비스 삭제 버튼 눌렀을 때 타입 오류 뜸
@@ -682,7 +685,7 @@ export default function HospitalInfo() {
                       <InfoInput
                         name="currPassword"
                         style={{ marginLeft: "0.5rem" }}
-                        type="text"
+                        type="password"
                         onChange={onChange}
                       />
                     </Container>
