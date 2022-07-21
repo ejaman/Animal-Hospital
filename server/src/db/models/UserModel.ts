@@ -59,6 +59,7 @@ export class UserModel {
         return updatedStatus;
     }
 
+
     async updateUserStatus(statusInfoRequired : StatusInfoRequired) : Promise<UserData>{
         const {userId, userStatus} = statusInfoRequired;
         const filter = {_id : userId};
@@ -72,6 +73,7 @@ export class UserModel {
         }
         return updatedUser;
     }
+
 
     async updateRefreshToken(userId : string, refreshToken : string) {
         const filter = {_id : userId};

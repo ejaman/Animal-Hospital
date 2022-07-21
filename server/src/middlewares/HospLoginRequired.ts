@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import jwt_decode from 'jwt-decode';
 import { hospitalService } from '../services';
+import { HttpError } from './';
 
 async function HospLoginRequired(
   req: Request,
@@ -50,7 +51,7 @@ async function HospLoginRequired(
       const { role, hospitalId } = hospInfo;
 
       if (role !== 'hospital') {
-        throw Error('해당 접근 권한이 없습니다.');
+        throw new HttpError(403, '해당 접근 권한이 없습니다.');
       }
 
       const hospital = await hospitalService.findHospitalById(hospitalId);
@@ -77,7 +78,7 @@ async function HospLoginRequired(
           },
           secretKey,
           {
-            expiresIn: '60s',
+            expiresIn: '1h',
           }
         );
 
@@ -98,7 +99,7 @@ async function HospLoginRequired(
       ) as JwtPayload;
 
       if (role !== 'hospital') {
-        throw Error('해당 접근 권한이 없습니다.');
+        throw new HttpError(403, '해당 접근 권한이 없습니다.');
       }
 
       const hospital = await hospitalService.findHospitalById(hospitalId);
@@ -115,7 +116,7 @@ async function HospLoginRequired(
       // access token은 유효하지만, refresh token은 만료된 경우 ->  refresh token 재발급
       if (verifyRefreshToken == 'jwt expired') {
         const newRefreshToken = jwt.sign({}, secretKey, {
-          expiresIn: '90s',
+          expiresIn: '24h',
         });
 
         const updatedHospital = await hospitalService.updateRefreshToken({

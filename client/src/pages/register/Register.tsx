@@ -11,10 +11,10 @@ const Container = styled.div`
   padding: 28px;
   box-shadow: rgb(0 0 0 / 12%) 0px 6px 16px;
   border-radius: 12px;
-  position: absolute;
+  /* position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); */
 `
 
 const Welcome = styled.h3`
@@ -50,7 +50,7 @@ const UserSelectBtn = styled.button<IButtonProps>`
 
 const HospitalSelectBtn = styled(UserSelectBtn)<IButtonProps>`
   margin-right: 0;
-  background-color: ${props => props.isHospital ? props => props.theme.palette.blue : 'white'};
+  background-color: ${props => props.isHospital ? props.theme.palette.blue : 'white'};
   color: ${props => props.isHospital ? 'white' : props.theme.palette.blue};
   font-weight: ${props => props.isHospital ? 'bold' : 'normal'};
 `
@@ -59,19 +59,23 @@ export default function Register () {
   const [isHospital, setIsHospital] = useState<boolean>(false);
 
   return (
-    <Container>
-      <Title title='회원가입' />
-      <Welcome>동물병원에 오신 것을 환영합니다:)</Welcome>
-      <BtnContainer>
-        <UserSelectBtn isHospital={isHospital} onClick={() => setIsHospital(false)}>
-          일반 회원
-        </UserSelectBtn>
-        <HospitalSelectBtn isHospital={isHospital} onClick={() => setIsHospital(true)}>
-          병원 회원
-        </HospitalSelectBtn>
-      </BtnContainer>
-
-      <RegisterForm isHospital={isHospital} />
-    </Container>
+    <div style={{  display: "flex",
+      minHeight: "100vh",
+      alignItems: "center",
+      justifyContent: "center"}}>
+      <Container>
+        <Title title='회원가입' />
+        <Welcome>펫닥터 방문을 환영합니다:)</Welcome>
+        <BtnContainer>
+          <UserSelectBtn isHospital={isHospital} onClick={() => setIsHospital(false)}>
+            일반 회원
+          </UserSelectBtn>
+          <HospitalSelectBtn isHospital={isHospital} onClick={() => setIsHospital(true)}>
+            병원 회원
+          </HospitalSelectBtn>
+        </BtnContainer>
+        <RegisterForm isHospital={isHospital} />
+      </Container>
+    </div>
   )
 }

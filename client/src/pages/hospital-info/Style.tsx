@@ -1,9 +1,17 @@
 import styled from "styled-components";
 import { theme } from '../../styles/Colors';
 
-const SubTitle = styled.span`
-  font-size: 16px;
-`
+const HospitalContainer = styled.div`
+max-width: 1000px;
+margin: 2rem auto;
+`;
+
+const Container = styled.span`
+  border-bottom: 1px solid #ebebeb;
+  margin: 1rem 0rem;
+  padding: 1rem 0rem;
+`;
+
 /* 사진 추가 css */
 
 const UploadFileLabel = styled.label`
@@ -30,11 +38,67 @@ const UploadFileInput = styled.input`
   border: 0;
 `
 
+/* category css */
+const CategoryLabel = styled.label`
+  display: inline-block;
+  padding: .5em .8em;
+  fontSize: inherit;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid ${theme.palette.lightgray};
+  border-radius: .25em;
+  color: black;
+
+  :hover {
+    transition: 2ms ease-in;
+    border-color: ${theme.palette.blue};
+    color: ${theme.palette.blue};
+  }
+};
+`
+
+/* day css */
+const DayLabel = styled.label`
+  display: inline-block;
+  padding: .5em .8em;
+  fontSize: inherit;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid ${theme.palette.lightgray};
+  border-radius: .25em;
+  color: black;
+
+  :hover {
+    transition: 2ms ease-in;
+    border-color: ${theme.palette.blue};
+    color: ${theme.palette.blue};
+  }
+};
+`
+
+/* time css */
+const TimeLabel = styled.label`
+  display: inline-block;
+  padding: .5em .8em;
+  fontSize: inherit;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid ${theme.palette.lightgray};
+  border-radius: .25em;
+  color: black;
+
+  :hover {
+    transition: 2ms ease-in;
+    border-color: ${theme.palette.blue};
+    color: ${theme.palette.blue};
+  }
+};
+`
+
 /* keyword css */
-  
 const KeywordInput = styled.div`
   margin: 24px 24px;
-  border-bottom: 2px solid ${theme.palette.gray};
+  border-bottom: 2px solid ${theme.palette.lightgray};
   color: rgb(52, 58, 64);
   display: flex;
   flex-wrap: wrap;
@@ -75,4 +139,4 @@ const KeywordInput = styled.div`
   }
 `
 
-export { SubTitle, UploadFileLabel, UploadFileInput, KeywordInput };
+export { HospitalContainer, Container, UploadFileLabel, UploadFileInput, CategoryLabel, DayLabel, TimeLabel, KeywordInput };

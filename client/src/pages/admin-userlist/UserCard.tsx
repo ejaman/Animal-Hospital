@@ -18,7 +18,7 @@ function UserCard({ data }: any) {
         <Title>{data?.role}</Title>
         <InfoText>{data?.userName}</InfoText>
         <InfoText>{data?.email}</InfoText>
-
+        <InfoText>{data?.userStatus}</InfoText>
         <StatusContainer>
           <Select value={status} onChange={onhandleChange}>
             {/* 수정해야함 */}

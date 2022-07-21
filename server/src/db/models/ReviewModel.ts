@@ -66,6 +66,16 @@ export class ReviewModel {
     const result = await Review.deleteOne({_id : reviewId});
     return result;
   }
+
+  async getHospitalRating(){
+    const avgStar = await Review.aggregate([
+      {
+        $group: {_id : '$targetHospital', avg : {$avg : '$like'}}
+      
+      }
+    ])
+    return avgStar;
+  }
 }
 
 const reviewModel = new ReviewModel();

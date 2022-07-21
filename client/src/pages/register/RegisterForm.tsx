@@ -118,7 +118,7 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
         }
 
         try {
-          const result = await axios.post('http://localhost:5100/hostpital/register', JSON.stringify(data), {
+          const result = await axios.post('http://localhost:5100/hospital/register', JSON.stringify(data), {
             headers: {
               'Content-Type': 'application/json',
             },
@@ -148,18 +148,20 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
           });
           console.log(result);
         }
-        catch(e) {
+        catch(e: any) {
+          alert(e.response.data.message);
           return console.log(e);
         }
       }
 
+      alert(`회원가입이 완료되었습니다:)`);
       navigate('/login');
   }
 
   function handleChangeEmail(e: React.ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value);
     const emailRegex:RegExp = reg.email;
-    setIsEmail(emailRegex.test(email) ? true : false);
+    setIsEmail(emailRegex.test(email));
   }
 
   function handleChangePwd(e: React.ChangeEvent<HTMLInputElement>) {
@@ -169,7 +171,7 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
 
   useEffect(() => {
     const passwordRegex:RegExp = reg.password;
-    password.length && setIsPwd(passwordRegex.test(password) ? true : false);
+    password.length && setIsPwd(passwordRegex.test(password));
   }, [password])
 
   useEffect(() => {
@@ -178,7 +180,7 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
 
   useEffect(() => {
     const phoneRegex: RegExp = reg.phone;
-    phone.length && setIsPhone(phoneRegex.test(phone) ? true : false);
+    phone.length && setIsPhone(phoneRegex.test(phone));
   }, [phone])
 
   return (
