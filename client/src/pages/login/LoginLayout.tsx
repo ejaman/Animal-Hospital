@@ -100,6 +100,7 @@ function LoginLayout() {
       }
     }
   };
+
   const handleKakaoLogin = async (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     window.location.href = "http://localhost:5100/api/login/kakao";
@@ -152,9 +153,11 @@ function LoginLayout() {
         >
           카카오 로그인
         </KakaoButton>
-        <RegisterButton variant="outlined" type="submit">
-          <Link to="/register">회원 가입</Link>
-        </RegisterButton>
+        <Link to="/register">
+          <RegisterButton variant="outlined" type="submit">
+            회원 가입
+          </RegisterButton>
+        </Link>
       </LoginWrapper>
     </form>
   );
