@@ -1,10 +1,11 @@
 // react와 vanilla js 혼종인 파일이다. 리액트로 서서히 바꿔나가자
+// 우선순위 높은 남은 기능들: 정보 수정 시 validation 추가, 회원 탈퇴 시 비밀번호 확인 추가
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import DaumPostcode from "react-daum-postcode";
 import Modal from "react-modal";
 import { HospitalInfoType, HospitalServiceInfoType, Data } from "./Interface";
 import "antd/dist/antd.min.css";
-import { Button, Form, Row, Col} from "antd";
+import { Form, Row, Col } from "antd";
 import { theme } from '../../styles/Colors';
 import {
   HospitalContainer,
@@ -17,6 +18,7 @@ import {
   KeywordInput
 } from "./Style";
 import { ModalStyle } from "../../components/ModalStyle";
+import { PasswordModalStyle } from "../../components/PasswordModalStyle";
 import {
   Title,
   InputLabel,
@@ -28,35 +30,15 @@ import {
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { hospitalLoginState } from "../../state/HospitalState";
+import { useNavigate } from "react-router-dom";
 
 export default function HospitalInfo() { 
   const [info, setInfo] = useRecoilState(hospitalLoginState);
-
+  console.log(info);
   // 폼 내용들은 입력 시마다 내용이 곧바로 저장되므로 추후 debouncing 적용 예정
 
-  // useEffect(() => {
-  //   async function getData() {
-  //     try {
-  //       //응답 성공
-  //       if (info.hospitalState === "추가정보 미기입") { // 초기 수정 필요할 때
-  //         // api
-  //         const API_URL = 'localhost:5100/hospital/addtional-info';
-  //         const response = await axios.get(API_URL);
-  //         console.log("응답 성공", response);
-  //       } else { // 초기 수정 완료s
-  //         // 
-  //         const API_URL = 'localhost:5100/hospital/';
-  //         const response = await axios.get(API_URL);
-  //        console.log("응답 성공", response);
-  //       }
-  //     } catch (error) {
-  //       //응답 실패
-  //       console.error("응답 실패", error);
-  //     }
-  //   }
-  //   getData();
-  // }, []);
-  
+  let navigate = useNavigate();
+
   /* elements */
   const $HashWrapOuter = document.querySelector('.HashWrapOuter');
   const $HashWrapInner = document.createElement('div');
@@ -92,15 +74,18 @@ export default function HospitalInfo() {
   });
   const [serviceList, setServiceList] = useState<any[]>([]);
   const [keyword, setKeyword] = useState<string[]|undefined>([]);
-  const [newKeyword, setNewKeyword] = useState('');
+  const [newKeyword, setNewKeyword] = useState("");
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
   /* address modal */
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  /* password modal */
+  const [isPassOpen, setIsPassOpen] = useState<boolean>(false);
 
   /* password */
-  const currentPwRef = useRef<HTMLInputElement>(null);
-  const newPwRef = useRef<HTMLInputElement>(null);
+  const [currPassword, setCurrPassword] = useState<string>("");
+  // const currentPwRef = useRef<HTMLInputElement>(null);
+  // const newPwRef = useRef<HTMLInputElement>(null);
   
   /* constants */
   const AVAILABLE_KEYWORD_LENGTH = 10;
@@ -136,7 +121,9 @@ export default function HospitalInfo() {
       ...hospitalServiceInfo,
       [e.currentTarget.name]: e.currentTarget.value
     }
-    // setHospitalInfo(hospitalData);
+    const currPassData = e.currentTarget.value
+    setHospitalInfo(hospitalData);
+    setCurrPassword(currPassData);
     // setHospitalServiceInfo(hospitalServiceData);
   };
  
@@ -211,9 +198,9 @@ export default function HospitalInfo() {
 
   const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    alert(
-      '버튼이 클릭되었습니다(확인용)'
-    )
+    // alert(
+    //   '버튼이 클릭되었습니다(확인용)'
+    // )
   };
 
   const onOpenClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -221,23 +208,11 @@ export default function HospitalInfo() {
     setIsOpen(!isOpen);
   };
 
-  const onhandleUpdate = async (event: React.MouseEvent<HTMLElement>) => {
+  const onPassOpenClick = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    const currentPassword = currentPwRef.current?.value;
-    const newPassword = newPwRef.current?.value;
-    // const data = {
-    //   ...hospitalInfo,
-    //   address: addr,
-    //   currentPassword: currentPassword,
-    //   newPassword: newPassword,
-    // };
-
-    // axios
-    //   .patch(`localhost:5100/api/hospital/`, data)
-    //   .then((res) => {
-    //     console.log(res);
-    //   });
+    setIsPassOpen(!isPassOpen);
   };
+
 
   const completeHandler = (data: Data) => {
     setIsOpen(false);
@@ -332,48 +307,65 @@ export default function HospitalInfo() {
     })
   }
 
-  const withdrawButtonHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const withdrawButtonHandler = async(e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log('병원 회원 탈퇴 버튼이 클릭되었습니다(확인용)')
+    console.log("현재 비밀번호:", currPassword);
+    const data = { "currentPassword": currPassword };
+    const response = await axios.patch("http://localhost:5100/hospital/withdrawal", data, {
+      withCredentials: true
+    });
+    console.log(response);
+    console.log('병원 회원 탈퇴가 진행됩니다.')
+    alert("탈퇴되었습니다.");
+    navigate("/login");
   }
 
+  const onhandleUpdate = async(event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    const data = { ...hospitalInfo };
+    await axios.patch('http://localhost:5100/hospital', data, { withCredentials: true });
+    console.log(data);
+  }
   // PROBLEM: 서비스 삭제 버튼 눌렀을 때 타입 오류 뜸
   // function deleteServiceHandler(e:React.MouseEvent<Element>, index) {
   //   // setServiceList(serviceList.splice(index, 1));
   //   console.log(index, '서비스가 삭제되었습니다.');
   // }
 
+  // useEffect(() => {
+  //   // 임시 데이터 (api 추가 후 삭제 예정)
+  //   setHospitalInfo({
+  //     ~~hospitalInfo는 get 완료했고 길어서 자름. service도 완성하면 주석 삭제~
+  //   });
+  //   setHospitalServiceInfo(
+  //   {
+  //     "serviceName": "중성화수술",
+  //     "servicePrice": 200000,
+  //     "serviceDesc": "지이이잉석둑",
+  //     "serviceCapacity": 1
+  //   });
+  // }, []);
   useEffect(() => {
-    // 임시 데이터 (api 추가 후 삭제 예정)
-    setHospitalInfo({
-      "name": "이이진진수수 동동물물병병원원",
-      "email": "sarangS2hospital@gmail.com",
-      "director": "이진수",
-      "password": "12345",
-      "address": {
-        "postalCode": "13477",
-        "address1": "경기 성남시 분당구 판교공원로5길 15",
-        "address2": "이진수 동물병원"
-      },
-      "phoneNumber": "010-0000-0000",
-      "businessHours": [""],
-      "businessNumber": "546521354",
-      "licenseNumber": "XXXXXXXXX",
-      "holiday": [""],
-      "hospitalCapacity": 3,
-      "tag": [""],
-      "keyword": [""],
-      // "image": "https://o-oa.com/wp-content/uploads/2020/05/LJS_01.jpg",
-      "image": ""
-    });
-    setHospitalServiceInfo(
-    {
-      "serviceName": "중성화수술",
-      "servicePrice": 200000,
-      "serviceDesc": "지이이잉석둑",
-      "serviceCapacity": 1
-    });
+    async function getData() {
+      try {
+        //응답 성공
+        // api
+        const API_URL = 'http://localhost:5100/hospital/detail';
+        const response = await axios.get(API_URL, {
+          withCredentials: true
+        });
+        console.log("응답 성공", response);
+        setHospitalInfo(response.data.data.hospDetailInfo);
+      } catch (error) {
+        //응답 실패
+        console.error("응답 실패", error);
+      }
+      // 서비스 api 완성되면 서비스 get 요청도 추가
+    }
+    getData();
   }, []);
+
+  console.log("hospital data:", hospitalInfo);
 
   return (
     <div style={{ margin: "0 2rem 2rem 2rem" }}>
@@ -394,7 +386,7 @@ export default function HospitalInfo() {
                       marginLeft: "0.5rem"
                     }}
                     type="text"
-                    defaultValue={hospitalInfo?.name || ""}
+                    defaultValue={hospitalInfo.name || ""}
                     onChange={onChange}
                   />
                 </Container>
@@ -406,7 +398,7 @@ export default function HospitalInfo() {
                     name="director"
                     style={{ marginLeft: "0.5rem" }}
                     type="text"
-                    defaultValue={hospitalInfo?.director || ""}
+                    defaultValue={hospitalInfo.director || ""}
                     onChange={onChange}
                   />
                 </Container>
@@ -421,7 +413,7 @@ export default function HospitalInfo() {
                       marginLeft: "0.5rem"
                     }}
                     type="text"
-                    defaultValue={hospitalInfo?.email}
+                    defaultValue={hospitalInfo.email}
                     autoComplete="username"
                     disabled
                   />
@@ -429,7 +421,7 @@ export default function HospitalInfo() {
               </Row>
               <Row>
                 <Container>
-                  <InputLabel>비밀번호</InputLabel>
+                  <InputLabel>새 비밀번호</InputLabel>
                   {/* <input ref={newPwRef} placeholder="새 비밀번호" />
                   <input ref={currentPwRef} placeholder="현재 비밀번호" /> */}
                   <InfoInput
@@ -438,12 +430,12 @@ export default function HospitalInfo() {
                     type="password"
                     autoComplete="current-password"
                     defaultValue=""
-                    disabled
                   />
-                  <InfoBtn
+                  {/* 유저 정보 페이지와의 통일감을 위해 현재 비밀번호 input과 수정 버튼은 아래에 */}
+                  {/* <InfoBtn
                     style={{ marginLeft: "0.5rem" }}
                     onClick={buttonHandler}
-                  >변경</InfoBtn>
+                  >변경</InfoBtn> */}
                 </Container>
               </Row>
               <Row>
@@ -453,7 +445,7 @@ export default function HospitalInfo() {
                     name="phoneNumber"
                     style={{ marginLeft: "0.5rem" }}
                     type="text"
-                    defaultValue={hospitalInfo?.phoneNumber || ""}
+                    defaultValue={hospitalInfo.phoneNumber || ""}
                     onChange={onChange}
                   />
                 </Container>
@@ -682,10 +674,20 @@ export default function HospitalInfo() {
                     </Container>
                   </Row>
                   <Row>
+                    <InfoBtn 
+                      style={{
+                        marginLeft: "0.5rem",
+                        marginBottom: "1.5rem",
+                        margin: "auto"
+                      }}
+                      onClick={ onhandleUpdate }
+                    >저장</InfoBtn>
+                  </Row>
+                  {/* <Row>
                     <Button onClick={() => {
                       console.log(hospitalInfo)
                     }}>개발자 확인 버튼</Button>
-                  </Row>
+                  </Row> */}
                 </Col>
               </Row>
             </Form>
@@ -811,7 +813,25 @@ export default function HospitalInfo() {
       </HospitalContainer>
       <DeactivateContainer>
         <p>Animal Hospital에서 탈퇴하고 싶으신가요?</p>
-        <DeactiveBtn onClick={withdrawButtonHandler}>탈퇴하기</DeactiveBtn>
+        <DeactiveBtn onClick={onPassOpenClick}>탈퇴하기</DeactiveBtn>
+        <Modal isOpen={isPassOpen} ariaHideApp={false} style={PasswordModalStyle}>
+          <HospitalContainer style={{ 
+            position: "absolute",
+            top: "18%",
+            left: "30%",
+            maxWidth: "16rem"
+          }}>
+            <Container style={{ margin: "auto" }}>
+              <InputLabel style={{ marginBottom: "1rem" }}>비밀번호를 입력해주세요.</InputLabel>
+              <InfoInput
+                type="password"
+                name="currPassword"
+                onChange={onChange}
+              />
+            </Container>
+            <InfoBtn onClick={withdrawButtonHandler}>확인</InfoBtn>
+          </HospitalContainer>
+        </Modal>
       </DeactivateContainer>
     </div>
   );
