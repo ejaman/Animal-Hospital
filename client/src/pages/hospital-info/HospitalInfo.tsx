@@ -1,11 +1,11 @@
 // react와 vanilla js 혼종인 파일이다. 리액트로 서서히 바꿔나가자
-// 우선순위 높은 남은 기능들: 정보 수정 시 validation 추가, 회원 탈퇴 시 비밀번호 확인 추가
+// 우선순위 높은 남은 기능들: 정보 수정 시 validation 추가, 정보 수정 반영
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import DaumPostcode from "react-daum-postcode";
 import Modal from "react-modal";
 import { HospitalInfoType, HospitalServiceInfoType, Data } from "./Interface";
 import "antd/dist/antd.min.css";
-import { Form, Row, Col } from "antd";
+import { Row, Col } from "antd";
 import { theme } from '../../styles/Colors';
 import {
   HospitalContainer,
@@ -375,7 +375,7 @@ export default function HospitalInfo() {
         </div>
         <Row>
           <Col span={12}>
-            <Form name="hospitalInfoForm">
+            <div>
               <Row>
                 <Container>
                   <InputLabel>병원명</InputLabel>
@@ -484,8 +484,9 @@ export default function HospitalInfo() {
                     accept='image/jpg,image/png,image/jpeg,image/gif'
                     name='profile_img'
                     onChange={(e: any) => {
+                      console.log("convert전:", e.target.files)
                       convertFileToBase64(e.target.files[0]);
-                      console.log(e.target.files);
+                      console.log("convert 후:", e.target.files);
                     }}
                   />
                 </div>
@@ -599,7 +600,7 @@ export default function HospitalInfo() {
               </Row>
               <Row>
                 <Col>
-                  <InputLabel>영업시간</InputLabel>
+                  <InputLabel style={{ marginBottom: "0.5rem" }}>영업시간</InputLabel>
                   <Row>
                     {TIME_LIST.map((time) => (
                       <TimeLabel
@@ -690,10 +691,10 @@ export default function HospitalInfo() {
                   </Row> */}
                 </Col>
               </Row>
-            </Form>
+            </div>
           </Col>
           <Col>
-            <Form>
+            <div>
               <Row>
                 <InputLabel
                   style={{
@@ -764,10 +765,9 @@ export default function HospitalInfo() {
                 onClick={onServiceSubmit}
               >추가</InfoBtn>
               </Row>
-              <Row>
+              <Row style={{ marginTop: "2rem" }}>
                 <InputLabel
                   style={{
-                    marginTop: "2rem",
                     marginBottom: "1rem",
                     margin: "auto",
                     fontWeight: "bold"
@@ -807,7 +807,7 @@ export default function HospitalInfo() {
                   ))}
                 </Col>
               </Row>
-            </Form>
+            </div>
           </Col>
         </Row>
       </HospitalContainer>
