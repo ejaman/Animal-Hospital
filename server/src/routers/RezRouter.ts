@@ -140,7 +140,7 @@ reservationRouter.get(
       const customerIds = Reservations.map((data) => data.customer.toString());
       const petIds = Reservations.map((data) => data.pet.toString());
       const rezStatuses = Reservations.map((data) => data.rezStatus.toString());
-
+      console.log(petIds);
       const customerInfoes = await userService.findByIds(customerIds);
       const petInfoes = await petService.findByIds(petIds);
       const rezStatusInfoes = await rezStatusService.findByIds(rezStatuses);
