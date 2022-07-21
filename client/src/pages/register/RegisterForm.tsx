@@ -118,7 +118,7 @@ const RegisterForm: React.FC<Props> = ({isHospital}) => {
         }
 
         try {
-          const result = await axios.post('http://localhost:5100/hostpital/register', JSON.stringify(data), {
+          const result = await axios.post('http://localhost:5100/hospital/register', JSON.stringify(data), {
             headers: {
               'Content-Type': 'application/json',
             },
