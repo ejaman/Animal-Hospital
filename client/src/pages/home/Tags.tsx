@@ -79,12 +79,9 @@ export default function Tags({setFiltered, setTotal, limit, page, setPage}: ITag
 
     setFilterData(data);
   }
-  
-  console.log(tagData, filterData);
 
   useEffect(() => {
     getData();
-    // initialList();
 
     setPage(1);
     setFiltered(filterData);
