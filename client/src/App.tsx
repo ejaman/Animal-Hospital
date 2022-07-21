@@ -14,7 +14,7 @@ import AdminUserList from "./pages/admin-userlist/AdminUserList";
 import Detail from "./pages/detail/Detail";
 import AdminHospitalList from "./pages/admin-hplist/AdminHospitalList";
 import PetInformation from "./pages/pet-information/PetInformation";
-
+import UserReserve from "./pages/user-reserv/UserReserve";
 import Layout from './components/Layout';
 
 function App() {
@@ -33,6 +33,7 @@ function App() {
           <Route path="/hospital/:hospitalName/Services" element={<Detail />} />
           <Route path="/user-mypage" element={<UserMypage />} />
           <Route path="/user-info" element={<UserInfo />} />
+          <Route path="/user-reservation" element={<UserReserve />} />
           <Route path="/pet-info" element={<PetInfo />} />
           <Route path="/petinfo" element={<PetInformation />} />
           <Route path="/hospital-mypage" element={<HospitalMypage />} />
