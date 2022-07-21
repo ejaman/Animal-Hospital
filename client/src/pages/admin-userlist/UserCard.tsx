@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   InfoCard,
   TextContainer,
@@ -12,6 +12,7 @@ function UserCard({ data }: any) {
   const onhandleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setStatus(event.target.value);
   };
+
   return (
     <InfoCard>
       <TextContainer>
@@ -20,10 +21,9 @@ function UserCard({ data }: any) {
         <InfoText>{data?.email}</InfoText>
         <InfoText>{data?.userStatus}</InfoText>
         <StatusContainer>
-          <Select value={status} onChange={onhandleChange}>
-            {/* 수정해야함 */}
-            <option value="회원">회원</option>
-            <option value="탈퇴회원">탈퇴회원</option>
+          <Select defaultValue={data?.userStatus} onChange={onhandleChange}>
+            <option value="expired">탈퇴회원</option>
+            <option value="normal">회원</option>
           </Select>
         </StatusContainer>
       </TextContainer>

@@ -57,10 +57,10 @@ function AdminUserList() {
   return (
     <Container>
       <div>
-        <Btn name="complete" onClick={onhandleSort}>
+        <Btn name="normal" onClick={onhandleSort}>
           회원
         </Btn>
-        <Btn name="pending" onClick={onhandleSort}>
+        <Btn name="expired" onClick={onhandleSort}>
           탈퇴회원
         </Btn>
         <Btn

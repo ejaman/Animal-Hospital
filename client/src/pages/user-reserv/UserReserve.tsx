@@ -1,20 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { Title } from "../../components/InfoForm";
 import { Header } from "../../components/Liststyle";
 import ReserveCard from "./ReserveCard";
 import { Container, Column } from "./ReserveStyle";
+
 const token = localStorage.getItem("token");
 function UserReserve() {
-  axios
-    .get("http://localhost:5100/reservation/user/list?page=2&perPage=3", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .then((res) => {
-      console.log(res.data);
-    });
+  // const [reservInfo, setReservInfo] = useState();
+  useEffect(() => {
+    try {
+      console.log(token);
+
+      // token &&
+      axios
+        .get("http://localhost:5100/reservation/user/list?page=2&perPage=3", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+        });
+    } catch (err) {
+      alert(err);
+      console.log(err);
+    }
+  }, []);
 
   return (
     <Container>
