@@ -14,9 +14,10 @@ import AdminUserList from "./pages/admin-userlist/AdminUserList";
 import Detail from "./pages/detail/Detail";
 import AdminHospitalList from "./pages/admin-hplist/AdminHospitalList";
 import PetInformation from "./pages/pet-information/PetInformation";
+import HospitalReserve from "./pages/hospital-reserve/HospitalReserve";
 
-import LayoutSearch from "./components/LayoutSearch";
-import LayoutMypage from "./components/LayoutMypage";
+import UserReserve from "./pages/user-reserv/UserReserve";
+import Layout from './components/Layout';
 
 function App() {
   return (
@@ -26,22 +27,20 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* 헤더 푸터 검색창 버전 */}
-        <Route element={<LayoutSearch />}>
+        {/* 헤더 푸터 o */}
+        <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="detail" element={<Detail />} />
           <Route path="/hospital/:hospitalName/detail" element={<Detail />} />
           <Route path="/hospital/:hospitalName/Services" element={<Detail />} />
-        </Route>
-
-        {/* 헤더 푸터 검색창x 버전 */}
-        <Route element={<LayoutMypage />}>
           <Route path="/user-mypage" element={<UserMypage />} />
           <Route path="/user-info" element={<UserInfo />} />
+          <Route path="/user-reservation" element={<UserReserve />} />
           <Route path="/pet-info" element={<PetInfo />} />
           <Route path="/petinfo" element={<PetInformation />} />
           <Route path="/hospital-mypage" element={<HospitalMypage />} />
           <Route path="/hospital-info" element={<HospitalInfo />} />
+          <Route path="/hospital-reservation" element={<HospitalReserve />} />
           <Route path="/admin-mypage" element={<AdminMypage />} />
           <Route path="/admin-userlist" element={<AdminUserList />} />
           <Route path="/admin-hplist" element={<AdminHospitalList />} />

@@ -11,6 +11,7 @@ import {
   HospitalModel,
 } from '../db';
 import { hospRegStatusService, hospStatusService } from './index';
+import { HttpError } from '../middlewares';
 
 class HospitalService {
   constructor(private hospitalModel: HospitalModel) {}
@@ -33,7 +34,8 @@ class HospitalService {
     const hospitalFindbyEmail = await this.hospitalModel.findByEmail(email);
 
     if (hospitalFindbyEmail) {
-      throw new Error(
+      throw new HttpError(
+        400,
         '이 이메일은 현재 사용중입니다. 다른 이메일을 입력해 주세요.'
       );
     }
@@ -41,7 +43,8 @@ class HospitalService {
     const hospitalFindbyname = await this.hospitalModel.findByName(name);
 
     if (hospitalFindbyname) {
-      throw new Error(
+      throw new HttpError(
+        400,
         '이 병원명은 현재 사용중입니다. 다른 병원명을 입력해 주세요.'
       );
     }
@@ -74,7 +77,8 @@ class HospitalService {
     const hospital = await this.hospitalModel.findByEmail(email);
 
     if (!hospital) {
-      throw new Error(
+      throw new HttpError(
+        400,
         '해당 이메일은 가입 내역이 없습니다. 다시 한 번 확인해 주세요.'
       );
     }
@@ -84,7 +88,7 @@ class HospitalService {
     const hospRegStatus = await hospRegStatusService.findById(hospRegStatusId);
     const { name: hospRegStatusName } = hospRegStatus;
     if (hospRegStatusId !== '62cc3c6432b6e445bc83920b') {
-      throw new Error(`${hospRegStatusName}`);
+      throw new HttpError(403, `${hospRegStatusName}`);
     }
 
     // 회원상태 확인
@@ -95,7 +99,7 @@ class HospitalService {
       hospStatusId !== '62ccf2f039864cbe2c2dccf4' &&
       hospStatusId !== '62d18a00c41f60c4768ddc53'
     ) {
-      throw new Error(`${hospStatusName}`);
+      throw new HttpError(403, `${hospStatusName}`);
     }
 
     const hospitalEmail = hospital.email;
@@ -109,7 +113,8 @@ class HospitalService {
     );
 
     if (!isPasswordCorrect) {
-      throw new Error(
+      throw new HttpError(
+        400,
         '비밀번호가 일치하지 않습니다. 다시 한 번 확인해 주세요.'
       );
     }
@@ -200,7 +205,10 @@ class HospitalService {
 
     // db에서 찾지 못한 경우, 에러 메시지 반환
     if (!hospital) {
-      throw new Error('가입 내역이 없습니다. 다시 한 번 확인해 주세요.');
+      throw new HttpError(
+        400,
+        '가입 내역이 없습니다. 다시 한 번 확인해 주세요.'
+      );
     }
 
     // 비밀번호 일치 여부 확인
@@ -211,7 +219,8 @@ class HospitalService {
     );
 
     if (!isPasswordCorrect) {
-      throw new Error(
+      throw new HttpError(
+        400,
         '현재 비밀번호가 일치하지 않습니다. 다시 한 번 확인해 주세요.'
       );
     }
@@ -230,7 +239,8 @@ class HospitalService {
       const hospitalFindbyname = await this.hospitalModel.findByName(name);
 
       if (hospitalFindbyname) {
-        throw new Error(
+        throw new HttpError(
+          400,
           '이 병원명은 현재 사용중입니다. 다른 병원명을 입력해 주세요.'
         );
       }
@@ -249,7 +259,7 @@ class HospitalService {
     const total = await this.hospitalModel.countHospitals(searchOptions);
 
     if (total < 1) {
-      throw new Error('병원이 없습니다.');
+      throw new HttpError(400, '병원이 없습니다.');
     }
     return total;
   }
@@ -278,6 +288,18 @@ class HospitalService {
       searchOptions
     );
     return users;
+  }
+
+  async findByIds(hospIds: string[]): Promise<HospitalInfo[]> {
+    const HospInfoes: HospitalInfo[] = [];
+    for (let hospId of hospIds) {
+      const hospInfo = await this.hospitalModel.findById(hospId);
+      if (!hospInfo) {
+        throw new Error('해당 병원 내역이 없습니다. 다시 한 번 확인해 주세요.');
+      }
+      HospInfoes.push(hospInfo);
+    }
+    return HospInfoes;
   }
 }
 

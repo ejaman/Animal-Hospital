@@ -1,5 +1,6 @@
 import {reviewModel, ReviewModel} from '../db'
 import {ReviewInfo, ReviewData} from '../types/ReviewTypes';
+import {HttpError} from '../middlewares';
 class ReviewService {
     constructor(private reviewModel : ReviewModel){}
 
@@ -20,6 +21,12 @@ class ReviewService {
     async getReviewsByHospital(hospitalId : string) : Promise<ReviewData[]>{
         const reviews = await this.reviewModel.findByHospitalId(hospitalId);
         return reviews;
+    }
+
+    //병원 회원의 자기병원에 대한 평점 평균 
+    async getHospitalRating() : Promise<any[]>{
+        const rating = await this.reviewModel.getHospitalRating();
+        return rating;
     }
 
     //관리자의 모든 리뷰 조회
@@ -48,7 +55,7 @@ class ReviewService {
         const {deletedCount} = await this.reviewModel.deleteReview(reviewId);
 
         if(deletedCount === 0) {
-            throw new Error(`${reviewId} 리뷰를 삭제하지 못했습니다.`)
+            throw new HttpError(400, `${reviewId} 리뷰를 삭제하지 못했습니다.`)
         }
 
         return { result : 'success'};

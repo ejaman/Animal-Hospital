@@ -9,7 +9,7 @@ export interface ReviewInfo {
 }
 
 export interface ReviewData {
-    _id : Types.ObjectId
+    _id : Types.ObjectId,
     userId : string,
     targetHospital : string,
     date : Date,
