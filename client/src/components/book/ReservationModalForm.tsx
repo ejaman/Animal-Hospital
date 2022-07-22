@@ -27,7 +27,7 @@ const ModalBtnContainer = styled.div`
   justify-content: flex-end;
 `;
 
-const ReservationModalForm = () => {
+const ReservationModalForm = ({ res }: any) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const isToken = localStorage.getItem("token");
 

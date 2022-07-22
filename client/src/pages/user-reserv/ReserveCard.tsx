@@ -3,6 +3,8 @@ import { InfoCard, TextContainer } from "../../components/Liststyle";
 import { Column } from "./ReserveStyle";
 import ReservationModalForm from "../../components/book/ReservationModalForm";
 function ReserveCard({ res, idx }: any) {
+  console.log(res);
+
   return (
     <InfoCard>
       <TextContainer>
@@ -11,7 +13,7 @@ function ReserveCard({ res, idx }: any) {
         <Column>{res?.hpName}</Column>
         <Column>{res?.resName}</Column>
         <Column>
-          <ReservationModalForm />
+          <ReservationModalForm res={res} />
         </Column>
       </TextContainer>
     </InfoCard>

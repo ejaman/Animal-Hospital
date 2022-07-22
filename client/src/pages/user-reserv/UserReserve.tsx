@@ -30,12 +30,6 @@ function UserReserve() {
             const data = res.data.data.ReservationsInfo;
             const check = Object.values(data);
             setResInfo(check);
-
-            // setResInfo({
-            //   ...data.Reservations.map((a: any) => a),
-            //   ...data.hospInfoes.map((a: any) => a.name),
-            //   ...data.rezStatusInfoes.map((a: any) => a.name),
-            // });
           });
     } catch (err) {
       alert(err);
@@ -44,6 +38,7 @@ function UserReserve() {
   }, []);
 
   const InfoArr = [];
+  // useCallback 사용해보기
   if (resInfo.length > 0) {
     for (let i = 0; i < resInfo[0].length + 1; i++) {
       InfoArr.push({
@@ -57,7 +52,6 @@ function UserReserve() {
       });
     }
   }
-  console.log(InfoArr);
 
   return (
     <Container>
