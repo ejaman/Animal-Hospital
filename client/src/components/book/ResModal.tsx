@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Modal from "react-modal";
 import { ModalStyle } from "../ModalStyle";
 import styled from "styled-components";
@@ -27,12 +28,36 @@ const ModalBtnContainer = styled.div`
   justify-content: flex-end;
 `;
 
-const ReservationModalForm = () => {
+const token = localStorage.getItem("token");
+const ResModal = ({ res }: any) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [status, setStatus] = useState<string>();
   const isToken = localStorage.getItem("token");
-
   const handleChangeModalState = () => {
     setIsOpen(!isOpen);
+  };
+
+  // 일반유저
+  const onhandleUpdate = () => {
+    const data = {
+      rezStatusId: res.rezStatus,
+      customerId: res.customer,
+    };
+    try {
+      token &&
+        axios.patch(
+          `http://localhost:5100/reservation/user/:${res.reservationId}`,
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      alert("예약이 수정되었습니다 ✏️");
+    } catch {
+      alert("비밀번호가 틀렸습니다.");
+    }
   };
 
   return (
@@ -43,55 +68,74 @@ const ReservationModalForm = () => {
           <ReservationSubTitle>펫 정보</ReservationSubTitle>
           {/* TODO: 이거 뭔가 너무 징그러운데 어케 좋은 방법 있을까요?? API가 있으면 중복적으로 처리하지 않아도 되려나요??*/}
           {/* 아니면 펫정보부분 따로 컴포넌트화 시키고 서비스 부분 따로 컴포넌트화 시키고 상태부분 따로 컴포넌트화 시킬까요?? */}
-          <ReservationContent label="종" defaultValue="강아지" name="species" />
+          <ReservationContent
+            label="이름"
+            defaultValue={res.petName}
+            name="name"
+          />
+          <ReservationContent
+            label="종"
+            defaultValue={res.species}
+            name="species"
+          />
           <ReservationContent
             label="품종"
-            defaultValue="포메라니안"
+            defaultValue={res.breed}
             name="breed"
           />
-          <ReservationContent label="이름" defaultValue="모모" name="name" />
-          <ReservationContent label="나이" defaultValue="35" name="age" />
-          <ReservationContent label="성별" defaultValue="남" name="sex" />
-          <ReservationContent label="무게" defaultValue="3kg" name="weight" />
+          <ReservationContent label="나이" defaultValue={res.age} name="age" />
+          <ReservationContent label="성별" defaultValue={res.sex} name="sex" />
+          <ReservationContent
+            label="무게"
+            defaultValue={res.weight}
+            name="weight"
+          />
           <ReservationContent
             label="진료 내역"
-            defaultValue="중성화 수술"
+            defaultValue={res.medicalHistory}
             name="medicalHistory"
           />
           <ReservationContent
             label="접종 내역"
-            defaultValue="모름"
+            defaultValue={res.vaccination}
             name="vaccination"
           />
           <ReservationSubTitle>서비스</ReservationSubTitle>
           <ReservationContent
             label="예약 날짜"
-            defaultValue="2022년 7월 20일"
+            defaultValue={res.rezDate}
             name="reservationDate"
           />
           <ReservationContent
             label="진료 항목"
-            defaultValue="중성화 수술"
+            defaultValue={res.service}
             name="clinic"
           />
           <ReservationContent
             label="가격"
-            defaultValue="20000원"
+            defaultValue={res.price}
             name="price"
           />
           <ReservationSubTitle>상태</ReservationSubTitle>
-          <Select
+          <button onClick={onhandleUpdate}>예약취소</button>
+          {/* <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             defaultValue=""
             sx={{ width: 150 }}
             label="Age"
           >
-            <MenuItem value={10}>예약 완료</MenuItem>
+            <MenuItem value={10} disabled>
+              예약 완료
+            </MenuItem>
             <MenuItem value={20}>예약 취소</MenuItem>
-            <MenuItem value={30}>예약 대기</MenuItem>
-            <MenuItem value={40}>예약 확정</MenuItem>
-          </Select>
+            <MenuItem value={30} disabled>
+              예약 대기
+            </MenuItem>
+            <MenuItem value={40} disabled>
+              예약 확정
+            </MenuItem>
+          </Select> */}
           <ModalBtnContainer>
             {isToken && (
               <Link to="/user-info">
@@ -107,4 +151,4 @@ const ReservationModalForm = () => {
   );
 };
 
-export default ReservationModalForm;
+export default ResModal;
