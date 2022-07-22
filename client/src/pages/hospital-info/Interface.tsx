@@ -14,10 +14,10 @@ export interface HospitalInfoType {
   businessNumber: string;
   licenseNumber: string;
   holiday: string[];
-  hospitalCapacity?: number;
+  hospitalCapacity: number;
   tag: string[]|undefined;
   keyword: string[];
-  image: string;
+  image: string[];
 }
 export interface HospitalServiceInfoType {
   serviceName: string;

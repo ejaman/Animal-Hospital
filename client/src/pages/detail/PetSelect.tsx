@@ -6,6 +6,8 @@ import { CalendarTitle } from "./Calendar";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { CustomAxiosGet } from "../../common/CustomAxios";
+import { useRecoilState } from "recoil";
+import { reservationState } from "../../state/ReservationState";
 import { useNavigate } from "react-router-dom";
 
 const PetSelectContainer = styled.div`
@@ -14,18 +16,6 @@ const PetSelectContainer = styled.div`
 const PetSelectWrapper = styled.div`
   margin-top: 20px;
 `;
-const BookingButtonContainer = styled.div``;
-const BookingButton = styled.button`
-  margin: 20px;
-  width: 328px;
-  height: 52px;
-  background-color: #00d780;
-  color: #fff;
-  border-radius: 5px;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-`;
 
 const PetSelectTitle = styled(CalendarTitle)``;
 
@@ -33,13 +23,9 @@ const PetSelect = () => {
   const navigate = useNavigate();
   // pets의 state를 하나 만들어준다.
   const [pets, setPets] = useState([]);
+  const [petName, setPetName] = useState();
+  const [petId, setPetId] = useRecoilState(reservationState);
   const token = localStorage.getItem("token");
-  const handleLoginBtn = () => {
-    if (!token) {
-      alert("로그인이 필요한 서비스입니다.");
-      navigate("/login");
-    }
-  };
 
   // useEffect를 통해서 data를 받아와 pets의 상태를 정해준다. 처음 받아온 상태만 지정해준다.
   useEffect(() => {
@@ -48,11 +34,21 @@ const PetSelect = () => {
     });
   }, []);
 
-  const selectPets = pets.map((pet: { name: string }, index: number) => (
-    <MenuItem key={index} value={pet.name}>
-      {pet.name}
-    </MenuItem>
-  ));
+  const handleChangePetInfo = (event: any) => {
+    const { value } = event.target;
+    setPetId({
+      ...petId,
+      pet: value,
+    });
+  };
+
+  const selectPets = pets.map(
+    (pet: { name: string; _id: number }, index: number) => (
+      <MenuItem key={index} value={pet._id}>
+        {pet.name}
+      </MenuItem>
+    )
+  );
   // 토큰이 있으면 보여주고 없으면 내 펫 선택하기 부분이 보여지지 않는다.
   return (
     <PetSelectWrapper>
@@ -68,14 +64,12 @@ const PetSelect = () => {
             label="pet"
             sx={{ width: 150 }}
             defaultValue=""
+            onChange={handleChangePetInfo}
           >
             {selectPets}
           </Select>
         </>
       )}
-      <BookingButtonContainer>
-        <BookingButton onClick={handleLoginBtn}>예약 하기</BookingButton>
-      </BookingButtonContainer>
     </PetSelectWrapper>
   );
 };
