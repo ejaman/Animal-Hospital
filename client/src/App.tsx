@@ -5,7 +5,6 @@ import Login from "./pages/login/LoginLayout";
 import Register from "./pages/register/Register";
 import UserMypage from "./pages/user-mypage/UserMypage";
 import UserInfo from "./pages/user-info/UserInfo";
-import PetInfo from "./pages/pet-info/PetInfo";
 import HospitalMypage from "./pages/hospital-mypage/HospitalMypage";
 import HospitalInfo from "./pages/hospital-info/HospitalInfo";
 import AdminMypage from "./pages/admin-mypage/AdminMypage";
@@ -17,7 +16,7 @@ import PetInformation from "./pages/pet-information/PetInformation";
 import HospitalReserve from "./pages/hospital-reserve/HospitalReserve";
 
 import UserReserve from "./pages/user-reserv/UserReserve";
-import Layout from './components/Layout';
+import Layout from "./components/Layout";
 
 function App() {
   return (
@@ -36,8 +35,7 @@ function App() {
           <Route path="/user-mypage" element={<UserMypage />} />
           <Route path="/user-info" element={<UserInfo />} />
           <Route path="/user-reservation" element={<UserReserve />} />
-          <Route path="/pet-info" element={<PetInfo />} />
-          <Route path="/petinfo" element={<PetInformation />} />
+          <Route path="/pet-info" element={<PetInformation />} />
           <Route path="/hospital-mypage" element={<HospitalMypage />} />
           <Route path="/hospital-info" element={<HospitalInfo />} />
           <Route path="/hospital-reservation" element={<HospitalReserve />} />
