@@ -48,11 +48,12 @@ const Nav = styled.nav`
 const Button = styled.button`
   border: none;
   border-radius: 8px;
-  padding: 8px;
-  margin: 0;
+  width: 30px;
   background: white;
   color: ${props => props.theme.palette.orange};
   font-size: 16px;
+  line-height: 26px;
+  text-align: center;
 
   &:hover {
     background: ${props => props.theme.palette.orange};

@@ -6,3 +6,5 @@ export * from './HospRegStatusService';
 export * from './HospTagService';
 export * from './HospService';
 export * from './HospServiceService';
+export * from './RezStatusService';
+export * from './RezService';

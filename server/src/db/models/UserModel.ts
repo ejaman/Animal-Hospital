@@ -1,42 +1,16 @@
-import mongoose, {model} from 'mongoose';
+import mongoose, {model, Types} from 'mongoose';
 import { UserSchema } from "../schemas/UserSchema";
+import {UserAddress, UserInfo, UserData, StatusInfoRequired, UserStatus} from '../../types/UserTypes';
 
 const User = model('users', UserSchema);
-
-// export type Role = 'basic-user' | 'hispital' | 'admin';
-
-export interface UserAddress {
-    postalCode?: string;
-    address1?: string;
-    address2?: string;
-}
-
-export interface UserInfo {
-    userName : string,
-    email : string,
-    password : string,
-    phoneNumber : string,
-    address : UserAddress,
-    role ? : string,
-    userStatus  : string,
-    
-}
-
-export interface UserData extends UserInfo{
-    _id : mongoose.Types.ObjectId
-}
-
 interface ToUpdate {
     email : string,
     update : {
-        [key: string] : string | UserAddress;
+        [key: string] : string | UserAddress |object[];
     }
 }
 
-export interface StatusInfoRequired {
-    userId : string,
-    userStatus : string
-}
+
 export class UserModel {
     async findByEmail(email : string) : Promise<UserData | null> {
         const user = await User.findOne({email});
@@ -72,7 +46,7 @@ export class UserModel {
         return users;
     }
 
-    async updateStatus({userId} : StatusInfoRequired) : Promise<string> {
+    async statusExpired({userId} : StatusInfoRequired) : Promise<string> {
         const filter = {_id : userId};
         const option = {returnOriginal : false};
         const updatedUser = await User.findOneAndUpdate(filter, {userStatus : 'expired'}, option);
@@ -83,6 +57,42 @@ export class UserModel {
         }
         const updatedStatus = updatedUser.userStatus;
         return updatedStatus;
+    }
+
+
+    async updateUserStatus(statusInfoRequired : StatusInfoRequired) : Promise<UserData>{
+        const {userId, userStatus} = statusInfoRequired;
+        const filter = {_id : userId};
+        const toUpdate = userStatus===UserStatus.EXPIRED ? UserStatus.NORMAL : UserStatus.EXPIRED;
+        console.log(toUpdate);
+        const option = {returnOriginal : false};
+        const updatedUser = await User.findOneAndUpdate(filter, {userStatus : toUpdate}, option );
+        console.log(updatedUser);
+        if(!updatedUser){
+            throw new Error("사용자 상태를 변경할 수 없습니다.")
+        }
+        return updatedUser;
+    }
+
+
+    async updateRefreshToken(userId : string, refreshToken : string) {
+        const filter = {_id : userId};
+        const updatedUser = await User.findOneAndUpdate(filter, {
+            $set : {
+                refreshToken
+            }
+        })
+        return updatedUser;
+    }
+
+    async deleteRefreshToken(userId : string){
+        const filter = {_id : userId};
+        const updatedUser = await User.findOneAndUpdate(filter, {
+            $unset : {
+                refreshToken: ""
+            }
+        })
+        return updatedUser;
     }
 }
 

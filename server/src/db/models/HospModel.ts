@@ -214,8 +214,8 @@ export class HospitalModel {
       .limit(perPage)) as HospitalInfo[];
     return users;
   }
-}
 
+}
 const hospitalModel = new HospitalModel();
 
 export { hospitalModel };

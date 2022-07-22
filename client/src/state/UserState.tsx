@@ -1,4 +1,9 @@
 import { atom } from "recoil";
+import { recoilPersist } from "recoil-persist";
+
+const { persistAtom }: any = recoilPersist({
+  key: "userState",
+});
 
 export type TUser = {
   role: string;
@@ -11,4 +16,5 @@ export const userState = atom<TUser>({
     role: "",
     userStatus: "",
   },
+  effects_UNSTABLE: [persistAtom],
 });

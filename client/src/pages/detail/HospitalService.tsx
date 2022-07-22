@@ -7,6 +7,8 @@ import { CustomAxiosGet } from "../../common/CustomAxios";
 import { CalendarTitle } from "./Calendar";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import { useRecoilState } from "recoil";
+import { reservationState } from "../../state/ReservationState";
 
 const HospitalServiceWrapper = styled.div`
   margin-top: 20px;
@@ -24,6 +26,8 @@ type THospitalService = {
 
 const HospitalService = () => {
   const { hospitalName } = useParams();
+  const [bookState, setBookState] = useRecoilState(reservationState);
+
   const [hospitalService, setHospitalService] = useState<THospitalService[]>(
     []
   );
@@ -36,11 +40,22 @@ const HospitalService = () => {
 
   const selectServices = hospitalService.map(
     (service: { name: string; price: number }, index: number) => (
-      <MenuItem key={index} value={service.name}>
+      <MenuItem key={index} value={`${service.name}/${service.price}`}>
         {service.name} / {service.price}
       </MenuItem>
     )
   );
+
+  const handleChangeInfo = (event: any) => {
+    event.preventDefault();
+    const splitValue = event.target.value.split("/");
+    setBookState({
+      ...bookState,
+      hospName: hospitalName,
+      service: splitValue[0],
+      price: parseInt(splitValue[1], 10),
+    });
+  };
 
   return (
     <HospitalServiceWrapper>
@@ -52,8 +67,11 @@ const HospitalService = () => {
         labelId="demo-select-small"
         id="demo-simple-small"
         label="pet"
-        sx={{ width: 150 }}
-        defaultValue=""
+        sx={{ width: 200 }}
+        defaultValue={
+          bookState ? `${bookState.hospName}/${bookState.price}` : ""
+        }
+        onChange={handleChangeInfo}
       >
         {selectServices}
       </Select>

@@ -6,8 +6,9 @@ import {faCircleUser} from '@fortawesome/free-solid-svg-icons';
 import { TUser, userState } from '../state/UserState';
 
 import Search from './Search';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { hospitalLoginState } from '../state/HospitalState';
+import { CustomAxiosGet } from '../common/CustomAxios';
 
 const HeaderContainer = styled.div`
   width: 100%;
@@ -36,6 +37,10 @@ const Logo = styled(Link)`
     color: ${props => props.theme.palette.orange};
   }
 `;
+
+const LogoImg = styled.img`
+  width: 140px;
+`
 
 const BtnContainer = styled.div`
   position: relative;
@@ -111,19 +116,31 @@ interface ISearch {
 
 export default function Header({searchBox}: ISearch) {
   const [isLogin, setIsLogin] = useState<boolean>(!!localStorage.getItem('token'));
-  // const [isLogin, setIsLogin] = useState<boolean>(true); // 로그인 되었다고 가정한 가데이터
   const [profile, setProfile] = useState<boolean>(false); // 계정 아이콘 클릭 여부 체크
-  const [role, setRole] = useRecoilState<TUser>(userState); // TODO: 롤 따라서 마이페이지 이동]
+  const [role, setRole] = useRecoilState<TUser>(userState);
   const hospital = useRecoilValue(hospitalLoginState);
   const haveSearch = searchBox;
+  const HospitalResetState = useResetRecoilState(hospitalLoginState);
+  const UserResetState = useResetRecoilState(userState);
+
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    // TODO: role 정한 것 반영
-  }, [])
+    !token && hospital.hospitalName==='' && setIsLogin(false);
+  }, [token, hospital]);
 
   // 로그아웃 클릭 시 로그아웃
-  function handleLogout() {
-    localStorage.removeItem('token');
+  async function handleLogout() {
+    if(token) {
+      localStorage.removeItem('token');
+      UserResetState();
+    }
+    else {
+      await CustomAxiosGet.get('/hospital/logout');
+      HospitalResetState();
+    }
+    
+    alert(`로그아웃이 완료되었습니다:)`);
     setIsLogin(false);
     setProfile(false);
   }
@@ -133,7 +150,9 @@ export default function Header({searchBox}: ISearch) {
       <div>
         <HeaderContainer>
           <LogoContainer>
-            <Logo to='/'>펫닥터</Logo>
+            <Logo to='/'>
+              <LogoImg src='/logo.jpg' />
+            </Logo>
           </LogoContainer>
           {haveSearch && <Search />}
           <BtnContainer>
@@ -145,7 +164,7 @@ export default function Header({searchBox}: ISearch) {
               <ProfileBtnbox profile={profile}>
                 <Link to={role.role === 'basic-user' ? '/user-mypage' :
                 (role.role === 'admin' ? 'admin-mypage' : 'hospital-mypage')}>
-                  <ProfileBtn num='first'>마이페이지</ProfileBtn>
+                  <ProfileBtn num='first' onClick={() => setProfile(false)}>마이페이지</ProfileBtn>
                 </Link>
                 <Link to='/'>
                   <ProfileBtn num='last' onClick={handleLogout}>로그아웃</ProfileBtn>

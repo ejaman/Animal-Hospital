@@ -29,9 +29,11 @@ import {
   DeactiveBtn
 } from "../../components/InfoForm"
 import axios from "axios";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState } from "recoil";
 import { hospitalLoginState } from "../../state/HospitalState";
 import { useNavigate } from "react-router-dom";
+import { CustomAxiosGet } from '../../common/CustomAxios';
+import { userState } from '../../state/UserState';
 
 export default function HospitalInfo() { 
   const [info, setInfo] = useRecoilState(hospitalLoginState);
@@ -309,6 +311,21 @@ export default function HospitalInfo() {
     })
   }
 
+  // 회원 탈퇴 후 로그아웃 함수
+  const hospitalResetState = useResetRecoilState(hospitalLoginState);
+  const userResetState = useResetRecoilState(userState);
+  async function handleLogout() {
+    const token = localStorage.getItem('token');
+    if(token) {
+      localStorage.removeItem('token');
+      userResetState();
+    }
+    else {
+      await CustomAxiosGet.get('/hospital/logout');
+        hospitalResetState();
+    }
+  }
+
   const withdrawButtonHandler = async(e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log("현재 비밀번호:", currPassword);
@@ -319,7 +336,7 @@ export default function HospitalInfo() {
     console.log(response);
     console.log('병원 회원 탈퇴가 진행됩니다.')
     alert("탈퇴되었습니다.");
-    navigate("/login");
+    navigate("/");
     }
     catch (err) {
       alert("비밀번호가 틀렸습니다.");
