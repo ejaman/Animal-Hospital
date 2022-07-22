@@ -50,7 +50,7 @@ function UserInfo() {
     if (token) {
       try {
         axios
-          .get("http://localhost:5000/api/user", {
+          .get("http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/user", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -105,11 +105,15 @@ function UserInfo() {
       newPassword: newPassword,
     };
     axios
-      .patch(`http://localhost:5000/api/users/${userInfo?.email}`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .patch(
+        `http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/users/${userInfo?.email}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((res) => {
         console.log(res);
 
@@ -137,7 +141,7 @@ function UserInfo() {
     //TODO
     await axios
       .patch(
-        `http://localhost:5000/api/expiration
+        `http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/expiration
       `,
         {},
         {

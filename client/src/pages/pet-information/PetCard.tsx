@@ -61,11 +61,15 @@ function PetCard({ pet, idx, onhandleDelete }: any) {
     event.preventDefault();
     const data = { ...petInfo, petId: pet._id, sex: gender, neutralized: neut };
     try {
-      axios.patch(`http://localhost:5000/pet/update`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      axios.patch(
+        `http://kdt-sw2-seoul-team14.elicecoding.com:5000/pet/update`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       alert("수정완료! 🐾");
     } catch (err) {
       alert("입력값을 다시 한 번 확인해주세요 🥲");

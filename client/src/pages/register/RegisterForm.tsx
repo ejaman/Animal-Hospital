@@ -129,7 +129,7 @@ const RegisterForm: React.FC<Props> = ({ isHospital }) => {
 
       try {
         const result = await axios.post(
-          "http://localhost:5000/hospital/register",
+          "http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/register",
           JSON.stringify(data),
           {
             headers: {
@@ -154,7 +154,7 @@ const RegisterForm: React.FC<Props> = ({ isHospital }) => {
 
       try {
         const result = await axios.post(
-          "http://localhost:5000/api/register",
+          "http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/register",
           JSON.stringify(data),
           {
             headers: {
