@@ -59,7 +59,9 @@ function Detail() {
       setHospitalInfo(res.data.data.hospDetailInfo)
     );
     await axios
-      .get(`http://localhost:5000/hospital/${hospitalName}/Services`) //
+      .get(
+        `http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/${hospitalName}/Services`
+      ) //
       .then((res) => {
         setService(res.data.data.hospServices);
       });
