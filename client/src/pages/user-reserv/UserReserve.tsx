@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Title } from "../../components/InfoForm";
 import { Header } from "../../components/Liststyle";
@@ -7,7 +7,13 @@ import { Container, Column } from "./ReserveStyle";
 
 const token = localStorage.getItem("token");
 function UserReserve() {
-  // const [reservInfo, setReservInfo] = useState();
+  // 정보 뿌려주고 수정하기, pagination
+  const [resInfo, setResInfo] = useState<any>({
+    Reservations: [],
+    hospInfoes: [],
+    petInfoes: [],
+    rezStatusInfoes: [],
+  });
   useEffect(() => {
     try {
       token &&
@@ -18,13 +24,16 @@ function UserReserve() {
             },
           })
           .then((res) => {
-            console.log(res.data);
+            const data = res.data.data.ReservationsInfo;
+            setResInfo({ ...data });
           });
     } catch (err) {
       alert(err);
       console.log(err);
     }
   }, []);
+  console.log(resInfo);
+  // console.log(resInfo.Reservations);
 
   return (
     <Container>
@@ -36,6 +45,9 @@ function UserReserve() {
         <Column>예약현황</Column>
         <Column></Column>
       </Header>
+      {resInfo.Reservations.map((res: any, i: number) => (
+        <ReserveCard key={i} res={res} />
+      ))}
       <ReserveCard />
     </Container>
   );

@@ -1,23 +1,19 @@
-import React from "react";
-import {
-  InfoCard,
-  TextContainer,
-  Title,
-  StatusContainer,
-  Select,
-} from "../../components/Liststyle";
-import { CheckBtn, Column } from "./ReserveStyle";
+import React, { useState } from "react";
+import { InfoCard, TextContainer } from "../../components/Liststyle";
+import { Column } from "./ReserveStyle";
+import ReservationModalForm from "../../components/book/ReservationModalForm";
+function ReserveCard({ res }: any) {
+  console.log(res);
 
-function ReserveCard() {
   return (
     <InfoCard>
       <TextContainer>
         <Column>인덱스</Column>
         <Column>날짜+시간</Column>
-        <Column>병원이름</Column>
+        <Column></Column>
         <Column>상태</Column>
         <Column>
-          <CheckBtn>조회﹒수정</CheckBtn>
+          <ReservationModalForm />
         </Column>
       </TextContainer>
     </InfoCard>
