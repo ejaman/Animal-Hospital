@@ -31,11 +31,14 @@ function AdminUserList() {
     if (token) {
       try {
         axios
-          .get("http://localhost:5000/api/userlist", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
+          .get(
+            "http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/userlist",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
           .then((res) => {
             setDatas(res.data);
           });

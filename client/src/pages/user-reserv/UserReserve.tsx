@@ -23,7 +23,7 @@ function UserReserve() {
       token &&
         axios
           .get(
-            `http://localhost:5000/reservation/user/list?page=${page}&perPage=${pages.perPage}`,
+            `http://kdt-sw2-seoul-team14.elicecoding.com:5000/reservation/user/list?page=${page}&perPage=${pages.perPage}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -34,8 +34,8 @@ function UserReserve() {
             const data = res.data.data;
             const check = Object.values(data.ReservationsInfo);
             setPages({
-              ["perPage"]: data.perPage,
-              ["totalPage"]: data.totalHospitals,
+              perPage: data.perPage,
+              totalPage: data.totalHospitals,
             });
             console.log(data);
 

@@ -374,7 +374,7 @@ export default function HospitalInfo() {
     const data = { currentPassword: currentPassword };
     try {
       const response = await axios.patch(
-        "http://localhost:5000/hospital/withdrawal",
+        "http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/withdrawal",
         data,
         {
           withCredentials: true,
@@ -398,7 +398,7 @@ export default function HospitalInfo() {
     try {
       console.log("try문 안 정보 출력:", hospitalInfo);
       const response = await axios.patch(
-        "http://localhost:5000/hospital/",
+        "http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/",
         data,
         {
           withCredentials: true,
@@ -422,7 +422,8 @@ export default function HospitalInfo() {
       try {
         //응답 성공
         // api
-        const API_URL = "http://localhost:5000/hospital/detail";
+        const API_URL =
+          "http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/detail";
         const response = await axios.get(API_URL, {
           withCredentials: true,
         });
