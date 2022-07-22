@@ -2,12 +2,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
 import { CustomAxiosGet, CustomAxiosPost } from "../../common/CustomAxios";
 import TimeButton from "../../components/detail/TimeButton";
 import MainKeyWord from "../../components/main/MainKeyWord";
 import CalendarUi from "./Calendar";
 import {
-  Add,
   ContentContainer,
   Header,
   ImgContainer,
@@ -25,6 +25,7 @@ import {
   Ser,
   ServiceCol,
   ServiceDiv,
+  Add,
 } from "./DetailStyle";
 import HospitalService from "./HospitalService";
 import PetSelect from "./PetSelect";
@@ -37,12 +38,11 @@ const BookingButton = styled.button`
   margin: 20px;
   width: 328px;
   height: 52px;
-  background-color: ${(props) => props.theme.palette.orange};
+  background-color: #00d780;
   color: #fff;
   border-radius: 5px;
   border: none;
   font-size: 18px;
-  font-weight: bold;
   cursor: pointer;
 `;
 
@@ -58,12 +58,14 @@ function Detail() {
     await CustomAxiosGet.get(`/hospital/${hospitalName}/detail`).then((res) =>
       setHospitalInfo(res.data.data.hospDetailInfo)
     );
+    await axios
+      .get(`http://localhost:5000/hospital/${hospitalName}/Services`) //
+      .then((res) => {
+        setService(res.data.data.hospServices);
+      });
   };
   useEffect(() => {
     fetchGetData();
-    CustomAxiosGet.get(`/hospital/${hospitalName}/Services`).then((res) =>
-      setService(res.data.data.hospServices)
-    );
   }, []);
 
   const handleLoginBtn = () => {
