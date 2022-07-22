@@ -395,8 +395,6 @@ export default function HospitalInfo() {
     // const data2 = { currentPassword: "test1234@", director: "김봉준바보" }; // PROBLEM: patch문제 테스트하느라 임의로 넣음. 해결될 시 수정
     const { name, email, password, ...restHospitalInfo } = hospitalInfo;
     const data = { ...restHospitalInfo, currentPassword };
-    console.log("restHospitalInfo:", restHospitalInfo);
-    console.log("rest-password:", password);
     try {
       console.log("try문 안 정보 출력:", hospitalInfo);
       const response = await axios.patch(
@@ -462,6 +460,7 @@ export default function HospitalInfo() {
                     type="text"
                     value={hospitalInfo.name || ""}
                     onChange={onChange}
+                    disabled
                   />
                 </Container>
               </Row>
