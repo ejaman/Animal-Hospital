@@ -7,7 +7,7 @@ import AdminReserveCard from "./AdminReserveCard";
 const AdminReserve = () => {
   return (
     <Container>
-      <Title>내 예약 확인하기</Title>
+      <Title>유저 예약 확인하기</Title>
       <Header>
         <Column>이메일</Column>
         <Column>고객 이름</Column>

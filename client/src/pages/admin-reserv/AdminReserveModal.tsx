@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Modal from "react-modal";
 import styled from "styled-components";
 import MenuItem from "@mui/material/MenuItem";
@@ -27,7 +27,7 @@ const ModalBtnContainer = styled.div`
   justify-content: flex-end;
 `;
 
-const AdimReserveModal = ({ reserveData }: any) => {
+const AdimReserveModal = ({ reserveData, idx }: any) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const isToken = localStorage.getItem("token");
 
@@ -43,40 +43,60 @@ const AdimReserveModal = ({ reserveData }: any) => {
           <ReservationSubTitle>펫 정보</ReservationSubTitle>
           {/* TODO: 이거 뭔가 너무 징그러운데 어케 좋은 방법 있을까요?? API가 있으면 중복적으로 처리하지 않아도 되려나요??*/}
           {/* 아니면 펫정보부분 따로 컴포넌트화 시키고 서비스 부분 따로 컴포넌트화 시키고 상태부분 따로 컴포넌트화 시킬까요?? */}
-          <ReservationContent label="종" defaultValue="강아지" name="species" />
+          <ReservationContent
+            label="종"
+            defaultValue={reserveData?.petInfoes[idx].species}
+            name="species"
+          />
           <ReservationContent
             label="품종"
-            defaultValue="포메라니안"
+            defaultValue={reserveData?.petInfoes[idx].breed}
             name="breed"
           />
-          <ReservationContent label="이름" defaultValue="모모" name="name" />
-          <ReservationContent label="나이" defaultValue="35" name="age" />
-          <ReservationContent label="성별" defaultValue="남" name="sex" />
-          <ReservationContent label="무게" defaultValue="3kg" name="weight" />
+          <ReservationContent
+            label="이름"
+            defaultValue={reserveData?.petInfoes[idx].name}
+            name="name"
+          />
+          <ReservationContent
+            label="나이"
+            defaultValue={reserveData?.petInfoes[idx].age}
+            name="age"
+          />
+          <ReservationContent
+            label="성별"
+            defaultValue={reserveData?.petInfoes[idx].sex}
+            name="sex"
+          />
+          <ReservationContent
+            label="무게"
+            defaultValue={reserveData?.petInfoes[idx].weight}
+            name="weight"
+          />
           <ReservationContent
             label="진료 내역"
-            defaultValue="중성화 수술"
+            defaultValue={reserveData?.petInfoes[idx].medicalHistory}
             name="medicalHistory"
           />
           <ReservationContent
             label="접종 내역"
-            defaultValue="모름"
+            defaultValue={reserveData?.petInfoes[idx].vaccination}
             name="vaccination"
           />
           <ReservationSubTitle>서비스</ReservationSubTitle>
           <ReservationContent
             label="예약 날짜"
-            defaultValue="2022년 7월 20일"
+            defaultValue={reserveData?.Reservations[idx].rezDate}
             name="reservationDate"
           />
           <ReservationContent
             label="진료 항목"
-            defaultValue="중성화 수술"
+            defaultValue={reserveData?.petInfoes[idx].neutralized}
             name="clinic"
           />
           <ReservationContent
             label="가격"
-            defaultValue="20000원"
+            defaultValue={reserveData?.Reservations[idx].price}
             name="price"
           />
           <ReservationSubTitle>상태</ReservationSubTitle>
