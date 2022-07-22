@@ -25,10 +25,7 @@ export default function ReserveCard() {
           <Column>인덱스</Column>
           <Column>날짜+시간</Column>
           <Column>병원이름</Column>
-          <Column>상태</Column>
-          <Column>
-            <ReservationModalForm />
-          </Column>
+          <Column><ReservationModalForm /></Column>
         </TextContainer>
       </InfoCard>
     </>
