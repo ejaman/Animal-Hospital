@@ -67,7 +67,7 @@ export default function Tags({
   const [tagData, setTagData] = useState<ITagData[]>([]); // 태그 데이터 모음
   const [tag, setTag] = useState<number>(0); // 클릭 된 태그의 인덱스
   const [searchParams, setSearchParams] = useSearchParams();
-  const [paramsTag, setParamsTag] = useState<string>("24시");
+  const [paramsTag, setParamsTag] = useState<string>("24hour");
   const [filterData, setFilterData] = useState<IData[]>([]);
 
   async function getData() {
@@ -97,7 +97,7 @@ export default function Tags({
 
     setPage(1);
     setFiltered(filterData);
-    setParamsTag(tagData[tag]?.name || "24시");
+    setParamsTag(tagData[tag]?.name || "24hour");
     setSearchParams({ page: "1", perPage: "4", tagName: paramsTag });
   }, []);
 
