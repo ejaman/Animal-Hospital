@@ -21,7 +21,7 @@ function UserCard({ data }: any) {
         <InfoText>{data?.email}</InfoText>
         <InfoText>{data?.userStatus}</InfoText>
         <StatusContainer>
-          <Select defaultValue={data?.userStatus} onChange={onhandleChange}>
+          <Select value={data?.userStatus} onChange={onhandleChange}>
             <option value="expired">탈퇴회원</option>
             <option value="normal">회원</option>
           </Select>

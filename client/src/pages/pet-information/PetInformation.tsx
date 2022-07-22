@@ -65,7 +65,7 @@ function PetInformation() {
         />
       )}
       {pets.map((pet, i) => (
-        <PetCard pet={pet} key={i} onhandleDelete={onhandleDelete} />
+        <PetCard pet={pet} idx={i} key={i} onhandleDelete={onhandleDelete} />
       ))}
     </MainContainer>
   );

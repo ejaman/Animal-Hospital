@@ -33,7 +33,6 @@ function UserReserve() {
           });
     } catch (err) {
       alert(err);
-      console.log(err);
     }
   }, []);
 
@@ -42,16 +41,18 @@ function UserReserve() {
   if (resInfo.length > 0) {
     for (let i = 0; i < resInfo[0].length + 1; i++) {
       InfoArr.push({
-        ...resInfo[0][0],
-        ...resInfo[1][0],
-        ...resInfo[2][0],
-        ...resInfo[3][0],
-        ["hpName"]: resInfo[1][0].name,
-        ["petName"]: resInfo[2][0].name,
-        ["resName"]: resInfo[3][0].name,
+        ...resInfo[0][i],
+        ["reservationId"]: resInfo[0][i]?._id,
+        ...resInfo[1][i],
+        ...resInfo[2][i],
+        ...resInfo[3][i],
+        ["hpName"]: resInfo[1][i]?.name,
+        ["petName"]: resInfo[2][i]?.name,
+        ["resName"]: resInfo[3][i]?.name,
       });
     }
   }
+  console.log(resInfo);
 
   return (
     <Container>
