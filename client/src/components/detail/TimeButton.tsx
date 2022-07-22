@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { CalendarTitle } from "../../pages/detail/Calendar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClockFour } from "@fortawesome/free-solid-svg-icons";
+import { useRecoilState } from "recoil";
+import { reservationState } from "../../state/ReservationState";
 
 const TimeWrapper = styled.div`
   margin-top: 20px;
@@ -40,8 +42,21 @@ type TTimeProps = {
 };
 
 const TimeButton = ({ time }: TTimeProps) => {
+  const [bookTime, setBookTime] = useRecoilState(reservationState);
+
+  const handleChangeTime = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    setBookTime({
+      ...bookTime,
+      rezHour: e.currentTarget.value,
+    });
+  };
+
   const timeButtonItems = time.map((item, index) => (
-    <TimeContainer key={index}>{item}:00</TimeContainer>
+    <TimeContainer key={index} value={item} onClick={handleChangeTime}>
+      {item}:00
+    </TimeContainer>
   ));
 
   return (

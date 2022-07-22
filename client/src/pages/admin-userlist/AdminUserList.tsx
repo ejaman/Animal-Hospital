@@ -28,16 +28,17 @@ function AdminUserList() {
   const [sort, serSort] = useState<string>();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5100/api/userlist", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-        setDatas(res.data);
-      });
+    token &&
+      axios
+        .get("http://localhost:5100/api/userlist", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          setDatas(res.data);
+        });
   }, []);
 
   const SearchLists = search
@@ -56,10 +57,10 @@ function AdminUserList() {
   return (
     <Container>
       <div>
-        <Btn name="complete" onClick={onhandleSort}>
+        <Btn name="normal" onClick={onhandleSort}>
           회원
         </Btn>
-        <Btn name="pending" onClick={onhandleSort}>
+        <Btn name="expired" onClick={onhandleSort}>
           탈퇴회원
         </Btn>
         <Btn
