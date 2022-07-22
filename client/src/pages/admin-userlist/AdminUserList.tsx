@@ -30,7 +30,7 @@ function AdminUserList() {
   useEffect(() => {
     token &&
       axios
-        .get("http://localhost:5100/api/userlist", {
+        .get("http://localhost:5000/api/userlist", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

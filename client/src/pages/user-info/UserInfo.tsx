@@ -49,7 +49,7 @@ function UserInfo() {
   useEffect(() => {
     token &&
       axios
-        .get("http://localhost:5100/api/user", {
+        .get("http://localhost:5000/api/user", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -100,7 +100,7 @@ function UserInfo() {
       newPassword: newPassword,
     };
     axios
-      .patch(`http://localhost:5100/api/users/${userInfo?.email}`, data, {
+      .patch(`http://localhost:5000/api/users/${userInfo?.email}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -132,7 +132,7 @@ function UserInfo() {
     //TODO
     await axios
       .patch(
-        `http://localhost:5100/api/expiration
+        `http://localhost:5000/api/expiration
       `,
         {},
         {
