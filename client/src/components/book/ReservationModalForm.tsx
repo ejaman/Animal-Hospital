@@ -7,6 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { InfoBtn } from "../InfoForm";
 import { Link } from "react-router-dom";
+import { CheckBtn } from "../../pages/user-reserv/ReserveStyle";
 
 const ReservationTitle = styled.h2`
   text-align: center;
@@ -101,7 +102,7 @@ const ReservationModalForm = () => {
           </ModalBtnContainer>
         </ReservationWrapper>
       </Modal>
-      <button onClick={handleChangeModalState}>조회</button>
+      <CheckBtn onClick={handleChangeModalState}>조회﹒수정</CheckBtn>
     </div>
   );
 };

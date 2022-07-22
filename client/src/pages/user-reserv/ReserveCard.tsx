@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  InfoCard,
-  TextContainer,
-  Title,
-  StatusContainer,
-  Select,
-} from "../../components/Liststyle";
+import { InfoCard, TextContainer } from "../../components/Liststyle";
 import { CheckBtn, Column } from "./ReserveStyle";
 
 function ReserveCard() {
