@@ -85,7 +85,7 @@ export default function Tags({setFiltered, setTotal, limit, page, setPage}: ITag
 
     setPage(1);
     setFiltered(filterData);
-    setParamsTag(tagData[tag]?.name); // TODO: 새로고침 하면 값 못 받는 문제
+    setParamsTag(tagData[tag]?.name || '24시');
     setSearchParams({page: '1', perPage: '4', tagName: paramsTag});
   }, []);
 
