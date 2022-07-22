@@ -67,7 +67,7 @@ const Profile = styled(FontAwesomeIcon)`
 `;
 
 interface IProfile {
-  profile: boolean,
+  profile: string,
 }
 
 const ProfileBtnbox = styled.div<IProfile>`
@@ -161,7 +161,7 @@ export default function Header({searchBox}: ISearch) {
               <Profile icon={faCircleUser} size='3x' onClick={() => setProfile((cur => !cur))} />
             }
             {profile &&
-              <ProfileBtnbox profile={profile}>
+              <ProfileBtnbox profile="true">
                 <Link to={role.role === 'basic-user' ? '/user-mypage' :
                 (role.role === 'admin' ? 'admin-mypage' : 'hospital-mypage')}>
                   <ProfileBtn num='first' onClick={() => setProfile(false)}>마이페이지</ProfileBtn>

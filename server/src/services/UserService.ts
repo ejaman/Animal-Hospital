@@ -1,9 +1,4 @@
 import { userModel, UserModel } from '../db';
-import {
-
-  userModel,
-  UserModel
-} from '../db';
 import {UserStatus, UserInfo, UserData, StatusInfoRequired, LoginInfo, LoginResult, UserInfoRequired} from '../types/UserTypes';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
