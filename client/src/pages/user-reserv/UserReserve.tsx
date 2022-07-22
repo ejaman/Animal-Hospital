@@ -8,6 +8,7 @@ import Pagination from "../home/Pagenation";
 
 const token = localStorage.getItem("token");
 function UserReserve() {
+  // 정보 뿌려주고 수정하기, pagination
   const [resInfo, setResInfo] = useState<any>({
     Reservations: [],
     hospInfoes: [],
@@ -36,6 +37,8 @@ function UserReserve() {
               ["perPage"]: data.perPage,
               ["totalPage"]: data.totalHospitals,
             });
+            console.log(data);
+
             setPage(data.page);
             setResInfo(check);
           });
@@ -43,7 +46,7 @@ function UserReserve() {
       alert(err);
     }
   }, [page]);
-  console.log(pages);
+  console.log(resInfo);
 
   const InfoArr = [];
   // useCallback 사용해보기

@@ -7,11 +7,13 @@ const MainKeyWordContainer = styled.div`
 `;
 
 const MainKeyWordContent = styled.div`
-  font-size: 15px;
-  border-radius: 14px;
+  font-size: 14px;
+  border-radius: 10px;
   margin-right: 5px;
-  padding: 5px;
-  background-color: #faf4b7;
+  padding: 6px;
+  color: white;
+  font-weight: bold;
+  background-color: ${(props) => props.theme.palette.orange};
 `;
 
 export { MainKeyWordContainer, MainKeyWordContent };
