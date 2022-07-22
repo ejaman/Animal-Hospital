@@ -19,8 +19,8 @@ import {
 import { ModalStyle } from "../../components/ModalStyle";
 import { CustomAxiosGet } from "../../common/CustomAxios";
 import { useResetRecoilState } from "recoil";
-import { userState } from '../../state/UserState';
-import { hospitalLoginState } from '../../state/HospitalState';
+import { userState } from "../../state/UserState";
+import { hospitalLoginState } from "../../state/HospitalState";
 
 const token = localStorage.getItem("token");
 function UserInfo() {
@@ -47,16 +47,17 @@ function UserInfo() {
 
   // 처음 한 번만 서버 통신
   useEffect(() => {
-    axios
-      .get("http://localhost:5100/api/user", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        setUserInfo(res.data);
-        setAddr(res.data.address);
-      });
+    token &&
+      axios
+        .get("http://localhost:5100/api/user", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          setUserInfo(res.data);
+          setAddr(res.data.address);
+        });
   }, []);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,19 +119,17 @@ function UserInfo() {
   const hospitalResetState = useResetRecoilState(hospitalLoginState);
   const userResetState = useResetRecoilState(userState);
   async function handleLogout() {
-    if(token) {
-      localStorage.removeItem('token');
+    if (token) {
+      localStorage.removeItem("token");
       userResetState();
-    }
-    else {
-      await CustomAxiosGet.get('/hospital/logout');
-        hospitalResetState();
+    } else {
+      await CustomAxiosGet.get("/hospital/logout");
+      hospitalResetState();
     }
   }
 
   const expiration = async () => {
     //TODO
-    // console.log(token);
     await axios
       .patch(
         `http://localhost:5100/api/expiration

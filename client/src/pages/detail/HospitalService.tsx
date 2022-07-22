@@ -38,6 +38,7 @@ const HospitalService = () => {
     );
   }, []);
 
+  console.log(hospitalService);
   const selectServices = hospitalService.map(
     (service: { name: string; price: number }, index: number) => (
       <MenuItem key={index} value={`${service.name}/${service.price}`}>
