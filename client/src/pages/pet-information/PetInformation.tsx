@@ -15,7 +15,7 @@ function PetInformation() {
   }, []);
 
   const reload = async () => {
-    const res = await axios.get("http://localhost:5100/pet/mypets", {
+    const res = await axios.get("http://localhost:5000/pet/mypets", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -25,7 +25,7 @@ function PetInformation() {
   };
 
   const onhandleDelete = async (id: string) => {
-    await axios.delete("http://localhost:5100/pet/delete", {
+    await axios.delete("http://localhost:5000/pet/delete", {
       data: { petId: id },
       headers: {
         Authorization: `Bearer ${token}`,
@@ -37,7 +37,7 @@ function PetInformation() {
 
   const onhandleAdd = async (data: any) => {
     try {
-      await axios.post("http://localhost:5100/pet/register", data, {
+      await axios.post("http://localhost:5000/pet/register", data, {
         headers: {
           Authorization: `Bearer ${token}`,
           "content-type": "multipart/form-data",
