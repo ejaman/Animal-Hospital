@@ -67,6 +67,7 @@ function Detail() {
     CustomAxiosPost.post("/reservation/register", bookDataPost).then((res) =>
       console.log(res)
     );
+    alert("예약이 완료되었습니다.");
   };
 
   return (

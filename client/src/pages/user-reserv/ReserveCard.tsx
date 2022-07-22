@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { InfoCard, TextContainer } from "../../components/Liststyle";
 import { Column } from "./ReserveStyle";
 import ReservationModalForm from "../../components/book/ReservationModalForm";
+
 function ReserveCard({ res, idx }: any) {
+
   return (
     <InfoCard>
       <TextContainer>
