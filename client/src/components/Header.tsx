@@ -120,16 +120,27 @@ export default function Header({searchBox}: ISearch) {
   const [role, setRole] = useRecoilState<TUser>(userState);
   const hospital = useRecoilValue(hospitalLoginState);
   const haveSearch = searchBox;
-  const resetState = useResetRecoilState(hospitalLoginState);
+  const HospitalResetState = useResetRecoilState(hospitalLoginState);
+  const UserResetState = useResetRecoilState(userState);
+
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    !token && hospital.hospitalName==='' && setIsLogin(false);
+  }, [token, hospital]);
 
   // 로그아웃 클릭 시 로그아웃
   async function handleLogout() {
-    const res = await CustomAxiosGet.get('/hospital/logout');
+    if(token) {
+      localStorage.removeItem('token');
+      UserResetState();
+    }
+    else {
+      await CustomAxiosGet.get('/hospital/logout');
+      HospitalResetState();
+    }
     
-
-    !!localStorage.getItem('token') ? localStorage.removeItem('token') : resetState();
-    
-    alert(res.data.message);
+    alert(`로그아웃이 완료되었습니다:)`);
     setIsLogin(false);
     setProfile(false);
   }

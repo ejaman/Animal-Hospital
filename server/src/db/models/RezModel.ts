@@ -3,6 +3,13 @@ import { ReservationSchema } from '../schemas/RezSchema';
 
 const Reservation = model('reservations', ReservationSchema);
 
+export interface ToUpdateReservation {
+  reservationId: string;
+  update: {
+    [key: string]: mongoose.Types.ObjectId;
+  };
+}
+
 interface SearchOptions {
   [key: string]: string | mongoose.Types.ObjectId;
 }
@@ -55,6 +62,28 @@ export class ReservationModel {
   async countReservations(searchOptions: SearchOptions): Promise<number> {
     const counts = await Reservation.countDocuments(searchOptions);
     return counts;
+  }
+
+  async findById(reservationId: string): Promise<ReservationInfo> {
+    const reservation = (await Reservation.findById(
+      reservationId
+    )) as ReservationInfo;
+    return reservation;
+  }
+
+  async update({
+    reservationId,
+    update,
+  }: ToUpdateReservation): Promise<ReservationInfo> {
+    const filter = { _id: reservationId };
+    const option = { returnOriginal: false };
+
+    const updated = (await Reservation.findOneAndUpdate(
+      filter,
+      update,
+      option
+    )) as ReservationInfo;
+    return updated;
   }
 }
 

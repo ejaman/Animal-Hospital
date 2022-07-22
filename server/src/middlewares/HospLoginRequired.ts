@@ -78,7 +78,7 @@ async function HospLoginRequired(
           },
           secretKey,
           {
-            expiresIn: '60s',
+            expiresIn: '1h',
           }
         );
 
@@ -116,7 +116,7 @@ async function HospLoginRequired(
       // access token은 유효하지만, refresh token은 만료된 경우 ->  refresh token 재발급
       if (verifyRefreshToken == 'jwt expired') {
         const newRefreshToken = jwt.sign({}, secretKey, {
-          expiresIn: '90s',
+          expiresIn: '24h',
         });
 
         const updatedHospital = await hospitalService.updateRefreshToken({
