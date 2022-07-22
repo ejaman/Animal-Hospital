@@ -11,26 +11,25 @@ export async function postReviewCTR(
   next: NextFunction
 ) {
   try {
-   
-    blockInvalidRequest(req.body)
+
     const { userId, targetHospital, date, content, like } = req.body;
+    const requiredParams = ['userId', 'targetHospital', 'date', 'content', 'like']
+    blockInvalidRequest(req.body, requiredParams);
+
     const currentUserId = req.currentUserId;
     const isPermittedUser = await userService.blockUnauthorized(userId);
-  
-    //오피스아워 반영. 
+
+      
     if(!isPermittedUser || currentUserId !== userId){
-
-        //TODO : 리다이렉션경로 재설정하기(프론트)
-        throw new HttpError(403, "접근권한이 없거나 로그인한 사용자와 작성자가 일치하지 않습니다")
-
-    } 
+        //TODO : 리다이렉션경로 재설정하기
+        // res.status(400).json({message: "리뷰 작성 권한이 없습니다."})
+        throw new HttpError(403, "작성권한이 없거나 로그인한 사용자와 작성자가 일치하지 않습니다.")
+    }  
 
     const reviewInfo = { userId, targetHospital, date, content, like };
     const newReview = await reviewService.addReview(reviewInfo);
     res.status(201).json(newReview);
-    
-    
-    
+
   } catch (error) {
     next(error);
   }

@@ -43,9 +43,11 @@
 
     "passport": "^0.6.0",
     "passport-kakao": "^1.0.1",
+
     "passport-local": "^1.0.0",
 
     "cookie-parser": "^1.4.6"
+
 
   },
   "devDependencies": {
