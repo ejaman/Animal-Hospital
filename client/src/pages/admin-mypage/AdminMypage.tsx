@@ -44,7 +44,7 @@ function AdminMypage() {
         </Card>
         <Card
           onClick={() => {
-            navigate("/reservation");
+            navigate("/admin-reserv");
           }}
         >
           <i className="fa-solid fa-book fa-xl"></i>
