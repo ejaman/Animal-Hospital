@@ -20,6 +20,15 @@ export const AddBtn = styled.button`
     color: ${(props) => props.theme.palette.lightgray};
   }
 `;
+export const UploadFileLabel = styled.label`
+  border: none;
+  padding: 0.5rem;
+
+  font-size: 0.9rem;
+  color: #7e7e7e;
+  border: 1.5px ${(props) => props.theme.palette.lightgray} solid;
+`;
+
 export const Button = styled.button`
   border: none;
   margin-top: 1rem;
@@ -31,6 +40,10 @@ export const Button = styled.button`
   &:hover {
     transform: scale(1.05);
   }
+`;
+export const Btn = styled(Button)`
+  display: flex;
+  margin-left: auto;
 `;
 export const PetCardContainer = styled.div`
   padding: 1rem;
