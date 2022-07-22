@@ -46,7 +46,7 @@ const ResModal = ({ res }: any) => {
     try {
       token &&
         axios.patch(
-          `http://localhost:5100/reservation/user/:${res.reservationId}`,
+          `http://localhost:5000/reservation/user/:${res.reservationId}`,
           data,
           {
             headers: {

@@ -61,7 +61,7 @@ function PetCard({ pet, idx, onhandleDelete }: any) {
     event.preventDefault();
     const data = { ...petInfo, petId: pet._id };
     try {
-      axios.patch(`http://localhost:5100/pet/update`, data, {
+      axios.patch(`http://localhost:5000/pet/update`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
