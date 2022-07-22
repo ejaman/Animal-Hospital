@@ -7,6 +7,7 @@ import TimeButton from "../../components/detail/TimeButton";
 import MainKeyWord from "../../components/main/MainKeyWord";
 import CalendarUi from "./Calendar";
 import {
+  Add,
   ContentContainer,
   Header,
   ImgContainer,
@@ -21,6 +22,9 @@ import {
   ReviewContainer,
   RightBottomImg,
   RightTopImg,
+  Ser,
+  ServiceCol,
+  ServiceDiv,
 } from "./DetailStyle";
 import HospitalService from "./HospitalService";
 import PetSelect from "./PetSelect";
@@ -33,11 +37,12 @@ const BookingButton = styled.button`
   margin: 20px;
   width: 328px;
   height: 52px;
-  background-color: #00d780;
+  background-color: ${(props) => props.theme.palette.orange};
   color: #fff;
   border-radius: 5px;
   border: none;
   font-size: 18px;
+  font-weight: bold;
   cursor: pointer;
 `;
 
@@ -47,6 +52,7 @@ function Detail() {
   const [hospitalInfo, setHospitalInfo] = useState<any>({});
   const bookDataPost = useRecoilValue(reservationState);
   const token = localStorage.getItem("token");
+  const [service, setService] = useState<any>([]);
 
   const fetchGetData = async () => {
     await CustomAxiosGet.get(`/hospital/${hospitalName}/detail`).then((res) =>
@@ -55,6 +61,9 @@ function Detail() {
   };
   useEffect(() => {
     fetchGetData();
+    CustomAxiosGet.get(`/hospital/${hospitalName}/Services`).then((res) =>
+      setService(res.data.data.hospServices)
+    );
   }, []);
 
   const handleLoginBtn = () => {
@@ -69,6 +78,7 @@ function Detail() {
     );
     alert("예약이 완료되었습니다.");
   };
+  console.log(hospitalInfo);
 
   return (
     <MainContainer>
@@ -102,6 +112,10 @@ function Detail() {
         <InfoContainer>
           <InfoDiv>
             <InfoTitle>{hospitalInfo.name}</InfoTitle>
+            <Add>
+              {hospitalInfo.address?.address1}
+              {hospitalInfo.address?.address2} {hospitalInfo.address?.address3}
+            </Add>
             <p>카테고리</p>
             {hospitalInfo.tag && (
               <MainKeyWord
@@ -112,11 +126,19 @@ function Detail() {
             )}
           </InfoDiv>
           <MainInfo>
-            <div>키워드</div>
             {hospitalInfo.keyword && (
               <MainKeyWord mainKeyWord={hospitalInfo.keyword} />
             )}
+            <ServiceDiv>
+              {service.map((a: any, i: number) => (
+                <ServiceCol key={i}>
+                  <Ser>{a?.name}</Ser>
+                  <Ser>{a?.price} 원</Ser>
+                </ServiceCol>
+              ))}
+            </ServiceDiv>
           </MainInfo>
+
           <ReviewContainer>
             <h3>Review!</h3>
           </ReviewContainer>

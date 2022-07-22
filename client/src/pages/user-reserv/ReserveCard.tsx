@@ -3,7 +3,7 @@ import { InfoCard, TextContainer } from "../../components/Liststyle";
 import { Column } from "./ReserveStyle";
 import ResModal from "../../components/book/ResModal";
 function ReserveCard({ res, idx }: any) {
-  console.log(res);
+  // console.log(res);
 
   return (
     <InfoCard>
