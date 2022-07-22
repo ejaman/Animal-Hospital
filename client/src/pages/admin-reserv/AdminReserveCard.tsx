@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { InfoCard, TextContainer } from "../../components/Liststyle";
 import { Column } from "../user-reserv/ReserveStyle";
 import { CustomAxiosGet } from "../../common/CustomAxios";
-import ReservationModalForm from "../../components/book/ReservationModalForm";
+import AdminReserveModal from "./AdminReserveModal";
 
 const AdminReserveCard = () => {
   const [reserveData, setReserveData] = useState<any>();
@@ -18,7 +18,7 @@ const AdminReserveCard = () => {
   useEffect(() => {
     getFetchData();
   }, []);
-
+  // TODO : 렌더링이 늦게되는 문제
   const adminInfoContainer = () => {
     const res = [];
 
@@ -31,7 +31,7 @@ const AdminReserveCard = () => {
           <Column>{reserveData?.Reservations[i].hospital}</Column>
           <Column>{reserveData?.Reservations[i].rezDate}</Column>
           <Column>
-            <ReservationModalForm />
+            <AdminReserveModal />
           </Column>
         </TextContainer>
       );
