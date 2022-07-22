@@ -61,7 +61,7 @@ function AddPet({ onhandleAdd }: any) {
 
   const onLoadImg = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files![0];
-    console.log(file);
+    console.log("이미지 파일입니다", file);
     setImg(file);
   };
 
@@ -69,7 +69,7 @@ function AddPet({ onhandleAdd }: any) {
     <Container ref={formRef}>
       <Title>펫 정보를 입력해주세요 🐾</Title>
       <div>
-        <input type="file" onChange={onLoadImg} />
+        <input type="file" accept="image/*" onChange={onLoadImg} />
         <label htmlFor="image">파일 선택하기</label>
         {/* <img src={img} alt="img" /> */}
       </div>

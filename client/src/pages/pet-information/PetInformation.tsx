@@ -42,6 +42,7 @@ function PetInformation() {
       const res = await axios.post("http://localhost:5100/pet/register", data, {
         headers: {
           Authorization: `Bearer ${token}`,
+          "content-type": "multipart/form-data",
         },
       });
       console.log(res);

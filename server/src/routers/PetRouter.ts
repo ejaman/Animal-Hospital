@@ -120,10 +120,15 @@ petRouter.patch(
   upload.single('image'),
   async (req, res, next) => {
     try {
-      if (_.isEmpty(req.body)) {
-        throw new Error(
-          'headers의 Content-Type을 application/json으로 설정해주세요'
-        );
+      let image = '';
+      if (req.file) {
+        image = (req.file as Express.MulterS3.File).location;
+      } else {
+        if (_.isEmpty(req.body)) {
+          throw new Error(
+            'headers의 Content-Type을 application/json으로 설정해주세요'
+          );
+        }
       }
 
       //수정권한있는 사용자 확인 필요?
@@ -142,13 +147,6 @@ petRouter.patch(
         vaccination,
         neutralized,
       } = req.body;
-
-      let image = '';
-      if (req.file) {
-        image = (req.file as Express.MulterS3.File).location;
-      }
-
-      console.log(image);
 
       if (owner === currentOwner) {
         const petInfoRequired = { owner, petId };
