@@ -1,6 +1,8 @@
+// TODO: 디테일 예약 파트는 전면 리팩토링이 필요할 것 같음!!
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { CustomAxiosGet } from "../../common/CustomAxios";
+import styled from "styled-components";
+import { CustomAxiosGet, CustomAxiosPost } from "../../common/CustomAxios";
 import TimeButton from "../../components/detail/TimeButton";
 import MainKeyWord from "../../components/main/MainKeyWord";
 import CalendarUi from "./Calendar";
@@ -22,10 +24,29 @@ import {
 } from "./DetailStyle";
 import HospitalService from "./HospitalService";
 import PetSelect from "./PetSelect";
+import { useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { reservationState } from "../../state/ReservationState";
+
+const BookingButtonContainer = styled.div``;
+const BookingButton = styled.button`
+  margin: 20px;
+  width: 328px;
+  height: 52px;
+  background-color: #00d780;
+  color: #fff;
+  border-radius: 5px;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+`;
 
 function Detail() {
   const { hospitalName } = useParams();
+  const navigate = useNavigate();
   const [hospitalInfo, setHospitalInfo] = useState<any>({});
+  const bookDataPost = useRecoilValue(reservationState);
+  const token = localStorage.getItem("token");
 
   const fetchGetData = async () => {
     await CustomAxiosGet.get(`/hospital/${hospitalName}/detail`).then((res) =>
@@ -36,7 +57,17 @@ function Detail() {
     fetchGetData();
   }, []);
 
-  console.log(hospitalInfo);
+  const handleLoginBtn = () => {
+    // 토큰이 없으면 로그인하라고 먼저 알려주고 있으면 Post 요청
+    if (!token) {
+      alert("로그인이 필요한 서비스입니다.");
+      navigate("/login");
+      return;
+    }
+    CustomAxiosPost.post("/reservation/register", bookDataPost).then((res) =>
+      console.log(res)
+    );
+  };
 
   return (
     <MainContainer>
@@ -92,12 +123,14 @@ function Detail() {
         <ReservationContainer>
           <Reservation>
             <CalendarUi />
-            {/* TODO: time 타입 오류 해결되면 진행하겠습니다. */}
             {hospitalInfo.businessHours && (
               <TimeButton time={hospitalInfo.businessHours} />
             )}
             <HospitalService />
             <PetSelect />
+            <BookingButtonContainer>
+              <BookingButton onClick={handleLoginBtn}>예약 하기</BookingButton>
+            </BookingButtonContainer>
           </Reservation>
         </ReservationContainer>
       </ContentContainer>

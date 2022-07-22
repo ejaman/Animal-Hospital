@@ -1,6 +1,7 @@
 // react와 vanilla js 혼종인 파일이다. 리액트로 서서히 바꿔나가자
 // 시간관계상 구현 못한 남은 기능들: 정보 수정 시 validation 추가, 비밀번호 수정, 버튼 재렌더링, 업로드한 이미지 반영, 그 외 코드 주석
 // 개선해야 될 부분: 유저 페이지와 형식을 통일하려다 보니 정보 수정 시에는 현재 비밀번호를 form에서 입력하는데 탈퇴 시에는 modal 창에서 입력해서 UI의 가독성이 좋지 않아서 방식을 추후 modal 창으로 통일할 예정, 페이지 로드 시 시간이 오래 걸림
+
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import DaumPostcode from "react-daum-postcode";
 import Modal from "react-modal";
@@ -501,6 +502,7 @@ export default function HospitalInfo() {
                     accept='image/jpg,image/png,image/jpeg,image/gif'
                     name='profile_img'
                     onChange={(e: any) => {
+                      console.log("convert전:", e.target.files)
                       convertFileToBase64(e.target.files[0]);
                     }}
                   />
@@ -696,6 +698,17 @@ export default function HospitalInfo() {
                       <InputLabel>현재 비밀번호</InputLabel>
                       <InfoInput
                         name="currentPassword"
+                        style={{ marginLeft: "0.5rem" }}
+                        type="password"
+                        onChange={onChange}
+                      />
+                    </Container>
+                  </Row>
+                  <Row style={{ marginTop: "1rem" }}>
+                    <Container>
+                      <InputLabel>현재 비밀번호</InputLabel>
+                      <InfoInput
+                        name="currPassword"
                         style={{ marginLeft: "0.5rem" }}
                         type="password"
                         onChange={onChange}
