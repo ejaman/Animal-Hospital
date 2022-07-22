@@ -19,39 +19,29 @@ const AdminReserveCard = () => {
     getFetchData();
   }, []);
 
-  console.log(reserveData);
-
   const adminInfoContainer = () => {
-    let res = "";
+    const res = [];
 
     for (let i = 0; i < 20; i++) {
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      res += `
-        <TextContainer>
-          <Column>${reserveData.customerInfoes[i].email}</Column>
-          <Column>${reserveData.customerInfoes[i].userName}</Column>
-          <Column>${reserveData.Reservations[i].hospital}</Column>
-          <Column>${reserveData.Reservations[i].rezDate}</Column>
+      res.push(
+        <TextContainer key={i}>
+          <Column>{reserveData?.customerInfoes[i].email}</Column>
+          <Column>{reserveData?.customerInfoes[i].userName}</Column>
+          <Column>{reserveData?.Reservations[i].hospital}</Column>
+          <Column>{reserveData?.Reservations[i].rezDate}</Column>
           <Column>
-            <CheckBtn>조회﹒수정</CheckBtn>
+            <ReservationModalForm />
           </Column>
         </TextContainer>
-      `;
+      );
     }
     return res;
   };
+
   return (
     <InfoCard>
-      <TextContainer>
-        <Column>이메일</Column>
-        <Column>고객 이름</Column>
-        <Column>병원이름</Column>
-        <Column>예약 날짜 시간</Column>
-        <Column>
-          <ReservationModalForm />
-        </Column>
-      </TextContainer>
-      {/* {adminInfoContainer} */}
+      <>{adminInfoContainer()}</>
     </InfoCard>
   );
 };
