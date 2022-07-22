@@ -131,12 +131,12 @@ class HospitalService {
       },
       secretKey,
       {
-        expiresIn: '60s',
+        expiresIn: '1h',
       }
     );
 
     const refreshToken = jwt.sign({}, secretKey, {
-      expiresIn: '90s',
+      expiresIn: '24h',
     });
 
     console.log(refreshToken);
