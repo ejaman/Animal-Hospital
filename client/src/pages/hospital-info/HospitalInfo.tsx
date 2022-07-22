@@ -1,11 +1,12 @@
 // react와 vanilla js 혼종인 파일이다. 리액트로 서서히 바꿔나가자
-// 우선순위 높은 남은 기능들: 정보 수정 시 validation 추가, 회원 탈퇴 시 비밀번호 확인 추가
+// 시간관계상 구현 못한 남은 기능들: 정보 수정 시 validation 추가, 비밀번호 수정, 버튼 재렌더링, 업로드한 이미지 반영, 그 외 코드 주석
+// 개선해야 될 부분: 유저 페이지와 형식을 통일하려다 보니 정보 수정 시에는 현재 비밀번호를 form에서 입력하는데 탈퇴 시에는 modal 창에서 입력해서 UI의 가독성이 좋지 않아서 방식을 추후 modal 창으로 통일할 예정
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import DaumPostcode from "react-daum-postcode";
 import Modal from "react-modal";
 import { HospitalInfoType, HospitalServiceInfoType, Data } from "./Interface";
 import "antd/dist/antd.min.css";
-import { Form, Row, Col } from "antd";
+import { Row, Col } from "antd";
 import { theme } from '../../styles/Colors';
 import {
   HospitalContainer,
@@ -66,7 +67,7 @@ export default function HospitalInfo() {
     hospitalCapacity: 0,
     tag: [],
     keyword: [],
-    image: ""
+    image: []
   });
   const [hospitalServiceInfo, setHospitalServiceInfo] = useState<HospitalServiceInfoType>({
     serviceName: "",
@@ -86,8 +87,6 @@ export default function HospitalInfo() {
 
   /* password */
   const [currPassword, setCurrPassword] = useState<string>("");
-  // const currentPwRef = useRef<HTMLInputElement>(null);
-  // const newPwRef = useRef<HTMLInputElement>(null);
   
   /* constants */
   const AVAILABLE_KEYWORD_LENGTH = 10;
@@ -103,10 +102,12 @@ export default function HospitalInfo() {
     return new Promise((resolve: any) => {
       if (reader) {
         reader.onload = () => {
-        setHospitalInfo(prev => {
-          return { ...prev, image: reader.result as string}
-        });
-        resolve();
+          setHospitalInfo(prev => {
+            let imgList = [...hospitalInfo.image];
+            imgList.push(reader.result as string);
+            return { ...prev, image: imgList};
+          });
+          resolve();
         };
       }
     });
@@ -126,7 +127,7 @@ export default function HospitalInfo() {
     const currPassData = e.currentTarget.value
     setHospitalInfo(hospitalData);
     setCurrPassword(currPassData);
-    // setHospitalServiceInfo(hospitalServiceData);
+    setHospitalServiceInfo(hospitalServiceData);
   };
  
   const onChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -287,6 +288,7 @@ export default function HospitalInfo() {
     checkedBusinessHoursHandler(target.parentNode, target.value, target.checked)
   }
 
+  // 이거 재렌더링 어떻게 하지? 오피스아워 질문
   const checkedBusinessHoursHandler = (box: any, id: any, isChecked: any) => {
     const businessHoursList = [...hospitalInfo.businessHours!];
     if (isChecked) {
@@ -328,21 +330,36 @@ export default function HospitalInfo() {
     e.preventDefault();
     console.log("현재 비밀번호:", currPassword);
     const data = { "currentPassword": currPassword };
-    const response = await axios.patch("http://localhost:5100/hospital/withdrawal", data, {
+    try {const response = await axios.patch("http://localhost:5100/hospital/withdrawal", data, {
       withCredentials: true
     });
     console.log(response);
     console.log('병원 회원 탈퇴가 진행됩니다.')
     alert("탈퇴되었습니다.");
-    handleLogout();
     navigate("/");
+    }
+    catch (err) {
+      alert("비밀번호가 틀렸습니다.");
+      setIsPassOpen(!isPassOpen);
+    }
   }
 
   const onhandleUpdate = async(event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    const data = { ...hospitalInfo };
-    await axios.patch('http://localhost:5100/hospital', data, { withCredentials: true });
-    console.log(data);
+    // const data = { ...hospitalInfo };
+    const data = { "currentPassword": currPassword };
+    // const data = currPassword;
+    console.log(currPassword);
+    try {
+      await axios.patch('http://localhost:5100/hospital/', data, {
+        withCredentials: true
+      });
+      console.log(data);
+      alert("성공적으로 저장되었습니다.");
+      navigate("/hospital-info");
+    } catch {
+      alert("비밀번호가 틀렸습니다.");
+    }
   }
   // PROBLEM: 서비스 삭제 버튼 눌렀을 때 타입 오류 뜸
   // function deleteServiceHandler(e:React.MouseEvent<Element>, index) {
@@ -393,7 +410,7 @@ export default function HospitalInfo() {
         </div>
         <Row>
           <Col span={12}>
-            <Form name="hospitalInfoForm">
+            <div>
               <Row>
                 <Container>
                   <InputLabel>병원명</InputLabel>
@@ -440,13 +457,12 @@ export default function HospitalInfo() {
               <Row>
                 <Container>
                   <InputLabel>새 비밀번호</InputLabel>
-                  {/* <input ref={newPwRef} placeholder="새 비밀번호" />
-                  <input ref={currentPwRef} placeholder="현재 비밀번호" /> */}
+                  {/* 유저 페이지와 형식 통일, 추후 기능 추가 */}
                   <InfoInput
                     name="password"
                     style={{ marginLeft: "0.5rem" }}
                     type="password"
-                    autoComplete="current-password"
+                    // autoComplete="current-password"
                     defaultValue=""
                   />
                   {/* 유저 정보 페이지와의 통일감을 위해 현재 비밀번호 input과 수정 버튼은 아래에 */}
@@ -502,13 +518,14 @@ export default function HospitalInfo() {
                     accept='image/jpg,image/png,image/jpeg,image/gif'
                     name='profile_img'
                     onChange={(e: any) => {
+                      console.log("convert전:", e.target.files)
                       convertFileToBase64(e.target.files[0]);
-                      console.log(e.target.files);
+                      console.log("convert 후:", e.target.files);
                     }}
                   />
                 </div>
                 <div>
-                  {hospitalInfo.image && <img src={hospitalInfo.image} width="280px" alt="" />}
+                  {hospitalInfo.image && hospitalInfo.image.map((img) => (<img src={img} width="280px" alt="" />))}
                 </div>
               </Row>
               <div style={{ marginBottom: "0.5rem" }} />
@@ -617,7 +634,7 @@ export default function HospitalInfo() {
               </Row>
               <Row>
                 <Col>
-                  <InputLabel>영업시간</InputLabel>
+                  <InputLabel style={{ marginBottom: "0.5rem" }}>영업시간</InputLabel>
                   <Row>
                     {TIME_LIST.map((time) => (
                       <TimeLabel
@@ -691,6 +708,17 @@ export default function HospitalInfo() {
                       />
                     </Container>
                   </Row>
+                  <Row style={{ marginTop: "1rem" }}>
+                    <Container>
+                      <InputLabel>현재 비밀번호</InputLabel>
+                      <InfoInput
+                        name="currPassword"
+                        style={{ marginLeft: "0.5rem" }}
+                        type="password"
+                        onChange={onChange}
+                      />
+                    </Container>
+                  </Row>
                   <Row>
                     <InfoBtn 
                       style={{
@@ -701,17 +729,12 @@ export default function HospitalInfo() {
                       onClick={ onhandleUpdate }
                     >저장</InfoBtn>
                   </Row>
-                  {/* <Row>
-                    <Button onClick={() => {
-                      console.log(hospitalInfo)
-                    }}>개발자 확인 버튼</Button>
-                  </Row> */}
                 </Col>
               </Row>
-            </Form>
+            </div>
           </Col>
           <Col>
-            <Form>
+            <div>
               <Row>
                 <InputLabel
                   style={{
@@ -782,10 +805,9 @@ export default function HospitalInfo() {
                 onClick={onServiceSubmit}
               >추가</InfoBtn>
               </Row>
-              <Row>
+              <Row style={{ marginTop: "2rem" }}>
                 <InputLabel
                   style={{
-                    marginTop: "2rem",
                     marginBottom: "1rem",
                     margin: "auto",
                     fontWeight: "bold"
@@ -825,7 +847,7 @@ export default function HospitalInfo() {
                   ))}
                 </Col>
               </Row>
-            </Form>
+            </div>
           </Col>
         </Row>
       </HospitalContainer>

@@ -2,16 +2,14 @@ import React, { useState } from "react";
 import { InfoCard, TextContainer } from "../../components/Liststyle";
 import { Column } from "./ReserveStyle";
 import ReservationModalForm from "../../components/book/ReservationModalForm";
-function ReserveCard({ res }: any) {
-  console.log(res);
-
+function ReserveCard({ res, idx }: any) {
   return (
     <InfoCard>
       <TextContainer>
-        <Column>인덱스</Column>
-        <Column>날짜+시간</Column>
-        <Column></Column>
-        <Column>상태</Column>
+        <Column>{idx + 1}</Column>
+        <Column>{`${res?.rezDate}, ${res?.rezHour}시`}</Column>
+        <Column>{res?.hpName}</Column>
+        <Column>{res?.resName}</Column>
         <Column>
           <ReservationModalForm />
         </Column>

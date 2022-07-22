@@ -18,22 +18,46 @@ function UserReserve() {
     try {
       token &&
         axios
-          .get("http://localhost:5100/reservation/user/list?page=2&perPage=3", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
+          .get(
+            "http://localhost:5100/reservation/user/list?page=1&perPage=20",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
           .then((res) => {
             const data = res.data.data.ReservationsInfo;
-            setResInfo({ ...data });
+            const check = Object.values(data);
+            setResInfo(check);
+
+            // setResInfo({
+            //   ...data.Reservations.map((a: any) => a),
+            //   ...data.hospInfoes.map((a: any) => a.name),
+            //   ...data.rezStatusInfoes.map((a: any) => a.name),
+            // });
           });
     } catch (err) {
       alert(err);
       console.log(err);
     }
   }, []);
-  console.log(resInfo);
-  // console.log(resInfo.Reservations);
+
+  const InfoArr = [];
+  if (resInfo.length > 0) {
+    for (let i = 0; i < resInfo[0].length + 1; i++) {
+      InfoArr.push({
+        ...resInfo[0][0],
+        ...resInfo[1][0],
+        ...resInfo[2][0],
+        ...resInfo[3][0],
+        ["hpName"]: resInfo[1][0].name,
+        ["petName"]: resInfo[2][0].name,
+        ["resName"]: resInfo[3][0].name,
+      });
+    }
+  }
+  console.log(InfoArr);
 
   return (
     <Container>
@@ -45,10 +69,10 @@ function UserReserve() {
         <Column>예약현황</Column>
         <Column></Column>
       </Header>
-      {resInfo.Reservations.map((res: any, i: number) => (
-        <ReserveCard key={i} res={res} />
+
+      {InfoArr.map((res: any, i: number) => (
+        <ReserveCard key={i} res={res} idx={i} />
       ))}
-      <ReserveCard />
     </Container>
   );
 }
