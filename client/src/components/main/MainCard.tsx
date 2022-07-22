@@ -1,5 +1,5 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
   MainCardContainer,
   MainCardContent,
@@ -7,35 +7,35 @@ import {
   MainCardAdress,
   MainCardWrapper,
   MainCardImg,
-} from './MainCardStyle';
-import MainKeyWord from './MainKeyWord';
+} from "./MainCardStyle";
+import MainKeyWord from "./MainKeyWord";
 
 export interface IData {
-  starRating: number,
-  name: string,
+  starRating: number;
+  name: string;
   address: {
-    postalCode: string,
-    address1: string,
-    address2: string
-  },
-  phoneNumber: string,
-  businessHours: number[],
-  holiday: string[],
-  tag: string[],
-  keyword: string[],
-  image: string[],
-  hospitalCapacity: number
+    postalCode: string;
+    address1: string;
+    address2: string;
+  };
+  phoneNumber: string;
+  businessHours: number[];
+  holiday: string[];
+  tag: string[];
+  keyword: string[];
+  image: string[];
+  hospitalCapacity: number;
 }
 
 interface IProps {
-  filtered: IData[],
+  filtered: IData[];
 }
 
 // main페이지에 사용할 컴포넌트
-function MainCard({filtered}: IProps) {
-  const dataProps = filtered.map((items) => {
+function MainCard({ filtered }: IProps) {
+  const dataProps = filtered.map((items, index) => {
     return (
-      <MainCardContainer to={`hospital/${items.name}/detail`}>
+      <MainCardContainer to={`hospital/${items.name}/detail`} key={index}>
         <MainCardImg
           src={items.image[0]}
           alt=""
@@ -44,7 +44,9 @@ function MainCard({filtered}: IProps) {
         ></MainCardImg>
         <MainCardContent>
           <MainCardName>{items.name}</MainCardName>
-          <MainCardAdress>{items.address.address1} {items.address.address2}</MainCardAdress>
+          <MainCardAdress>
+            {items.address.address1} {items.address.address2}
+          </MainCardAdress>
           <MainKeyWord mainKeyWord={items.keyword} />
         </MainCardContent>
       </MainCardContainer>

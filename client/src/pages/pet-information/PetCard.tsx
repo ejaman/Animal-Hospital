@@ -23,7 +23,7 @@ import {
 const defaultImg = "/defaultImg.png";
 const token = localStorage.getItem("token");
 
-function PetCard({ pet, onhandleDelete }: any) {
+function PetCard({ pet, idx, onhandleDelete }: any) {
   const [petInfo, setPetInfo] = useState<PetInfoType>({
     _id: "",
     image: "",
@@ -75,12 +75,15 @@ function PetCard({ pet, onhandleDelete }: any) {
   // radio 관련
   const onhandleGender = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
+    console.log(value);
+    // 수정안됨
     setGender(value);
   };
   const onhandleNeut = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setNeut(value);
   };
+  console.log(pet);
 
   return (
     <PetCardContainer>
@@ -133,7 +136,7 @@ function PetCard({ pet, onhandleDelete }: any) {
               <Item>
                 <RadioButton
                   type="radio"
-                  name="gender"
+                  name={`${idx}gender`}
                   value="F"
                   checked={gender === "F"}
                   onChange={(event) => onhandleGender(event)}
@@ -144,7 +147,7 @@ function PetCard({ pet, onhandleDelete }: any) {
               <Item>
                 <RadioButton
                   type="radio"
-                  name="gender"
+                  name={`${idx}gender`}
                   value="M"
                   checked={gender === "M"}
                   onChange={(event) => onhandleGender(event)}
@@ -162,7 +165,7 @@ function PetCard({ pet, onhandleDelete }: any) {
               <Item>
                 <RadioButton
                   type="radio"
-                  name="neutralized"
+                  name={`${idx}neutralized`}
                   value="완료"
                   checked={neut === "완료"}
                   onChange={(event) => onhandleNeut(event)}
@@ -173,7 +176,7 @@ function PetCard({ pet, onhandleDelete }: any) {
               <Item>
                 <RadioButton
                   type="radio"
-                  name="neutralized"
+                  name={`${idx}neutralized`}
                   value="미완료"
                   checked={neut === "미완료"}
                   onChange={(event) => onhandleNeut(event)}
@@ -184,7 +187,7 @@ function PetCard({ pet, onhandleDelete }: any) {
               <Item>
                 <RadioButton
                   type="radio"
-                  name="neutralized"
+                  name={`${idx}neutralized`}
                   value="모름"
                   checked={neut === "모름"}
                   onChange={(event) => onhandleNeut(event)}
