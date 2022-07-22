@@ -138,8 +138,8 @@ const RegisterForm: React.FC<Props> = ({ isHospital }) => {
           }
         );
         console.log(result);
-      } catch (e) {
-        return console.log(e);
+      } catch (e: any) {
+        return alert(e.response.data.message);
       }
     } else {
       const data: IUserData = {
@@ -165,7 +165,6 @@ const RegisterForm: React.FC<Props> = ({ isHospital }) => {
         console.log(result);
       } catch (e: any) {
         alert(e.response.data.message);
-        return console.log(e);
       }
     }
 
