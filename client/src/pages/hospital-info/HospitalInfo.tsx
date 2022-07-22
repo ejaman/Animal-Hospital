@@ -54,7 +54,7 @@ export default function HospitalInfo() {
     name: "",
     email: "",
     director: "",
-    // password: "",
+    password: "",
     address: {
       postalCode: "",
       address1: "",
@@ -344,9 +344,11 @@ export default function HospitalInfo() {
 
   const onhandleUpdate = async(event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    const data2 = { currentPassword: "test1234@", director: "김봉준바보" }; // PROBLEM: patch문제 테스트하느라 임의로 넣음. 해결될 시 수정
-    const data = { ...hospitalInfo, data2};
-    // console.log("data:", data);
+    // const data2 = { currentPassword: "test1234@", director: "김봉준바보" }; // PROBLEM: patch문제 테스트하느라 임의로 넣음. 해결될 시 수정
+    const { name, email, password, ...restHospitalInfo } = hospitalInfo;
+    const data = { ...restHospitalInfo, currentPassword};
+    console.log("restHospitalInfo:", restHospitalInfo);
+    console.log("rest-password:", password);
     try {
       console.log("try문 안 정보 출력:", hospitalInfo);
       const response = await axios.patch('http://localhost:5100/hospital/', data, {
@@ -356,7 +358,7 @@ export default function HospitalInfo() {
       alert("성공적으로 저장되었습니다.");
       navigate("/hospital-info");
     } catch (err) {
-      alert(err);
+      console.log(err);
     }
   }
   // PROBLEM: 서비스 삭제 버튼 눌렀을 때 타입 오류 뜸
@@ -444,7 +446,7 @@ export default function HospitalInfo() {
                   <InputLabel>새 비밀번호</InputLabel>
                   {/* 유저 페이지와 형식 통일, 추후 기능 추가 */}
                   <InfoInput
-                    // name="password"
+                    name="password"
                     style={{ marginLeft: "0.5rem" }}
                     type="password"
                     // autoComplete="current-password"
