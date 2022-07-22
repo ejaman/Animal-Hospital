@@ -1,5 +1,5 @@
 // react와 vanilla js 혼종인 파일이다. 리액트로 서서히 바꿔나가자
-// 시간관계상 구현 못한 남은 기능들: 정보 수정 시 validation 추가, 비밀번호 수정, 버튼 재렌더링, 업로드한 이미지 반영, 그 외 코드 주석
+// 시간관계상 구현 못한 남은 기능들: 정보 수정 시 validation 추가, 버튼 재렌더링, 비밀번호 수정(기존에 구상했던 부분과 다른 페이지의 구현이 다른데 백프론트 모두 방식이 달라서 통일감있게 제작하려면 시간이 좀 걸릴 것 같아서 후순위로 둠), 업로드한 이미지 반영, 그 외 코드 주석
 // 개선해야 될 부분: 유저 페이지와 형식을 통일하려다 보니 정보 수정 시에는 현재 비밀번호를 form에서 입력하는데 탈퇴 시에는 modal 창에서 입력해서 UI의 가독성이 좋지 않아서 방식을 추후 modal 창으로 통일할 예정, 페이지 로드 시 시간이 오래 걸림
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
@@ -54,7 +54,7 @@ export default function HospitalInfo() {
     name: "",
     email: "",
     director: "",
-    password: "",
+    // password: "",
     address: {
       postalCode: "",
       address1: "",
@@ -344,13 +344,14 @@ export default function HospitalInfo() {
 
   const onhandleUpdate = async(event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    // const data2 = { currentPassword, director: "김봉준바보" }; // PROBLEM: patch문제 테스트하느라 임의로 넣음. 해결될 시 수정
-    // const data = { ...hospitalInfo, "test1234@" };
+    const data2 = { currentPassword: "test1234@", director: "김봉준바보" }; // PROBLEM: patch문제 테스트하느라 임의로 넣음. 해결될 시 수정
+    const data = { ...hospitalInfo, data2};
     // console.log("data:", data);
     try {
-      const response = await axios.patch('http://localhost:5100/hospital/', JSON.stringify({...hospitalInfo, "currentPassword":"test1234@"}), {
+      console.log("try문 안 정보 출력:", hospitalInfo);
+      const response = await axios.patch('http://localhost:5100/hospital/', data, {
         withCredentials: true
-      });
+      }); // 서버 오류로 코드 수정함. 이후 다시 수정할 것
       console.log("response:", response);
       alert("성공적으로 저장되었습니다.");
       navigate("/hospital-info");
@@ -443,7 +444,7 @@ export default function HospitalInfo() {
                   <InputLabel>새 비밀번호</InputLabel>
                   {/* 유저 페이지와 형식 통일, 추후 기능 추가 */}
                   <InfoInput
-                    name="password"
+                    // name="password"
                     style={{ marginLeft: "0.5rem" }}
                     type="password"
                     // autoComplete="current-password"
@@ -698,17 +699,6 @@ export default function HospitalInfo() {
                       <InputLabel>현재 비밀번호</InputLabel>
                       <InfoInput
                         name="currentPassword"
-                        style={{ marginLeft: "0.5rem" }}
-                        type="password"
-                        onChange={onChange}
-                      />
-                    </Container>
-                  </Row>
-                  <Row style={{ marginTop: "1rem" }}>
-                    <Container>
-                      <InputLabel>현재 비밀번호</InputLabel>
-                      <InfoInput
-                        name="currPassword"
                         style={{ marginLeft: "0.5rem" }}
                         type="password"
                         onChange={onChange}

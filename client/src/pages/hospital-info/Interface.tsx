@@ -3,7 +3,7 @@ export interface HospitalInfoType {
   name: string;
   email: string;
   director: string;
-  password: string;
+  // password: string;
   address: {
     postalCode: string;
     address1: string;
