@@ -285,6 +285,7 @@ export default function HospitalInfo() {
   }
 
   // 이거 재렌더링 어떻게 하지? 오피스아워 질문
+  // get 응답 시 => 스타일링 해주는 함수 각자 추가
   const checkedBusinessHoursHandler = (box: any, id: any, isChecked: any) => {
     const businessHoursList = [...hospitalInfo.businessHours!];
     if (isChecked) {
@@ -342,18 +343,18 @@ export default function HospitalInfo() {
 
   const onhandleUpdate = async(event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    const data2 = { currentPassword, director: "김봉준바보" }; // PROBLEM: patch문제 테스트하느라 임의로 넣음. 해결될 시 수정
-    const data = { ...hospitalInfo, ...data2 };
-    console.log("data:", data);
+    // const data2 = { currentPassword, director: "김봉준바보" }; // PROBLEM: patch문제 테스트하느라 임의로 넣음. 해결될 시 수정
+    // const data = { ...hospitalInfo, "test1234@" };
+    // console.log("data:", data);
     try {
-      const response = await axios.patch('http://localhost:5100/hospital/', JSON.stringify(data2), {
+      const response = await axios.patch('http://localhost:5100/hospital/', JSON.stringify({...hospitalInfo, "currentPassword":"test1234@"}), {
         withCredentials: true
       });
       console.log("response:", response);
       alert("성공적으로 저장되었습니다.");
       navigate("/hospital-info");
-    } catch {
-      alert("비밀번호가 틀렸습니다.");
+    } catch (err) {
+      alert(err);
     }
   }
   // PROBLEM: 서비스 삭제 버튼 눌렀을 때 타입 오류 뜸
@@ -628,6 +629,7 @@ export default function HospitalInfo() {
                           onClick={checkBusinessHoursHandler}
                           value={time}
                           hidden
+                          checked={hospitalInfo.businessHours.includes(time)}
                         />{time}:00
                       </TimeLabel>
                     ))}
