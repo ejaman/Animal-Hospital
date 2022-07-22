@@ -9,6 +9,7 @@ import {
   InfoInput,
   InfoTextarea,
   NameInput,
+  AddInput,
   RadioButton,
   RadioButtonLabel,
   RadioContainer,
@@ -19,8 +20,7 @@ import {
   Button,
 } from "./PetInfoStyle";
 
-const defaultImg =
-  "https://media.istockphoto.com/photos/crazy-looking-black-and-white-border-collie-dog-say-looking-intently-picture-id1213516345?k=20&m=1213516345&s=612x612&w=0&h=_XUSwcrXe5HjI2QEby0ex6Tl1fB_YJUzUU8o2cUt0YA=";
+const defaultImg = "/defaultImg.png";
 const token = localStorage.getItem("token");
 
 function PetCard({ pet, onhandleDelete }: any) {
@@ -40,8 +40,6 @@ function PetCard({ pet, onhandleDelete }: any) {
   });
   const [gender, setGender] = useState(pet.sex);
   const [neut, setNeut] = useState(pet.neutralized);
-  // 받아온 값 pet을 petinfo에 넣어줌
-  console.log(pet);
 
   useEffect(() => {
     setPetInfo(pet);
@@ -84,8 +82,6 @@ function PetCard({ pet, onhandleDelete }: any) {
     setNeut(value);
   };
 
-  console.log(gender, neut);
-
   return (
     <PetCardContainer>
       <DeleteBtn
@@ -97,7 +93,7 @@ function PetCard({ pet, onhandleDelete }: any) {
       </DeleteBtn>
       <Contents>
         <ImgContainer>
-          <PetImg src={petInfo.image} />
+          <PetImg src={petInfo.image || defaultImg} />
         </ImgContainer>
         <InfoContainer>
           <NameInput
@@ -208,10 +204,6 @@ function PetCard({ pet, onhandleDelete }: any) {
             onChange={onInputChange}
             value={petInfo.vaccination}
           />
-          <Button>
-            <i className="fa-solid fa-camera"></i>
-            사진
-          </Button>
           <Button onClick={onhandleUpdate}>
             <i className="fa-solid fa-paw"></i>저장
           </Button>
