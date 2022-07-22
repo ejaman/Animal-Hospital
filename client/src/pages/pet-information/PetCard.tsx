@@ -59,7 +59,7 @@ function PetCard({ pet, idx, onhandleDelete }: any) {
 
   const onhandleUpdate = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    const data = { ...petInfo, petId: pet._id };
+    const data = { ...petInfo, petId: pet._id, sex: gender, neutralized: neut };
     try {
       axios.patch(`http://localhost:5000/pet/update`, data, {
         headers: {
@@ -76,7 +76,6 @@ function PetCard({ pet, idx, onhandleDelete }: any) {
   const onhandleGender = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     console.log(value);
-    // 수정안됨
     setGender(value);
   };
   const onhandleNeut = (event: React.ChangeEvent<HTMLInputElement>) => {
