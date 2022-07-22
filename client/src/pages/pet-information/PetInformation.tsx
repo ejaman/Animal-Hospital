@@ -36,15 +36,13 @@ function PetInformation() {
   };
 
   const onhandleAdd = async (data: any) => {
-    console.log(data);
-
     try {
-      const res = await axios.post("http://localhost:5100/pet/register", data, {
+      await axios.post("http://localhost:5100/pet/register", data, {
         headers: {
           Authorization: `Bearer ${token}`,
+          "content-type": "multipart/form-data",
         },
       });
-      console.log(res);
       await reload();
       alert("펫 추가 완료 🐾");
     } catch (err) {

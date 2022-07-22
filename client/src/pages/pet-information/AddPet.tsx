@@ -1,8 +1,7 @@
 import React, { useState, useRef, useCallback } from "react";
+import { UploadFileInput } from "../hospital-info/Style";
 import {
   Title,
-  ImgContainer,
-  InfoContainer,
   RadioButton,
   RadioButtonLabel,
   RadioContainer,
@@ -13,8 +12,10 @@ import {
   AddInput,
   AddTextarea,
   Button,
+  InfoContainer,
+  Btn,
+  UploadFileLabel,
 } from "./PetInfoStyle";
-import { PetInfoType } from "./PetInfoInterface";
 
 function AddPet({ onhandleAdd }: any) {
   const [gender, setGender] = useState<string>();
@@ -31,13 +32,10 @@ function AddPet({ onhandleAdd }: any) {
 
   const onhandleGender = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    console.log(value);
-
     setGender(value);
   };
   const onhandleNeut = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    console.log(value);
     setNeut(value);
   };
 
@@ -55,24 +53,21 @@ function AddPet({ onhandleAdd }: any) {
       sex: gender,
       neutralized: neut,
     };
-    console.log(data);
     onhandleAdd(data);
+    formRef.current?.reset();
+    setImg(null);
+    setNeut("");
+    setGender("");
   };
 
   const onLoadImg = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files![0];
-    console.log(file);
     setImg(file);
   };
 
   return (
     <Container ref={formRef}>
       <Title>펫 정보를 입력해주세요 🐾</Title>
-      <div>
-        <input type="file" onChange={onLoadImg} />
-        <label htmlFor="image">파일 선택하기</label>
-        {/* <img src={img} alt="img" /> */}
-      </div>
       <InfoContainer>
         <AddInput placeholder="이름" ref={nameRef} />
         <Contents>
@@ -159,7 +154,17 @@ function AddPet({ onhandleAdd }: any) {
           ref={vaccinationRef}
         />
       </InfoContainer>
-      <Button onClick={onSubmit}>추가</Button>
+      <InfoContainer>
+        <UploadFileLabel htmlFor="uploadFile">펫 사진 업로드</UploadFileLabel>
+        <UploadFileInput
+          type="file"
+          id="uploadFile"
+          accept="image/*"
+          onChange={onLoadImg}
+        />
+        <AddInput placeholder="이미지파일" value={img?.name} disabled />
+      </InfoContainer>
+      <Btn onClick={onSubmit}>펫 추가</Btn>
     </Container>
   );
 }
