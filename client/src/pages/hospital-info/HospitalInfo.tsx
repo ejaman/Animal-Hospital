@@ -1,6 +1,6 @@
 // react와 vanilla js 혼종인 파일이다. 리액트로 서서히 바꿔나가자
 // 시간관계상 구현 못한 남은 기능들: 정보 수정 시 validation 추가, 비밀번호 수정, 버튼 재렌더링, 업로드한 이미지 반영, 그 외 코드 주석
-// 개선해야 될 부분: 유저 페이지와 형식을 통일하려다 보니 정보 수정 시에는 현재 비밀번호를 form에서 입력하는데 탈퇴 시에는 modal 창에서 입력해서 UI의 가독성이 좋지 않아서 방식을 추후 modal 창으로 통일할 예정
+// 개선해야 될 부분: 유저 페이지와 형식을 통일하려다 보니 정보 수정 시에는 현재 비밀번호를 form에서 입력하는데 탈퇴 시에는 modal 창에서 입력해서 UI의 가독성이 좋지 않아서 방식을 추후 modal 창으로 통일할 예정, 페이지 로드 시 시간이 오래 걸림
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import DaumPostcode from "react-daum-postcode";
 import Modal from "react-modal";
@@ -37,7 +37,7 @@ import { userState } from '../../state/UserState';
 
 export default function HospitalInfo() { 
   const [info, setInfo] = useRecoilState(hospitalLoginState);
-  console.log(info);
+  console.log("loginStateInfo:", info);
   // 폼 내용들은 입력 시마다 내용이 곧바로 저장되므로 추후 debouncing 적용 예정
 
   let navigate = useNavigate();
@@ -86,7 +86,7 @@ export default function HospitalInfo() {
   const [isPassOpen, setIsPassOpen] = useState<boolean>(false);
 
   /* password */
-  const [currPassword, setCurrPassword] = useState<string>("");
+  const [currentPassword, setCurrentPassword] = useState<string>("");
   
   /* constants */
   const AVAILABLE_KEYWORD_LENGTH = 10;
@@ -124,9 +124,9 @@ export default function HospitalInfo() {
       ...hospitalServiceInfo,
       [e.currentTarget.name]: e.currentTarget.value
     }
-    const currPassData = e.currentTarget.value
+    const currentPassData = e.currentTarget.value
     setHospitalInfo(hospitalData);
-    setCurrPassword(currPassData);
+    setCurrentPassword(currentPassData);
     setHospitalServiceInfo(hospitalServiceData);
   };
  
@@ -147,7 +147,6 @@ export default function HospitalInfo() {
       // => 삭제 시 DOM에러 뜸. 아마 디자인용으로 새로 생성한 컴포넌트 때문으로 예상중이나 기능은 정상 작동해서 이후 수정할 예정
       $HashWrapInner.addEventListener('click', () => {
         $HashWrapOuter?.removeChild($HashWrapInner)
-        console.log($HashWrapInner.innerHTML)
         setKeyword(keyword!.filter((newKeyword: any) => newKeyword))
         setHospitalInfo(prev => {
           return {
@@ -156,7 +155,7 @@ export default function HospitalInfo() {
         })
       })
 
-      /* enter's key code: 13 */
+      /* enter key code = 13 */
       if (e.keyCode === 13 && $keywordNumWarning) {
         if (newKeyword.length > AVAILABLE_KEYWORD_LENGTH) {
           $keywordNumWarning.textContent = `키워드는 ${AVAILABLE_KEYWORD_LENGTH}글자 미만이어야 합니다.`
@@ -186,16 +185,13 @@ export default function HospitalInfo() {
   const onServiceSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log("서비스 추가 버튼 클릭");
-    console.log("추가된 서비스:", hospitalServiceInfo);
     setServiceList([...serviceList, hospitalServiceInfo]);
     setHospitalServiceInfo({
     serviceName: "",
     servicePrice: 0,
     serviceDesc: "",
     serviceCapacity: 0
-  })
-    console.log("serviceList:", serviceList);
-  }
+  })}
 
   /* onClick handlers */
 
@@ -328,14 +324,12 @@ export default function HospitalInfo() {
 
   const withdrawButtonHandler = async(e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log("현재 비밀번호:", currPassword);
-    const data = { "currentPassword": currPassword };
+    const data = { "currentPassword": currentPassword };
     try {
       const response = await axios.patch("http://localhost:5100/hospital/withdrawal", data, {
       withCredentials: true
       });
-      console.log(response);
-      console.log('병원 회원 탈퇴가 진행됩니다.')
+      console.log('병원 회원 탈퇴가 진행됩니다.:', response);
       alert("탈퇴되었습니다.");
       handleLogout();
       navigate("/");
@@ -348,15 +342,14 @@ export default function HospitalInfo() {
 
   const onhandleUpdate = async(event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    // const data = { ...hospitalInfo };
-    const data = { "currentPassword": currPassword };
-    // const data = currPassword;
-    console.log(currPassword);
+    const data2 = { currentPassword, director: "김봉준바보" }; // PROBLEM: patch문제 테스트하느라 임의로 넣음. 해결될 시 수정
+    const data = { ...hospitalInfo, ...data2 };
+    console.log("data:", data);
     try {
-      await axios.patch('http://localhost:5100/hospital/', data, {
+      const response = await axios.patch('http://localhost:5100/hospital/', JSON.stringify(data2), {
         withCredentials: true
       });
-      console.log(data);
+      console.log("response:", response);
       alert("성공적으로 저장되었습니다.");
       navigate("/hospital-info");
     } catch {
@@ -369,19 +362,6 @@ export default function HospitalInfo() {
   //   console.log(index, '서비스가 삭제되었습니다.');
   // }
 
-  // useEffect(() => {
-  //   // 임시 데이터 (api 추가 후 삭제 예정)
-  //   setHospitalInfo({
-  //     ~~hospitalInfo는 get 완료했고 길어서 자름. service도 완성하면 주석 삭제~
-  //   });
-  //   setHospitalServiceInfo(
-  //   {
-  //     "serviceName": "중성화수술",
-  //     "servicePrice": 200000,
-  //     "serviceDesc": "지이이잉석둑",
-  //     "serviceCapacity": 1
-  //   });
-  // }, []);
   useEffect(() => {
     async function getData() {
       try {
@@ -402,7 +382,7 @@ export default function HospitalInfo() {
     getData();
   }, []);
 
-  console.log("hospital data:", hospitalInfo);
+  // console.log("hospital data:", hospitalInfo);
 
   return (
     <div style={{ margin: "0 2rem 2rem 2rem" }}>
@@ -423,7 +403,7 @@ export default function HospitalInfo() {
                       marginLeft: "0.5rem"
                     }}
                     type="text"
-                    defaultValue={hospitalInfo.name || ""}
+                    value={hospitalInfo.name || ""}
                     onChange={onChange}
                   />
                 </Container>
@@ -435,7 +415,7 @@ export default function HospitalInfo() {
                     name="director"
                     style={{ marginLeft: "0.5rem" }}
                     type="text"
-                    defaultValue={hospitalInfo.director || ""}
+                    value={hospitalInfo.director || ""}
                     onChange={onChange}
                   />
                 </Container>
@@ -450,7 +430,7 @@ export default function HospitalInfo() {
                       marginLeft: "0.5rem"
                     }}
                     type="text"
-                    defaultValue={hospitalInfo.email}
+                    value={hospitalInfo.email}
                     autoComplete="username"
                     disabled
                   />
@@ -465,7 +445,7 @@ export default function HospitalInfo() {
                     style={{ marginLeft: "0.5rem" }}
                     type="password"
                     // autoComplete="current-password"
-                    defaultValue=""
+                    value=""
                   />
                   {/* 유저 정보 페이지와의 통일감을 위해 현재 비밀번호 input과 수정 버튼은 아래에 */}
                   {/* <InfoBtn
@@ -481,7 +461,7 @@ export default function HospitalInfo() {
                     name="phoneNumber"
                     style={{ marginLeft: "0.5rem" }}
                     type="text"
-                    defaultValue={hospitalInfo.phoneNumber || ""}
+                    value={hospitalInfo.phoneNumber || ""}
                     onChange={onChange}
                   />
                 </Container>
@@ -493,7 +473,7 @@ export default function HospitalInfo() {
                     name="businessNumber"
                     style={{ marginLeft: "0.5rem" }}
                     type="text"
-                    defaultValue={hospitalInfo?.businessNumber || ""}
+                    value={hospitalInfo?.businessNumber || ""}
                     onChange={onChange}
                   />
                 </Container>
@@ -505,7 +485,7 @@ export default function HospitalInfo() {
                     name="licenseNumber"
                     style={{ marginLeft: "0.5rem" }}
                     type="text"
-                    defaultValue={hospitalInfo?.licenseNumber || ""}
+                    value={hospitalInfo?.licenseNumber || ""}
                     onChange={onChange}
                   />
                 </Container>
@@ -520,9 +500,7 @@ export default function HospitalInfo() {
                     accept='image/jpg,image/png,image/jpeg,image/gif'
                     name='profile_img'
                     onChange={(e: any) => {
-                      console.log("convert전:", e.target.files)
                       convertFileToBase64(e.target.files[0]);
-                      console.log("convert 후:", e.target.files);
                     }}
                   />
                 </div>
@@ -546,7 +524,7 @@ export default function HospitalInfo() {
                           width: "6rem"
                         }}
                         type="text"
-                        defaultValue={hospitalInfo?.address?.postalCode || ""}
+                        value={hospitalInfo?.address?.postalCode || ""}
                         onChange={onChangeAddress}
                       />
                     </Row>
@@ -559,7 +537,7 @@ export default function HospitalInfo() {
                           width: "20rem"
                         }}
                         type="text"
-                        defaultValue={hospitalInfo?.address?.address1}
+                        value={hospitalInfo?.address?.address1}
                         onChange={onChangeAddress}
                       />
                     </Row>
@@ -571,7 +549,7 @@ export default function HospitalInfo() {
                           width: "18rem"
                         }}
                         type="text"
-                        defaultValue={hospitalInfo?.address?.address2}
+                        value={hospitalInfo?.address?.address2}
                         onChange={onChangeAddress}
                       />
                       <InfoBtn
@@ -618,6 +596,7 @@ export default function HospitalInfo() {
                 ></span>
                 <KeywordInput>
                   <div className="HashWrapOuter"></div>
+                  {/* 기존 키워드 가져올 때 에러, 추후 해결 */}
                   {/* {INITIAL_KEYWORDS.map((item, index) => {
                     $HashWrapInner.innerHTML = '#' + item;
                     $HashWrapOuter?.appendChild($HashWrapInner);
@@ -705,7 +684,7 @@ export default function HospitalInfo() {
                         name="hospitalCapacity"
                         style={{ marginLeft: "0.5rem" }}
                         type="text"
-                        defaultValue={hospitalInfo?.hospitalCapacity || 0}
+                        value={hospitalInfo?.hospitalCapacity}
                         onChange={onChange}
                       />
                     </Container>
@@ -714,7 +693,7 @@ export default function HospitalInfo() {
                     <Container>
                       <InputLabel>현재 비밀번호</InputLabel>
                       <InfoInput
-                        name="currPassword"
+                        name="currentPassword"
                         style={{ marginLeft: "0.5rem" }}
                         type="password"
                         onChange={onChange}
