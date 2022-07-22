@@ -40,10 +40,6 @@ class ReservationService {
 
   async countTotalReservations(searchOptions: SearchOptions): Promise<number> {
     const total = await this.reservationModel.countReservations(searchOptions);
-
-    if (total < 1) {
-      throw new Error('예약이 없습니다.');
-    }
     return total;
   }
 
