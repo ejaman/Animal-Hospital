@@ -59,13 +59,17 @@ function PetCard({ pet, idx, onhandleDelete }: any) {
 
   const onhandleUpdate = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    const data = { ...petInfo, petId: pet._id };
+    const data = { ...petInfo, petId: pet._id, sex: gender, neutralized: neut };
     try {
-      axios.patch(`http://localhost:5000/pet/update`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      axios.patch(
+        `http://kdt-sw2-seoul-team14.elicecoding.com:5000/pet/update`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       alert("수정완료! 🐾");
     } catch (err) {
       alert("입력값을 다시 한 번 확인해주세요 🥲");
@@ -76,7 +80,6 @@ function PetCard({ pet, idx, onhandleDelete }: any) {
   const onhandleGender = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     console.log(value);
-    // 수정안됨
     setGender(value);
   };
   const onhandleNeut = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -374,7 +374,7 @@ export default function HospitalInfo() {
     const data = { currentPassword: currentPassword };
     try {
       const response = await axios.patch(
-        "http://localhost:5000/hospital/withdrawal",
+        "http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/withdrawal",
         data,
         {
           withCredentials: true,
@@ -395,12 +395,10 @@ export default function HospitalInfo() {
     // const data2 = { currentPassword: "test1234@", director: "김봉준바보" }; // PROBLEM: patch문제 테스트하느라 임의로 넣음. 해결될 시 수정
     const { name, email, password, ...restHospitalInfo } = hospitalInfo;
     const data = { ...restHospitalInfo, currentPassword };
-    console.log("restHospitalInfo:", restHospitalInfo);
-    console.log("rest-password:", password);
     try {
       console.log("try문 안 정보 출력:", hospitalInfo);
       const response = await axios.patch(
-        "http://localhost:5000/hospital/",
+        "http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/",
         data,
         {
           withCredentials: true,
@@ -424,7 +422,8 @@ export default function HospitalInfo() {
       try {
         //응답 성공
         // api
-        const API_URL = "http://localhost:5000/hospital/detail";
+        const API_URL =
+          "http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/detail";
         const response = await axios.get(API_URL, {
           withCredentials: true,
         });
@@ -462,6 +461,7 @@ export default function HospitalInfo() {
                     type="text"
                     value={hospitalInfo.name || ""}
                     onChange={onChange}
+                    disabled
                   />
                 </Container>
               </Row>

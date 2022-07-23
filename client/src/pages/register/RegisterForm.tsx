@@ -129,7 +129,7 @@ const RegisterForm: React.FC<Props> = ({ isHospital }) => {
 
       try {
         const result = await axios.post(
-          "http://localhost:5000/hospital/register",
+          "http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/register",
           JSON.stringify(data),
           {
             headers: {
@@ -138,8 +138,8 @@ const RegisterForm: React.FC<Props> = ({ isHospital }) => {
           }
         );
         console.log(result);
-      } catch (e) {
-        return console.log(e);
+      } catch (e: any) {
+        return alert(e.response.data.message);
       }
     } else {
       const data: IUserData = {
@@ -154,7 +154,7 @@ const RegisterForm: React.FC<Props> = ({ isHospital }) => {
 
       try {
         const result = await axios.post(
-          "http://localhost:5000/api/register",
+          "http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/register",
           JSON.stringify(data),
           {
             headers: {
@@ -165,7 +165,6 @@ const RegisterForm: React.FC<Props> = ({ isHospital }) => {
         console.log(result);
       } catch (e: any) {
         alert(e.response.data.message);
-        return console.log(e);
       }
     }
 

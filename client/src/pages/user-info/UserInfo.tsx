@@ -47,17 +47,22 @@ function UserInfo() {
 
   // 처음 한 번만 서버 통신
   useEffect(() => {
-    token &&
-      axios
-        .get("http://localhost:5000/api/user", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          setUserInfo(res.data);
-          setAddr(res.data.address);
-        });
+    if (token) {
+      try {
+        axios
+          .get("http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/user", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((res) => {
+            setUserInfo(res.data);
+            setAddr(res.data.address);
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    }
   }, []);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,11 +105,15 @@ function UserInfo() {
       newPassword: newPassword,
     };
     axios
-      .patch(`http://localhost:5000/api/users/${userInfo?.email}`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .patch(
+        `http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/users/${userInfo?.email}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((res) => {
         console.log(res);
 
@@ -132,7 +141,7 @@ function UserInfo() {
     //TODO
     await axios
       .patch(
-        `http://localhost:5000/api/expiration
+        `http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/expiration
       `,
         {},
         {
@@ -183,6 +192,7 @@ function UserInfo() {
             <InfoInput name="address1" value={addr.address1 || ""} disabled />
             <InfoInput
               name="address2"
+              placeholder="상세주소를 입력해주세요"
               onChange={onAddressChange}
               value={addr.address2 || ""}
             />
@@ -194,7 +204,10 @@ function UserInfo() {
         </Container>
         <Container>
           <InputLabel>비밀번호 확인</InputLabel>
-          <InfoInput ref={currentPwRef} placeholder="현재 비밀번호" />
+          <InfoInput
+            ref={currentPwRef}
+            placeholder="정보 수정 시 현재 비밀번호를 입력해주세요"
+          />
         </Container>
 
         <div style={{ display: "flex" }}>

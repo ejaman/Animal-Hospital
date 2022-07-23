@@ -4,6 +4,7 @@ import { Title } from "../../components/InfoForm";
 import { Header } from "../../components/Liststyle";
 import ReserveCard from "./ReserveCard";
 import { Container, Column } from "./ReserveStyle";
+import Pagination from "../home/Pagenation";
 
 const token = localStorage.getItem("token");
 function UserReserve() {
@@ -14,12 +15,15 @@ function UserReserve() {
     petInfoes: [],
     rezStatusInfoes: [],
   });
+  const [page, setPage] = useState<number>(1);
+  const [pages, setPages] = useState<any>({ perPage: 10 });
+
   useEffect(() => {
     try {
       token &&
         axios
           .get(
-            "http://localhost:5000/reservation/user/list?page=1&perPage=20",
+            `http://kdt-sw2-seoul-team14.elicecoding.com:5000/reservation/user/list?page=${page}&perPage=${pages.perPage}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -27,19 +31,27 @@ function UserReserve() {
             }
           )
           .then((res) => {
-            const data = res.data.data.ReservationsInfo;
-            const check = Object.values(data);
+            const data = res.data.data;
+            const check = Object.values(data.ReservationsInfo);
+            setPages({
+              perPage: data.perPage,
+              totalPage: data.totalHospitals,
+            });
+            console.log(data);
+
+            setPage(data.page);
             setResInfo(check);
           });
     } catch (err) {
       alert(err);
     }
-  }, []);
+  }, [page]);
+  console.log(resInfo);
 
   const InfoArr = [];
   // useCallback 사용해보기
   if (resInfo.length > 0) {
-    for (let i = 0; i < resInfo[0].length + 1; i++) {
+    for (let i = 0; i < resInfo[0].length; i++) {
       InfoArr.push({
         ...resInfo[0][i],
         reservationId: resInfo[0][i]?._id,
@@ -52,7 +64,6 @@ function UserReserve() {
       });
     }
   }
-  console.log(resInfo);
 
   return (
     <Container>
@@ -68,6 +79,12 @@ function UserReserve() {
       {InfoArr.map((res: any, i: number) => (
         <ReserveCard key={i} res={res} idx={i} />
       ))}
+      <Pagination
+        total={pages?.totalPage}
+        limit={pages.perPage}
+        page={page}
+        setPage={(page: number) => setPage(page)}
+      />
     </Container>
   );
 }

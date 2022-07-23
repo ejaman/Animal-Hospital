@@ -46,7 +46,7 @@ const ResModal = ({ res }: any) => {
     try {
       token &&
         axios.patch(
-          `http://localhost:5000/reservation/user/:${res.reservationId}`,
+          `http://kdt-sw2-seoul-team14.elicecoding.com:5000/reservation/user/:${res.reservationId}`,
           data,
           {
             headers: {
@@ -116,32 +116,13 @@ const ResModal = ({ res }: any) => {
             defaultValue={res.price}
             name="price"
           />
-          <ReservationSubTitle>상태</ReservationSubTitle>
-          <button onClick={onhandleUpdate}>예약취소</button>
-          {/* <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            defaultValue=""
-            sx={{ width: 150 }}
-            label="Age"
-          >
-            <MenuItem value={10} disabled>
-              예약 완료
-            </MenuItem>
-            <MenuItem value={20}>예약 취소</MenuItem>
-            <MenuItem value={30} disabled>
-              예약 대기
-            </MenuItem>
-            <MenuItem value={40} disabled>
-              예약 확정
-            </MenuItem>
-          </Select> */}
+          <ReservationContent
+            label="예약상태"
+            defaultValue={res.resName}
+            name="res"
+          />
           <ModalBtnContainer>
-            {isToken && (
-              <Link to="/user-info">
-                <ModalModifyBtn>수정</ModalModifyBtn>
-              </Link>
-            )}
+            <ModalModifyBtn onClick={onhandleUpdate}>예약 취소</ModalModifyBtn>
             <ModalCloseBtn onClick={handleChangeModalState}>닫기</ModalCloseBtn>
           </ModalBtnContainer>
         </ReservationWrapper>

@@ -106,7 +106,8 @@ function LoginLayout() {
 
   const handleKakaoLogin = async (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    window.location.href = "http://localhost:5000/api/login/kakao";
+    window.location.href =
+      "http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/login/kakao";
   };
 
   return (
