@@ -82,7 +82,6 @@ function Detail() {
     );
     alert("예약이 완료되었습니다.");
   };
-  console.log(hospitalInfo);
 
   return (
     <MainContainer>
@@ -137,7 +136,7 @@ function Detail() {
               {service.map((a: any, i: number) => (
                 <ServiceCol key={i}>
                   <Ser>{a?.name}</Ser>
-                  <Ser>{a?.price} 원</Ser>
+                  <Ser>{a?.price.toLocaleString()} 원</Ser>
                 </ServiceCol>
               ))}
             </ServiceDiv>
