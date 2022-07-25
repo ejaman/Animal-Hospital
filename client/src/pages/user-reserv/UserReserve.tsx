@@ -6,9 +6,8 @@ import ReserveCard from "./ReserveCard";
 import { Container, Column } from "./ReserveStyle";
 import Pagination from "../home/Pagenation";
 
-const token = localStorage.getItem("token");
 function UserReserve() {
-  // 정보 뿌려주고 수정하기, pagination
+  const token = localStorage.getItem("token");
   const [resInfo, setResInfo] = useState<any>({
     Reservations: [],
     hospInfoes: [],

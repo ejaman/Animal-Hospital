@@ -5,8 +5,8 @@ import { MainContainer, AddBtn } from "./PetInfoStyle";
 import AddPet from "./AddPet";
 import { PetInfoType } from "./PetInfoInterface";
 
-const token = localStorage.getItem("token");
 function PetInformation() {
+  const token = localStorage.getItem("token");
   const [pets, setPets] = useState<PetInfoType[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   // 처음 한 번 서버 통신

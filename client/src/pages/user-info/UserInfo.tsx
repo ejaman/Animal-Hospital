@@ -22,8 +22,8 @@ import { useResetRecoilState } from "recoil";
 import { userState } from "../../state/UserState";
 import { hospitalLoginState } from "../../state/HospitalState";
 
-const token = localStorage.getItem("token");
 function UserInfo() {
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   // 받아온 정보를 저장하는 state
   const [userInfo, setUserInfo] = useState<UserInfoType>({
