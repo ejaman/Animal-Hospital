@@ -18,34 +18,26 @@ function UserReserve() {
   const [pages, setPages] = useState<any>({ perPage: 10 });
 
   useEffect(() => {
-    try {
-      token &&
-        axios
-          .get(
-            `http://kdt-sw2-seoul-team14.elicecoding.com:5000/reservation/user/list?page=${page}&perPage=${pages.perPage}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          )
-          .then((res) => {
-            const data = res.data.data;
-            const check = Object.values(data.ReservationsInfo);
-            setPages({
-              perPage: data.perPage,
-              totalPage: data.totalHospitals,
-            });
-            console.log(data);
-
-            setPage(data.page);
-            setResInfo(check);
-          });
-    } catch (err) {
-      alert(err);
-    }
+    axios
+      .get(
+        `http://kdt-sw2-seoul-team14.elicecoding.com:5000/reservation/user/list?page=${page}&perPage=${pages.perPage}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        const data = res.data.data;
+        const check = Object.values(data.ReservationsInfo);
+        setPages({
+          perPage: data.perPage,
+          totalPage: data.totalHospitals,
+        });
+        setPage(data.page);
+        setResInfo(check);
+      });
   }, [page]);
-  console.log(resInfo);
 
   const InfoArr = [];
   // useCallback 사용해보기

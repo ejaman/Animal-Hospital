@@ -38,7 +38,6 @@ function PetInformation() {
       }
     );
     await reload();
-    alert("삭제완료!");
   };
 
   const onhandleAdd = async (data: any) => {
@@ -54,9 +53,7 @@ function PetInformation() {
         }
       );
       await reload();
-      alert("펫 추가 완료 🐾");
     } catch (err) {
-      alert("입력한 내용을 확인해주세요 🥲 ");
       console.log(err);
     }
   };

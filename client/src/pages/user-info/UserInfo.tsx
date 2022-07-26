@@ -47,22 +47,16 @@ function UserInfo() {
 
   // 처음 한 번만 서버 통신
   useEffect(() => {
-    if (token) {
-      try {
-        axios
-          .get("http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/user", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((res) => {
-            setUserInfo(res.data);
-            setAddr(res.data.address);
-          });
-      } catch (err) {
-        console.log(err);
-      }
-    }
+    axios
+      .get("http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/user", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setUserInfo(res.data);
+        setAddr(res.data.address);
+      });
   }, []);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,24 +98,15 @@ function UserInfo() {
       currentPassword: currentPassword,
       newPassword: newPassword,
     };
-    axios
-      .patch(
-        `http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/users/${userInfo?.email}`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-
-        alert("수정이 완료되었습니다 👍");
-
-        // 수정할 때 마다 입력해야함 + 새로운 비밀번호는 입력하지 않아도 됨
-        // 현재 비밀번호 위치를 수정 옆으로?
-      });
+    axios.patch(
+      `http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/users/${userInfo?.email}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
   };
 
   // 로그아웃 함수
@@ -151,7 +136,7 @@ function UserInfo() {
         }
       )
       .then((res) => {
-        alert(`${userInfo.userName}님 탈퇴가 완료되었습니다 🥲`);
+        // alert(`${userInfo.userName}님 탈퇴가 완료되었습니다 🥲`);
         handleLogout();
         navigate("/");
       });

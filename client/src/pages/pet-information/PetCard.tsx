@@ -70,23 +70,20 @@ function PetCard({ pet, idx, onhandleDelete }: any) {
           },
         }
       );
-      alert("수정완료! 🐾");
     } catch (err) {
-      alert("입력값을 다시 한 번 확인해주세요 🥲");
+      // alert("입력값을 다시 한 번 확인해주세요 🥲");
     }
   };
 
   // radio 관련
   const onhandleGender = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    console.log(value);
     setGender(value);
   };
   const onhandleNeut = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setNeut(value);
   };
-  console.log(pet);
 
   return (
     <PetCardContainer>
