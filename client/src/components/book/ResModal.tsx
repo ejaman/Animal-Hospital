@@ -54,9 +54,8 @@ const ResModal = ({ res }: any) => {
             },
           }
         );
-      alert("예약이 수정되었습니다 ✏️");
     } catch {
-      alert("비밀번호가 틀렸습니다.");
+      // alert("비밀번호가 틀렸습니다.");
     }
   };
 

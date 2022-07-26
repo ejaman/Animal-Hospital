@@ -5,8 +5,8 @@ import { MainContainer, AddBtn } from "./PetInfoStyle";
 import AddPet from "./AddPet";
 import { PetInfoType } from "./PetInfoInterface";
 
-const token = localStorage.getItem("token");
 function PetInformation() {
+  const token = localStorage.getItem("token");
   const [pets, setPets] = useState<PetInfoType[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   // 처음 한 번 서버 통신
@@ -38,7 +38,6 @@ function PetInformation() {
       }
     );
     await reload();
-    alert("삭제완료!");
   };
 
   const onhandleAdd = async (data: any) => {
@@ -54,9 +53,7 @@ function PetInformation() {
         }
       );
       await reload();
-      alert("펫 추가 완료 🐾");
     } catch (err) {
-      alert("입력한 내용을 확인해주세요 🥲 ");
       console.log(err);
     }
   };
