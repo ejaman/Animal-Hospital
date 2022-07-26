@@ -157,7 +157,15 @@ function UserInfo() {
           <InputLabel>이메일 주소</InputLabel>
           <InfoInput name="email" value={userInfo.email} disabled />
         </Container>
-
+        <Container>
+          <InputLabel>비밀번호 수정</InputLabel>
+          <InfoInput
+            type="password"
+            autoComplete="off"
+            ref={newPwRef}
+            placeholder="새 비밀번호"
+          />
+        </Container>
         <Container>
           <InputLabel>전화번호</InputLabel>
           <InfoInput
@@ -184,12 +192,10 @@ function UserInfo() {
           </Divider>
         </Container>
         <Container>
-          <InputLabel>비밀번호 수정</InputLabel>
-          <InfoInput ref={newPwRef} placeholder="새 비밀번호" />
-        </Container>
-        <Container>
           <InputLabel>비밀번호 확인</InputLabel>
           <InfoInput
+            type="password"
+            autoComplete="off"
             ref={currentPwRef}
             placeholder="정보 수정 시 현재 비밀번호를 입력해주세요"
           />

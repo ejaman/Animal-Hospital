@@ -1,57 +1,38 @@
 import React, { useRef, useState } from "react";
 import styled from "styled-components";
-import UserCard from "./UserCard";
-const Container = styled.div`
-  width: 88%;
-  padding: 0.7em 1em;
-  font-size: 1.1em;
-  outline: none;
-  border: none;
-`;
-const Searchbar = styled.form`
-  width: 35em;
-  border-radius: 25px;
-  border: #d6d6d6 1px solid;
-  padding: 0 1em;
-  :hover {
-    box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
-  }
+const SearchContainer = styled.form`
+  display: flex;
+  margin-left: auto;
 `;
 const SearchInput = styled.input`
-  width: 88%;
-  padding: 0.7em 1em;
-  font-size: 1.1em;
   outline: none;
-  border: none;
+  padding: 0.2rem;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border: 1px solid ${(props) => props.theme.palette.gray};
 `;
-const SumbitBtn = styled.button`
-  background: none;
+const SearchBtn = styled.button`
   border: none;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  color: white;
+  font-size: bold;
+  background-color: ${(props) => props.theme.palette.orange};
 `;
-function SearchBar({ datas, setSearch }: any) {
-  const [email, setEmail] = useState<string>();
+function SearchBar({ setSearch }: any) {
   const formRef = useRef<HTMLFormElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-  const SearchLists = email
-    ? datas.filter((data: any) => data.email.includes(`${email}`))
-    : datas;
 
-  // datas.map((data: any) => console.log(data.userName));
-  const onSubmit = (event: React.MouseEvent<HTMLElement>) => {
+  const onhandleSearch = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    setEmail(searchRef.current?.value);
     setSearch(searchRef.current?.value);
     formRef.current?.reset();
   };
-
   return (
-    <Container>
-      <Searchbar ref={formRef}>
-        <span>🔍</span>
-        <SearchInput ref={searchRef} type="text" />
-        <SumbitBtn onClick={onSubmit}></SumbitBtn>
-      </Searchbar>
-    </Container>
+    <SearchContainer ref={formRef}>
+      <SearchInput ref={searchRef} />
+      <SearchBtn onClick={onhandleSearch}>search</SearchBtn>
+    </SearchContainer>
   );
 }
 
