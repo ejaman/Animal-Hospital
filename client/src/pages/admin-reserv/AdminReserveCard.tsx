@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { InfoCard, TextContainer } from "../../components/Liststyle";
-import { Column } from "../user-reserv/ReserveStyle";
-import { CustomAxiosGet } from "../../common/CustomAxios";
-import AdminReserveModal from "./AdminReserveModal";
+import React, { useEffect, useState } from 'react';
+import { InfoCard, TextContainer } from '../../components/Liststyle';
+import { Column } from '../user-reserv/ReserveStyle';
+import { CustomAxiosGet } from '../../common/CustomAxios';
+import AdminReserveModal from './AdminReserveModal';
 
 const AdminReserveCard = () => {
   const [reserveData, setReserveData] = useState<any>();
 
   //TODO : 페이지네이션 적용시켜야함
-  const getFetchData = (): Promise<any> =>
-    new Promise(async (resolve, reject) => {
-      const result = await CustomAxiosGet.get(
-        "/reservation/admin/list?page=1&perPage=35"
-      );
-      setReserveData(result.data.data.ReservationsInfo);
-    });
+  const getFetchData = async () => {
+    const result = await CustomAxiosGet.get(
+      '/reservation/admin/list?page=1&perPage=35',
+    );
+    setReserveData(result.data.data.ReservationsInfo);
+  };
 
   useEffect(() => {
     getFetchData();
@@ -35,7 +34,7 @@ const AdminReserveCard = () => {
           <Column>
             <AdminReserveModal reserveData={reserveData} idx={i} />
           </Column>
-        </TextContainer>
+        </TextContainer>,
       );
     }
     return res;

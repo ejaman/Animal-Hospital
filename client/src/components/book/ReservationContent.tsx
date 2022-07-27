@@ -1,5 +1,5 @@
-import React from "react";
-import { Container, InfoInput, InputLabel } from "../InfoForm";
+import React from 'react';
+import { Container, InfoInput, InputLabel } from '../InfoForm';
 
 type TBookProps = {
   label: string;

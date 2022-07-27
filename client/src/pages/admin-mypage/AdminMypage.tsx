@@ -1,5 +1,5 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Card,
@@ -8,20 +8,20 @@ import {
   MypageHeader,
   HeaderTitle,
   HeaderDescription,
-} from "../../components/MypageCardBtn";
+} from '../../components/MypageCardBtn';
 
 function AdminMypage() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ maxWidth: "700px", margin: "2rem auto" }}>
+    <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
       <MypageHeader>
         <HeaderDescription>마이페이지에 오신걸 환영합니다.</HeaderDescription>
       </MypageHeader>
       <Container>
         <Card
           onClick={() => {
-            navigate("/admin-userlist");
+            navigate('/admin-userlist');
           }}
         >
           <i className="fa-solid fa-users fa-xl"></i>
@@ -32,7 +32,7 @@ function AdminMypage() {
         </Card>
         <Card
           onClick={() => {
-            navigate("/admin-hplist");
+            navigate('/admin-hplist');
           }}
         >
           <i className="fa-solid fa-hospital fa-xl"></i>
@@ -43,7 +43,7 @@ function AdminMypage() {
         </Card>
         <Card
           onClick={() => {
-            navigate("/admin-reserv");
+            navigate('/admin-reserv');
           }}
         >
           <i className="fa-solid fa-book fa-xl"></i>
@@ -54,7 +54,7 @@ function AdminMypage() {
         </Card>
         <Card
           onClick={() => {
-            navigate("/promotion");
+            navigate('/promotion');
           }}
         >
           <i className="fa-brands fa-adversal fa-xl"></i>

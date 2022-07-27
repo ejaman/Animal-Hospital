@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import Modal from "react-modal";
-import styled from "styled-components";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import { Link } from "react-router-dom";
-import { CheckBtn } from "../../pages/user-reserv/ReserveStyle";
-import { InfoBtn } from "../../components/InfoForm";
-import { ModalStyle } from "../../components/ModalStyle";
-import ReservationContent from "../../components/book/ReservationContent";
+import React, { useState } from 'react';
+import Modal from 'react-modal';
+import styled from 'styled-components';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import { Link } from 'react-router-dom';
+import { CheckBtn } from '../../pages/user-reserv/ReserveStyle';
+import { InfoBtn } from '../../components/InfoForm';
+import { ModalStyle } from '../../components/ModalStyle';
+import ReservationContent from '../../components/book/ReservationContent';
 
 const ReservationTitle = styled.h2`
   text-align: center;
@@ -29,7 +29,7 @@ const ModalBtnContainer = styled.div`
 
 const AdimReserveModal = ({ reserveData, idx }: any) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const isToken = localStorage.getItem("token");
+  const isToken = localStorage.getItem('token');
 
   const handleChangeModalState = () => {
     setIsOpen(!isOpen);

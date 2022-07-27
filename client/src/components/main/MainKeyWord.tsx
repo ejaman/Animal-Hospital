@@ -1,5 +1,5 @@
-import React from "react";
-import { MainKeyWordContainer, MainKeyWordContent } from "./MainKeyWordStyle";
+import React from 'react';
+import { MainKeyWordContainer, MainKeyWordContent } from './MainKeyWordStyle';
 
 export type TKeyWord = {
   mainKeyWord: string[];

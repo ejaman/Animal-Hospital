@@ -1,10 +1,10 @@
-import React from "react";
-import styled from "styled-components";
-import { CalendarTitle } from "../../pages/detail/Calendar";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClockFour } from "@fortawesome/free-solid-svg-icons";
-import { useRecoilState } from "recoil";
-import { reservationState } from "../../state/ReservationState";
+import React from 'react';
+import styled from 'styled-components';
+import { CalendarTitle } from '../../pages/detail/Calendar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClockFour } from '@fortawesome/free-solid-svg-icons';
+import { useRecoilState } from 'recoil';
+import { reservationState } from '../../state/ReservationState';
 
 const TimeWrapper = styled.div`
   margin-top: 20px;
@@ -46,7 +46,7 @@ const TimeButton = ({ time }: TTimeProps) => {
   const [bookTime, setBookTime] = useRecoilState(reservationState);
 
   const handleChangeTime = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     setBookTime({
       ...bookTime,
@@ -62,8 +62,8 @@ const TimeButton = ({ time }: TTimeProps) => {
 
   return (
     <TimeWrapper>
-      <div style={{ marginBottom: "20px" }}>
-        <FontAwesomeIcon style={{ fontSize: "20px" }} icon={faClockFour} />
+      <div style={{ marginBottom: '20px' }}>
+        <FontAwesomeIcon style={{ fontSize: '20px' }} icon={faClockFour} />
         <TimeTitle>시간</TimeTitle>
       </div>
       <TimeButtonWrapper>{timeButtonItems}</TimeButtonWrapper>

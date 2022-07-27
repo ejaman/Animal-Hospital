@@ -1,8 +1,8 @@
-import React from "react";
-import { Title } from "../../components/InfoForm";
-import { Header } from "../../components/Liststyle";
-import { Container, Column } from "../user-reserv/ReserveStyle";
-import AdminReserveCard from "./AdminReserveCard";
+import React from 'react';
+import { Title } from '../../components/InfoForm';
+import { Header } from '../../components/Liststyle';
+import { Container, Column } from '../user-reserv/ReserveStyle';
+import AdminReserveCard from './AdminReserveCard';
 
 const AdminReserve = () => {
   return (

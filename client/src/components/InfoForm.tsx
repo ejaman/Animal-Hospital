@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Title = styled.h1`
   width: 100%;
@@ -15,7 +15,7 @@ export const Form = styled.form`
   font-variant: tabular-nums;
   line-height: 1.5715;
   list-style: none;
-  font-feature-settings: "tnum";
+  font-feature-settings: 'tnum';
 `;
 export const MainContainer = styled.div`
   max-width: 700px;

@@ -161,8 +161,11 @@ class UserService {
     }
   }
 
-  async getUsers(): Promise<UserData[]> {
-    const users = await this.userModel.findAll();
+
+
+  //유저 정보 pagination
+  async getUsers(page : number, perPage : number): Promise<UserData[]> {
+    const users = await this.userModel.findAllByPage(page, perPage);
     return users;
   }
 
@@ -176,14 +179,15 @@ class UserService {
     return newStatus;
   }
 
-  // 관리자의 회원 상태 변경
-  async setUserStatus( statusInfoRequired : StatusInfoRequired) : Promise<UserData>{
-    const { userId, userStatus } = statusInfoRequired;
-    const user = await this.userModel.findById(userId)
-    console.log(statusInfoRequired);
-    const updatedUserStatus = await this.userModel.updateUserStatus(statusInfoRequired);
-    return updatedUserStatus;
-  }
+    // 관리자의 회원 상태 변경
+    async setUserStatus( statusInfoRequired : StatusInfoRequired) : Promise<UserData>{
+      const { userId, userStatus } = statusInfoRequired;
+      const user = await this.userModel.findById(userId)
+      console.log(statusInfoRequired);
+      const updatedUserStatus = await this.userModel.updateUserStatus(statusInfoRequired);
+      return updatedUserStatus;
+    }
+
 
   //탈퇴한 회원 로그인 차단
   async blockExpiredUser(email: string): Promise<boolean> {

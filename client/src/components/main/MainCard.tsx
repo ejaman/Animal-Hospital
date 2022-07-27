@@ -1,5 +1,5 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import {
   MainCardContainer,
   MainCardContent,
@@ -7,8 +7,8 @@ import {
   MainCardAdress,
   MainCardWrapper,
   MainCardImg,
-} from "./MainCardStyle";
-import MainKeyWord from "./MainKeyWord";
+} from './MainCardStyle';
+import MainKeyWord from './MainKeyWord';
 
 export interface IData {
   starRating: number;

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { useSearchParams } from "react-router-dom";
-import axios from "axios";
-import { ITagsProps } from "./TagList";
-import { IData } from "../../components/main/MainCard";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { useSearchParams } from 'react-router-dom';
+import axios from 'axios';
+import { ITagsProps } from './TagList';
+import { IData } from '../../components/main/MainCard';
 
 // import overnight from '../../';
 
@@ -22,11 +22,11 @@ const TagWrapper = styled.div<ITagValue>`
   justify-content: center;
   align-items: center;
   color: ${(props) =>
-    props.idx === props.tag ? "black" : props.theme.palette.gray};
+    props.idx === props.tag ? 'black' : props.theme.palette.gray};
   transition: 0.2s all ease-in-out;
   cursor: pointer;
   border-bottom: 3px solid
-    ${(props) => (props.idx === props.tag ? "black" : "white")};
+    ${(props) => (props.idx === props.tag ? 'black' : 'white')};
   ${TagImg} {
     filter: contrast(${(props) => (props.idx === props.tag ? 1 : 0.1)});
   }
@@ -67,17 +67,17 @@ export default function Tags({
   const [tagData, setTagData] = useState<ITagData[]>([]); // 태그 데이터 모음
   const [tag, setTag] = useState<number>(0); // 클릭 된 태그의 인덱스
   const [searchParams, setSearchParams] = useSearchParams();
-  const [paramsTag, setParamsTag] = useState<string>("24시간");
+  const [paramsTag, setParamsTag] = useState<string>('24시간');
   const [filterData, setFilterData] = useState<IData[]>([]);
 
   async function getData() {
     const res = await axios.get(
-      "http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospitalTag/list",
+      'http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospitalTag/list',
       {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-      }
+      },
     );
     setTagData([...res.data]);
     initialList();
@@ -85,7 +85,7 @@ export default function Tags({
 
   async function initialList() {
     const res = await axios.get(
-      `http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/list/main?page=1&perPage=${limit}&tagName=${paramsTag}`
+      `http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/list/main?page=1&perPage=${limit}&tagName=${paramsTag}`,
     );
     const data = await res.data.data.hospitals;
 
@@ -97,14 +97,14 @@ export default function Tags({
 
     setPage(1);
     setFiltered(filterData);
-    setParamsTag(tagData[tag]?.name || "24시간");
-    setSearchParams({ page: "1", perPage: "4", tagName: paramsTag });
+    setParamsTag(tagData[tag]?.name || '24시간');
+    setSearchParams({ page: '1', perPage: '4', tagName: paramsTag });
   }, []);
 
   useEffect(() => {
     (async function getNewData() {
       const res = await axios.get(
-        `http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/list/main?page=${page}&perPage=${limit}&tagName=${paramsTag}`
+        `http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/list/main?page=${page}&perPage=${limit}&tagName=${paramsTag}`,
       ); // TODO: tagName=tagState로 변경. page 변경
       const { data } = await res.data;
       setFilterData(data.hospitals);
@@ -124,7 +124,7 @@ export default function Tags({
   function handleTagClick(category: ITagData, idx: number) {
     setParamsTag(category.name);
     setSearchParams({
-      page: "1",
+      page: '1',
       perPage: limit.toString(),
       tagName: category.name,
     });
