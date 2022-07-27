@@ -176,7 +176,10 @@ export async function updateUserInfoCTR (req : Request, res : Response, next : N
 
 export async function getAllUsersCTR (req : Request, res : Response, next : NextFunction) {
     try {
-        const users = await userService.getUsers();
+        const page = Number(req.query.page || 1);
+        const perPage = Number(req.query.perPage || 10)
+        const users = await userService.getUsers(page, perPage);
+        
         res.status(200).json(users);
     } catch (error) {
         next(error)
@@ -207,12 +210,7 @@ export async function loginKakaoCTR (req : Request, res : Response, next : NextF
             console.log('passport.authenticate(kakao)실행');
             console.log(user);
             console.log(req.user);
-            if(!user) {
-
-               
-                return res.redirect('http://localhost:5100/api/register');
-
-            }
+          
             req.login(user, async(err)=> {
                 console.log('kakao-callback user : ', user);
                 if(err){
@@ -247,13 +245,8 @@ export async function loginKakaoCTR (req : Request, res : Response, next : NextF
 
 export async function setUserStatusCTR (req : Request, res : Response, next : NextFunction){
     try{
-        const isAdmin = req.userRole === "admin";  //로그인한 사용자의 role
-        if(!isAdmin){
-            throw new HttpError(403, "권한없는 사용자입니다.")
-        }
+        
         const {userId, userStatus} = req.body;
-        console.log(req.userRole);
-        console.log(req.body);
         const requiredParams = ['userId', 'userStatus'];
         blockInvalidRequest(req.body, requiredParams);
         
