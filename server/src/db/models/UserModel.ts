@@ -46,6 +46,18 @@ export class UserModel {
         return users;
     }
 
+    //유저 정보의 pagination 추가함
+    async findAllByPage(page : number,perPage :number) : Promise<any>{
+        const total = await User.countDocuments({});
+        const users = await User.find({})
+        .sort({createdA : -1})
+        .skip(perPage * (page -1))
+        .limit(perPage) 
+        const totalPage = Math.ceil(total/perPage);
+        const usersPerPage = {users, page, perPage, totalPage};
+        return usersPerPage;
+    }
+
     async statusExpired({userId} : StatusInfoRequired) : Promise<string> {
         const filter = {_id : userId};
         const option = {returnOriginal : false};
