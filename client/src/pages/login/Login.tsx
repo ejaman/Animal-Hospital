@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 
 import {
   LoginWrapper,
@@ -11,24 +11,25 @@ import {
   PasswordInput,
   UserCheckBox,
   UserInput,
-} from "./LoginStyle";
+} from './LoginStyle';
 
-import { CustomAxiosPost } from "../../common/CustomAxios";
-import { useRecoilState } from "recoil";
-import { hospitalLoginState, THospital } from "../../state/HospitalState";
-import { TUser, userState } from "../../state/UserState";
+import { CustomAxiosPost } from '../../common/CustomAxios';
+import { useRecoilState } from 'recoil';
+import { hospitalLoginState, THospital } from '../../state/HospitalState';
+import { TUser, userState } from '../../state/UserState';
+import { customAxios } from '../../utils/AxiosModule';
 
 type LoginState = {
   email: string;
   password: string;
 };
 
-function LoginLayout() {
+function Login() {
   const navigate = useNavigate();
   const [isCheckUser, setIsCheckUser] = useState<boolean>(false);
   const [logins, setLogins] = useState<LoginState>({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
   // 병원 상태 저장!
   const [hospital, setHospital] = useRecoilState<THospital>(hospitalLoginState);
@@ -51,7 +52,7 @@ function LoginLayout() {
     // 만일 일반 유저가 로그인 했다면
     if (!isCheckUser) {
       try {
-        const result = await CustomAxiosPost.post("/api/login", logins);
+        const result = await customAxios.post('/api/login', logins);
         const { token, role, userStatus } = result.data.userToken;
 
         setUser({
@@ -60,25 +61,22 @@ function LoginLayout() {
           userStatus,
         });
 
-        if (userStatus === "expired") {
-          console.log("여길 안지나감?");
-          alert("탈퇴한 유저 입니다.");
+        if (userStatus === 'expired') {
+          alert('탈퇴한 유저 입니다.');
           return;
         }
 
-        localStorage.setItem("token", token);
-        alert("로그인에 성공하였습니다.");
-        navigate("/");
+        localStorage.setItem('token', token);
+        navigate('/');
       } catch (e) {
-        console.log(e);
-        alert("아이디 또는 비밀번호 오류입니다.");
+        alert('아이디 또는 비밀번호 오류입니다.');
       }
     } else {
       // 만일 병원 유저가 로그인 했다면
       try {
         const hospitalUser = await CustomAxiosPost.post(
-          "/hospital/login",
-          logins
+          '/hospital/login',
+          logins,
         );
         const { hospitalName, hospitalState } = hospitalUser.data.data;
 
@@ -87,17 +85,18 @@ function LoginLayout() {
           hospitalName,
           hospitalState,
         });
-        if (hospitalState === "추가정보 미기입") {
-          alert("추가정보를 기입해주세요.");
-          navigate("/hospital-info");
+
+        if (hospitalState === '추가정보 미기입') {
+          alert('추가정보를 기입해주세요.');
+          navigate('/hospital-info');
           return;
         }
         alert(`로그인에 성공하였습니다.`);
-        navigate("/");
+        navigate('/');
       } catch (e: any) {
         const errorMsg = e.response.data.message;
         // errorMsg가 확인중일때는 아래와 같은 경고창을 띄워준다.
-        if (errorMsg === "확인중") {
+        if (errorMsg === '확인중') {
           alert(`관리자 승인 대기중입니다. \n승인 완료시까지 기다려주세요.`);
         }
       }
@@ -107,7 +106,7 @@ function LoginLayout() {
   const handleKakaoLogin = async (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     window.location.href =
-      "http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/login/kakao";
+      'http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/login/kakao';
   };
 
   return (
@@ -145,14 +144,14 @@ function LoginLayout() {
           onClick={handleLoginChecked}
           variant="contained"
           type="submit"
-          sx={{ mb: 1, bgcolor: "#F87474" }}
+          sx={{ mb: 1, bgcolor: '#F87474' }}
         >
           로그인
         </LoginButton>
         <KakaoButton
           variant="contained"
           type="submit"
-          sx={{ mb: 1, bgcolor: "#fae100", color: "black" }}
+          sx={{ mb: 1, bgcolor: '#fae100', color: 'black' }}
           onClick={handleKakaoLogin}
         >
           카카오 로그인
@@ -167,4 +166,4 @@ function LoginLayout() {
   );
 }
 
-export default LoginLayout;
+export default Login;

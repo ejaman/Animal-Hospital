@@ -8,7 +8,7 @@ import '@fortawesome/fontawesome-free/js/all.js';
 import { RecoilRoot } from 'recoil';
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById('root') as HTMLElement,
 );
 root.render(
   <ThemeProvider theme={theme}>
@@ -16,5 +16,5 @@ root.render(
     <RecoilRoot>
       <App />
     </RecoilRoot>
-  </ThemeProvider>
+  </ThemeProvider>,
 );

@@ -1,7 +1,7 @@
-import React from 'react'
+import React from 'react';
 import styled from 'styled-components';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faGithub} from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
 const Container = styled.div`
   background-color: black;
@@ -29,7 +29,7 @@ const Member = styled.p`
   margin-bottom: 30px;
   font-size: 16px;
   text-align: center;
-  
+
   @media screen and (max-width: 780px) {
     margin-bottom: 15px;
   }
@@ -66,12 +66,12 @@ const Contact = styled(Role)`
     margin-top: 20px;
     margin-bottom: 16px;
   }
-`
+`;
 const EtcContainer = styled.div`
   @media screen and (max-width: 780px) {
     display: none;
   }
-`
+`;
 
 export default function Footer() {
   return (
@@ -79,8 +79,8 @@ export default function Footer() {
       <div>
         <Team>Team 14</Team>
         <Year>@2022 Copyright by Team14</Year>
-        <LinkBtn href='https://github.com/Elice-SW-2-Team14/Animal-Hospital.git'>
-          <FontAwesomeIcon icon={faGithub} size='3x' color='white' />
+        <LinkBtn href="https://github.com/Elice-SW-2-Team14/Animal-Hospital.git">
+          <FontAwesomeIcon icon={faGithub} size="3x" color="white" />
         </LinkBtn>
       </div>
       <div>
@@ -95,5 +95,5 @@ export default function Footer() {
         <Member>DM으로 문의 부탁드립니다🙏</Member>
       </EtcContainer>
     </Container>
-  )
+  );
 }

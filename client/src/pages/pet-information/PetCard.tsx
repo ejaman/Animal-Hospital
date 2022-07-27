@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { PetInfoType } from "./PetInfoInterface";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { PetInfoType } from './PetInfoInterface';
 import {
   PetCardContainer,
   DeleteBtn,
@@ -18,25 +18,25 @@ import {
   PetImg,
   Contents,
   Button,
-} from "./PetInfoStyle";
+} from './PetInfoStyle';
 
-const defaultImg = "/defaultImg.png";
-const token = localStorage.getItem("token");
+const defaultImg = '/defaultImg.png';
+const token = localStorage.getItem('token');
 
 function PetCard({ pet, idx, onhandleDelete }: any) {
   const [petInfo, setPetInfo] = useState<PetInfoType>({
-    _id: "",
-    image: "",
-    owner: "",
-    species: "",
-    breed: "",
-    name: "",
+    _id: '',
+    image: '',
+    owner: '',
+    species: '',
+    breed: '',
+    name: '',
     age: 0,
-    sex: "",
+    sex: '',
     weight: 0,
-    medicalHistory: "",
-    vaccination: "",
-    neutralized: "",
+    medicalHistory: '',
+    vaccination: '',
+    neutralized: '',
   });
   const [gender, setGender] = useState(pet.sex);
   const [neut, setNeut] = useState(pet.neutralized);
@@ -48,7 +48,7 @@ function PetCard({ pet, idx, onhandleDelete }: any) {
   const onInputChange = (
     event:
       | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
+      | React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     const data = {
       ...petInfo,
@@ -68,25 +68,22 @@ function PetCard({ pet, idx, onhandleDelete }: any) {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
-      alert("수정완료! 🐾");
     } catch (err) {
-      alert("입력값을 다시 한 번 확인해주세요 🥲");
+      // alert("입력값을 다시 한 번 확인해주세요 🥲");
     }
   };
 
   // radio 관련
   const onhandleGender = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    console.log(value);
     setGender(value);
   };
   const onhandleNeut = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setNeut(value);
   };
-  console.log(pet);
 
   return (
     <PetCardContainer>
@@ -141,7 +138,7 @@ function PetCard({ pet, idx, onhandleDelete }: any) {
                   type="radio"
                   name={`${idx}gender`}
                   value="F"
-                  checked={gender === "F"}
+                  checked={gender === 'F'}
                   onChange={(event) => onhandleGender(event)}
                 />
                 <RadioButtonLabel />
@@ -152,7 +149,7 @@ function PetCard({ pet, idx, onhandleDelete }: any) {
                   type="radio"
                   name={`${idx}gender`}
                   value="M"
-                  checked={gender === "M"}
+                  checked={gender === 'M'}
                   onChange={(event) => onhandleGender(event)}
                 />
                 <RadioButtonLabel />
@@ -170,7 +167,7 @@ function PetCard({ pet, idx, onhandleDelete }: any) {
                   type="radio"
                   name={`${idx}neutralized`}
                   value="완료"
-                  checked={neut === "완료"}
+                  checked={neut === '완료'}
                   onChange={(event) => onhandleNeut(event)}
                 />
                 <RadioButtonLabel />
@@ -181,7 +178,7 @@ function PetCard({ pet, idx, onhandleDelete }: any) {
                   type="radio"
                   name={`${idx}neutralized`}
                   value="미완료"
-                  checked={neut === "미완료"}
+                  checked={neut === '미완료'}
                   onChange={(event) => onhandleNeut(event)}
                 />
                 <RadioButtonLabel />
@@ -192,7 +189,7 @@ function PetCard({ pet, idx, onhandleDelete }: any) {
                   type="radio"
                   name={`${idx}neutralized`}
                   value="모름"
-                  checked={neut === "모름"}
+                  checked={neut === '모름'}
                   onChange={(event) => onhandleNeut(event)}
                 />
                 <RadioButtonLabel />

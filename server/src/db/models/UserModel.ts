@@ -46,6 +46,18 @@ export class UserModel {
         return users;
     }
 
+    //유저 정보의 pagination 추가함
+    async findAllByPage(page : number,perPage :number) : Promise<any>{
+        const total = await User.countDocuments({});
+        const users = await User.find({})
+        .sort({createdA : -1})
+        .skip(perPage * (page -1))
+        .limit(perPage) 
+        const totalPage = Math.ceil(total/perPage);
+        const usersPerPage = {users, page, perPage, totalPage};
+        return usersPerPage;
+    }
+
     async statusExpired({userId} : StatusInfoRequired) : Promise<string> {
         const filter = {_id : userId};
         const option = {returnOriginal : false};
@@ -60,19 +72,20 @@ export class UserModel {
     }
 
 
-    async updateUserStatus(statusInfoRequired : StatusInfoRequired) : Promise<UserData>{
-        const {userId, userStatus} = statusInfoRequired;
-        const filter = {_id : userId};
-        const toUpdate = userStatus===UserStatus.EXPIRED ? UserStatus.NORMAL : UserStatus.EXPIRED;
-        console.log(toUpdate);
-        const option = {returnOriginal : false};
-        const updatedUser = await User.findOneAndUpdate(filter, {userStatus : toUpdate}, option );
-        console.log(updatedUser);
-        if(!updatedUser){
-            throw new Error("사용자 상태를 변경할 수 없습니다.")
-        }
-        return updatedUser;
+   //관리자의 유저 상태 변경
+   async updateUserStatus(statusInfoRequired : StatusInfoRequired) : Promise<UserData>{
+    const {userId, userStatus} = statusInfoRequired;
+    const filter = {_id : userId};
+    const toUpdate = userStatus===UserStatus.EXPIRED ? UserStatus.NORMAL : UserStatus.EXPIRED;
+    console.log(toUpdate);
+    const option = {returnOriginal : false};
+    const updatedUser = await User.findOneAndUpdate(filter, {userStatus : toUpdate}, option );
+    console.log(updatedUser);
+    if(!updatedUser){
+        throw new Error("사용자 상태를 변경할 수 없습니다.")
     }
+    return updatedUser;
+}
 
 
     async updateRefreshToken(userId : string, refreshToken : string) {

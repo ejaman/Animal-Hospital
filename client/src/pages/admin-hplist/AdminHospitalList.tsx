@@ -1,10 +1,10 @@
-import React from "react";
-import { ListContainer } from "../../components/Liststyle";
-import HpCard from "./HpCard";
+import React from 'react';
+import { ListContainer } from '../../components/Liststyle';
+import HpCard from './HpCard';
 
 function AdminHospitalList() {
   const onClick = () => {
-    console.log("click");
+    console.log('click');
   };
   return (
     <ListContainer>

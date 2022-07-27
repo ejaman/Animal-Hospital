@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { InfoText, ListContainer } from "../../components/Liststyle";
+import styled from 'styled-components';
+import { InfoText, ListContainer } from '../../components/Liststyle';
 export const Container = styled(ListContainer)`
   max-width: 1000px;
   margin: 0rem auto;
