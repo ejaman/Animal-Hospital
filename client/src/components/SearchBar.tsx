@@ -1,5 +1,22 @@
 import React, { useRef, useState } from "react";
 import styled from "styled-components";
+function SearchBar({ setSearch }: any) {
+  const formRef = useRef<HTMLFormElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  const onhandleSearch = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    setSearch(searchRef.current?.value);
+    formRef.current?.reset();
+  };
+  return (
+    <SearchContainer ref={formRef}>
+      <SearchInput ref={searchRef} />
+      <SearchBtn onClick={onhandleSearch}>search</SearchBtn>
+    </SearchContainer>
+  );
+}
+
 const SearchContainer = styled.form`
   display: flex;
   margin-left: auto;
@@ -19,21 +36,4 @@ const SearchBtn = styled.button`
   font-size: bold;
   background-color: ${(props) => props.theme.palette.orange};
 `;
-function SearchBar({ setSearch }: any) {
-  const formRef = useRef<HTMLFormElement>(null);
-  const searchRef = useRef<HTMLInputElement>(null);
-
-  const onhandleSearch = (event: React.MouseEvent<HTMLElement>) => {
-    event.preventDefault();
-    setSearch(searchRef.current?.value);
-    formRef.current?.reset();
-  };
-  return (
-    <SearchContainer ref={formRef}>
-      <SearchInput ref={searchRef} />
-      <SearchBtn onClick={onhandleSearch}>search</SearchBtn>
-    </SearchContainer>
-  );
-}
-
 export default SearchBar;

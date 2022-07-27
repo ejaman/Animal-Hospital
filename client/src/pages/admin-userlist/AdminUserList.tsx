@@ -5,7 +5,7 @@ import { InfoText, ListContainer, Header } from "../../components/Liststyle";
 import { UserInfoType } from "../user-info/Interface";
 import styled from "styled-components";
 import Checkbox from "../../components/Buttons/CheckBox";
-import SearchBar from "./SearchBar";
+import SearchBar from "../../components/SearchBar";
 
 const Container = styled(ListContainer)`
   max-width: 700px;
@@ -48,7 +48,7 @@ const AdminUserList: React.FC = () => {
       ? data.userStatus === ""
       : data.userName.includes("")
   );
-  console.log(search);
+
   if (search) {
     list = list.filter((data: any) => data.email.includes(search));
   }

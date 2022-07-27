@@ -16,8 +16,6 @@ function Checkbox({ text, onChange, title, checked }: any) {
   );
 }
 
-export default Checkbox;
-
 const StyledInput = styled.input`
   appearance: none;
   width: 1.1rem;
@@ -44,3 +42,4 @@ const StyledLabel = styled.label`
 const StyledP = styled.p`
   margin-left: 0.25rem;
 `;
+export default Checkbox;
