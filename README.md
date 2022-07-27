@@ -67,7 +67,7 @@
   - 백엔드
    
     <img alt="Nodejs" src="https://img.shields.io/badge/-Nodejs-43853d?style=flat-square&logo=Node.js&logoColor=white" />
-    <img alt="Nodejs" src="https://img.shields.io/badge/-Nodejs-43853d?style=flat-square&logo=Node.js&logoColor=white" />
+    <img alt="express" src="https://img.shields.io/badge/-express-43853d?style=flat-square&logo=express&logoColor=white" />
     <img alt="TypeScript" src="https://img.shields.io/badge/-TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white" />
     <img alt="mongoDB" src="https://img.shields.io/badge/-mongoDB-019267?style=flat-square&logo=mongodb&logoColor=white" />
     <img alt="multer" src="https://img.shields.io/badge/-multer-012267?style=flat-square&logo=multer&logoColor=white" />
