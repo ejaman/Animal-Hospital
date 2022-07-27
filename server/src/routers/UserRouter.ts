@@ -15,7 +15,7 @@ router.post('/register', registerUserCTR);
 // router.post('/login', loginUserCTR);
 router.post('/login', loginPassportCTR);
 router.get('/login/kakao', passport.authenticate('kakao'));
-router.get('/login/kakao/callback', loginKakaoCTR)
+router.get('/oauth/kakao/callback', loginKakaoCTR)
 
 
 //일반회원 개인정보 조회
@@ -28,7 +28,7 @@ router.patch('/users/:userEmail', loginRequired, updateUserInfoCTR);
 router.get('/userlist', adminOnly, getAllUsersCTR);
 
 // 관리자의 일반회원 상태 변경
-router.patch('/admin/status', loginRequired, setUserStatusCTR);
+router.patch('/admin/status', loginRequired, adminOnly, setUserStatusCTR);
 
 // 일반 회원 탈퇴 
 router.patch('/expiration', loginRequired, ExpireUserCTR)

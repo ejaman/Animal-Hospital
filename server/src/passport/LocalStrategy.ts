@@ -2,7 +2,7 @@ import passport from 'passport';
 import {Strategy as LocalStrategy} from 'passport-local';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import {ExtractJwt, Strategy as JWTStragety} from 'passport-jwt';
+
 import {userModel} from '../db';
 
 
