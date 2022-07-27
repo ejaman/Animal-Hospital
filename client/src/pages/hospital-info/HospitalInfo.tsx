@@ -2,13 +2,13 @@
 // 시간관계상 구현 못한 남은 기능들: 정보 수정 시 validation 추가, 버튼 재렌더링, 비밀번호 수정(기존에 구상했던 부분과 다른 페이지의 구현이 다른데 백프론트 모두 방식이 달라서 통일감있게 제작하려면 시간이 좀 걸릴 것 같아서 후순위로 둠), 업로드한 이미지 반영, 그 외 코드 주석
 // 개선해야 될 부분: 유저 페이지와 형식을 통일하려다 보니 정보 수정 시에는 현재 비밀번호를 form에서 입력하는데 탈퇴 시에는 modal 창에서 입력해서 UI의 가독성이 좋지 않아서 방식을 추후 modal 창으로 통일할 예정, 페이지 로드 시 시간이 오래 걸림
 
-import React, { useState, useCallback, useEffect, useRef } from "react";
-import DaumPostcode from "react-daum-postcode";
-import Modal from "react-modal";
-import { HospitalInfoType, HospitalServiceInfoType, Data } from "./Interface";
-import "antd/dist/antd.min.css";
-import { Row, Col } from "antd";
-import { theme } from "../../styles/Colors";
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import DaumPostcode from 'react-daum-postcode';
+import Modal from 'react-modal';
+import { HospitalInfoType, HospitalServiceInfoType, Data } from './Interface';
+import 'antd/dist/antd.min.css';
+import { Row, Col } from 'antd';
+import { theme } from '../../styles/Colors';
 import {
   HospitalContainer,
   Container,
@@ -18,9 +18,9 @@ import {
   DayLabel,
   TimeLabel,
   KeywordInput,
-} from "./Style";
-import { ModalStyle } from "../../components/ModalStyle";
-import { PasswordModalStyle } from "../../components/PasswordModalStyle";
+} from './Style';
+import { ModalStyle } from '../../components/ModalStyle';
+import { PasswordModalStyle } from '../../components/PasswordModalStyle';
 import {
   Title,
   InputLabel,
@@ -28,42 +28,42 @@ import {
   InfoBtn,
   DeactivateContainer,
   DeactiveBtn,
-} from "../../components/InfoForm";
-import axios from "axios";
-import { useRecoilState, useResetRecoilState } from "recoil";
-import { hospitalLoginState } from "../../state/HospitalState";
-import { useNavigate } from "react-router-dom";
-import { CustomAxiosGet } from "../../common/CustomAxios";
-import { userState } from "../../state/UserState";
+} from '../../components/InfoForm';
+import axios from 'axios';
+import { useRecoilState, useResetRecoilState } from 'recoil';
+import { hospitalLoginState } from '../../state/HospitalState';
+import { useNavigate } from 'react-router-dom';
+import { CustomAxiosGet } from '../../common/CustomAxios';
+import { userState } from '../../state/UserState';
 
 export default function HospitalInfo() {
   const [info, setInfo] = useRecoilState(hospitalLoginState);
-  console.log("loginStateInfo:", info);
+  console.log('loginStateInfo:', info);
   // 폼 내용들은 입력 시마다 내용이 곧바로 저장되므로 추후 debouncing 적용 예정
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   /* elements */
-  const $HashWrapOuter = document.querySelector(".HashWrapOuter");
-  const $HashWrapInner = document.createElement("div");
-  $HashWrapInner.className = "HashWrapInner";
-  const $keywordNumWarning = document.querySelector(".keywordNumWarning");
+  const $HashWrapOuter = document.querySelector('.HashWrapOuter');
+  const $HashWrapInner = document.createElement('div');
+  $HashWrapInner.className = 'HashWrapInner';
+  const $keywordNumWarning = document.querySelector('.keywordNumWarning');
 
   /* states */
   const [hospitalInfo, setHospitalInfo] = useState<HospitalInfoType>({
-    name: "",
-    email: "",
-    director: "",
-    password: "",
+    name: '',
+    email: '',
+    director: '',
+    password: '',
     address: {
-      postalCode: "",
-      address1: "",
-      address2: "",
+      postalCode: '',
+      address1: '',
+      address2: '',
     },
-    phoneNumber: "",
+    phoneNumber: '',
     businessHours: [],
-    businessNumber: "",
-    licenseNumber: "",
+    businessNumber: '',
+    licenseNumber: '',
     holiday: [],
     hospitalCapacity: 0,
     tag: [],
@@ -72,14 +72,14 @@ export default function HospitalInfo() {
   });
   const [hospitalServiceInfo, setHospitalServiceInfo] =
     useState<HospitalServiceInfoType>({
-      serviceName: "",
+      serviceName: '',
       servicePrice: 0,
-      serviceDesc: "",
+      serviceDesc: '',
       serviceCapacity: 0,
     });
   const [serviceList, setServiceList] = useState<any[]>([]);
   const [keyword, setKeyword] = useState<string[] | undefined>([]);
-  const [newKeyword, setNewKeyword] = useState("");
+  const [newKeyword, setNewKeyword] = useState('');
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
   /* address modal */
@@ -88,48 +88,48 @@ export default function HospitalInfo() {
   const [isPassOpen, setIsPassOpen] = useState<boolean>(false);
 
   /* password */
-  const [currentPassword, setCurrentPassword] = useState<string>("");
+  const [currentPassword, setCurrentPassword] = useState<string>('');
 
   /* constants */
   const AVAILABLE_KEYWORD_LENGTH = 10;
   const AVAILABLE_KEYWORD_COUNTS = 3;
   const CATEGORY_LIST = [
-    "24시간",
-    "야간진료",
-    "강아지 전문",
-    "고양이 전문",
-    "특수동물",
-    "호텔",
-    "미용",
-    "중성화 전문",
-    "MRI",
+    '24시간',
+    '야간진료',
+    '강아지 전문',
+    '고양이 전문',
+    '특수동물',
+    '호텔',
+    '미용',
+    '중성화 전문',
+    'MRI',
   ];
-  const DAY_LIST = ["월", "화", "수", "목", "금", "토", "일"];
+  const DAY_LIST = ['월', '화', '수', '목', '금', '토', '일'];
   const TIME_LIST = [
-    "00",
-    "01",
-    "02",
-    "03",
-    "04",
-    "05",
-    "06",
-    "07",
-    "08",
-    "09",
-    "10",
-    "11",
-    "12",
-    "13",
-    "14",
-    "15",
-    "16",
-    "17",
-    "18",
-    "19",
-    "20",
-    "21",
-    "22",
-    "23",
+    '00',
+    '01',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+    '19',
+    '20',
+    '21',
+    '22',
+    '23',
   ];
 
   /* image converter */
@@ -140,7 +140,7 @@ export default function HospitalInfo() {
       if (reader) {
         reader.onload = () => {
           setHospitalInfo((prev) => {
-            let imgList = [...hospitalInfo.image];
+            const imgList = [...hospitalInfo.image];
             imgList.push(reader.result as string);
             return { ...prev, image: imgList };
           });
@@ -181,7 +181,7 @@ export default function HospitalInfo() {
 
       /* 키워드 클릭 시 키워드 삭제 */
       // => 삭제 시 DOM에러 뜸. 아마 디자인용으로 새로 생성한 컴포넌트 때문으로 예상중이나 기능은 정상 작동해서 이후 수정할 예정
-      $HashWrapInner.addEventListener("click", () => {
+      $HashWrapInner.addEventListener('click', () => {
         $HashWrapOuter?.removeChild($HashWrapInner);
         setKeyword(keyword!.filter((newKeyword: any) => newKeyword));
         setHospitalInfo((prev) => {
@@ -201,7 +201,7 @@ export default function HospitalInfo() {
           newKeyword &&
           keyword!.length < AVAILABLE_KEYWORD_COUNTS
         ) {
-          $HashWrapInner.innerHTML = "#" + newKeyword;
+          $HashWrapInner.innerHTML = '#' + newKeyword;
           $HashWrapOuter.appendChild($HashWrapInner);
           const keywords = [...keyword!, newKeyword];
           setHospitalInfo((prev) => {
@@ -211,26 +211,26 @@ export default function HospitalInfo() {
             };
           });
           $keywordNumWarning.textContent =
-            "키워드가 정상적으로 등록되었습니다.";
-          setNewKeyword("");
+            '키워드가 정상적으로 등록되었습니다.';
+          setNewKeyword('');
         } else {
           $keywordNumWarning.textContent = `키워드는 ${AVAILABLE_KEYWORD_COUNTS}개까지 등록 가능합니다.`;
-          setNewKeyword("");
-          console.log("초과 등록 실패");
+          setNewKeyword('');
+          console.log('초과 등록 실패');
         }
       }
     },
-    [keyword, newKeyword, $HashWrapInner, $HashWrapOuter, $keywordNumWarning]
+    [keyword, newKeyword, $HashWrapInner, $HashWrapOuter, $keywordNumWarning],
   );
 
   const onServiceSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log("서비스 추가 버튼 클릭");
+    console.log('서비스 추가 버튼 클릭');
     setServiceList([...serviceList, hospitalServiceInfo]);
     setHospitalServiceInfo({
-      serviceName: "",
+      serviceName: '',
       servicePrice: 0,
-      serviceDesc: "",
+      serviceDesc: '',
       serviceCapacity: 0,
     });
   };
@@ -279,13 +279,13 @@ export default function HospitalInfo() {
       box.style.color = theme.palette.blue;
     } else if (!isChecked && categoryList.find((i) => i === id)) {
       box.style.borderColor = theme.palette.lightgray;
-      box.style.color = "black";
+      box.style.color = 'black';
       const index = categoryList.indexOf(id);
       if (index !== -1) {
         categoryList.splice(index, 1);
       }
     }
-    if (categoryList[0] === "") {
+    if (categoryList[0] === '') {
       categoryList.splice(0, 1);
     }
     setHospitalInfo((prev) => {
@@ -306,13 +306,13 @@ export default function HospitalInfo() {
       box.style.color = theme.palette.blue;
     } else if (!isChecked && dayList.find((i) => i === id)) {
       box.style.borderColor = theme.palette.lightgray;
-      box.style.color = "black";
+      box.style.color = 'black';
       const index = dayList.indexOf(id);
       if (index !== -1) {
         dayList.splice(index, 1);
       }
     }
-    if (dayList[0] === "") {
+    if (dayList[0] === '') {
       dayList.splice(0, 1);
     }
     setHospitalInfo((prev) => {
@@ -325,7 +325,7 @@ export default function HospitalInfo() {
     checkedBusinessHoursHandler(
       target.parentNode,
       target.value,
-      target.checked
+      target.checked,
     );
   };
 
@@ -339,13 +339,13 @@ export default function HospitalInfo() {
       box.style.color = theme.palette.blue;
     } else if (!isChecked && businessHoursList.find((i) => i === id)) {
       box.style.borderColor = theme.palette.lightgray;
-      box.style.color = "black";
+      box.style.color = 'black';
       const index = businessHoursList.indexOf(id);
       if (index !== -1) {
         businessHoursList.splice(index, 1);
       }
     }
-    if (businessHoursList[0] === "") {
+    if (businessHoursList[0] === '') {
       businessHoursList.splice(0, 1);
     }
     setHospitalInfo((prev) => {
@@ -357,35 +357,35 @@ export default function HospitalInfo() {
   const hospitalResetState = useResetRecoilState(hospitalLoginState);
   const userResetState = useResetRecoilState(userState);
   async function handleLogout() {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (token) {
-      localStorage.removeItem("token");
+      localStorage.removeItem('token');
       userResetState();
     } else {
-      await CustomAxiosGet.get("/hospital/logout");
+      await CustomAxiosGet.get('/hospital/logout');
       hospitalResetState();
     }
   }
 
   const withdrawButtonHandler = async (
-    e: React.MouseEvent<HTMLButtonElement>
+    e: React.MouseEvent<HTMLButtonElement>,
   ) => {
     e.preventDefault();
     const data = { currentPassword: currentPassword };
     try {
       const response = await axios.patch(
-        "http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/withdrawal",
+        'http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/withdrawal',
         data,
         {
           withCredentials: true,
-        }
+        },
       );
-      console.log("병원 회원 탈퇴가 진행됩니다.:", response);
-      alert("탈퇴되었습니다.");
+      console.log('병원 회원 탈퇴가 진행됩니다.:', response);
+      alert('탈퇴되었습니다.');
       handleLogout();
-      navigate("/");
+      navigate('/');
     } catch (err) {
-      alert("비밀번호가 틀렸습니다.");
+      alert('비밀번호가 틀렸습니다.');
       setIsPassOpen(!isPassOpen);
     }
   };
@@ -396,17 +396,17 @@ export default function HospitalInfo() {
     const { name, email, password, ...restHospitalInfo } = hospitalInfo;
     const data = { ...restHospitalInfo, currentPassword };
     try {
-      console.log("try문 안 정보 출력:", hospitalInfo);
+      console.log('try문 안 정보 출력:', hospitalInfo);
       const response = await axios.patch(
-        "http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/",
+        'http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/',
         data,
         {
           withCredentials: true,
-        }
+        },
       ); // 서버 오류로 코드 수정함. 이후 다시 수정할 것
-      console.log("response:", response);
-      alert("성공적으로 저장되었습니다.");
-      navigate("/hospital-info");
+      console.log('response:', response);
+      alert('성공적으로 저장되었습니다.');
+      navigate('/hospital-info');
     } catch (err) {
       console.log(err);
     }
@@ -423,15 +423,15 @@ export default function HospitalInfo() {
         //응답 성공
         // api
         const API_URL =
-          "http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/detail";
+          'http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/detail';
         const response = await axios.get(API_URL, {
           withCredentials: true,
         });
-        console.log("응답 성공", response);
+        console.log('응답 성공', response);
         setHospitalInfo(response.data.data.hospDetailInfo);
       } catch (error) {
         //응답 실패
-        console.error("응답 실패", error);
+        console.error('응답 실패', error);
       }
       // 서비스 api 완성되면 서비스 get 요청도 추가
     }
@@ -441,7 +441,7 @@ export default function HospitalInfo() {
   // console.log("hospital data:", hospitalInfo);
 
   return (
-    <div style={{ margin: "0 2rem 2rem 2rem" }}>
+    <div style={{ margin: '0 2rem 2rem 2rem' }}>
       <HospitalContainer>
         <div className="ant-typography">
           <Title>병원정보</Title>
@@ -455,11 +455,11 @@ export default function HospitalInfo() {
                   <InfoInput
                     name="name"
                     style={{
-                      width: "12rem",
-                      marginLeft: "0.5rem",
+                      width: '12rem',
+                      marginLeft: '0.5rem',
                     }}
                     type="text"
-                    value={hospitalInfo.name || ""}
+                    value={hospitalInfo.name || ''}
                     onChange={onChange}
                     disabled
                   />
@@ -470,9 +470,9 @@ export default function HospitalInfo() {
                   <InputLabel>이름</InputLabel>
                   <InfoInput
                     name="director"
-                    style={{ marginLeft: "0.5rem" }}
+                    style={{ marginLeft: '0.5rem' }}
                     type="text"
-                    value={hospitalInfo.director || ""}
+                    value={hospitalInfo.director || ''}
                     onChange={onChange}
                   />
                 </Container>
@@ -483,8 +483,8 @@ export default function HospitalInfo() {
                   <InfoInput
                     name="email"
                     style={{
-                      width: "12rem",
-                      marginLeft: "0.5rem",
+                      width: '12rem',
+                      marginLeft: '0.5rem',
                     }}
                     type="text"
                     value={hospitalInfo.email}
@@ -499,7 +499,7 @@ export default function HospitalInfo() {
                   {/* 유저 페이지와 형식 통일, 추후 기능 추가 */}
                   <InfoInput
                     name="password"
-                    style={{ marginLeft: "0.5rem" }}
+                    style={{ marginLeft: '0.5rem' }}
                     type="password"
                     // autoComplete="current-password"
                     value=""
@@ -516,9 +516,9 @@ export default function HospitalInfo() {
                   <InputLabel>병원 연락처</InputLabel>
                   <InfoInput
                     name="phoneNumber"
-                    style={{ marginLeft: "0.5rem" }}
+                    style={{ marginLeft: '0.5rem' }}
                     type="text"
-                    value={hospitalInfo.phoneNumber || ""}
+                    value={hospitalInfo.phoneNumber || ''}
                     onChange={onChange}
                   />
                 </Container>
@@ -528,9 +528,9 @@ export default function HospitalInfo() {
                   <InputLabel>사업자 등록번호</InputLabel>
                   <InfoInput
                     name="businessNumber"
-                    style={{ marginLeft: "0.5rem" }}
+                    style={{ marginLeft: '0.5rem' }}
                     type="text"
-                    value={hospitalInfo?.businessNumber || ""}
+                    value={hospitalInfo?.businessNumber || ''}
                     onChange={onChange}
                   />
                 </Container>
@@ -540,17 +540,17 @@ export default function HospitalInfo() {
                   <InputLabel>면허번호</InputLabel>
                   <InfoInput
                     name="licenseNumber"
-                    style={{ marginLeft: "0.5rem" }}
+                    style={{ marginLeft: '0.5rem' }}
                     type="text"
-                    value={hospitalInfo?.licenseNumber || ""}
+                    value={hospitalInfo?.licenseNumber || ''}
                     onChange={onChange}
                   />
                 </Container>
               </Row>
               <Row>
                 <InputLabel>병원 사진</InputLabel>
-                <div style={{ marginBottom: "0.5rem" }} />
-                <div style={{ marginLeft: "0.5rem", marginBottom: "0.5rem" }}>
+                <div style={{ marginBottom: '0.5rem' }} />
+                <div style={{ marginLeft: '0.5rem', marginBottom: '0.5rem' }}>
                   <UploadFileLabel htmlFor="uploadFile">업로드</UploadFileLabel>
                   <UploadFileInput
                     type="file"
@@ -558,24 +558,24 @@ export default function HospitalInfo() {
                     accept="image/jpg,image/png,image/jpeg,image/gif"
                     name="profile_img"
                     onChange={(e: any) => {
-                      console.log("convert전:", e.target.files);
+                      console.log('convert전:', e.target.files);
                       convertFileToBase64(e.target.files[0]);
                     }}
                   />
                 </div>
                 <div>
                   {hospitalInfo.image &&
-                    hospitalInfo.image.map((img) => (
-                      <img src={img} width="280px" alt="" />
+                    hospitalInfo.image.map((img, i: number) => (
+                      <img src={img} width="280px" alt="" key={i} />
                     ))}
                 </div>
               </Row>
-              <div style={{ marginBottom: "0.5rem" }} />
+              <div style={{ marginBottom: '0.5rem' }} />
               <Row>
                 <Container>
                   <Col>
                     <Row>
-                      <InputLabel style={{ marginBottom: "0.5rem" }}>
+                      <InputLabel style={{ marginBottom: '0.5rem' }}>
                         주소
                       </InputLabel>
                     </Row>
@@ -583,12 +583,12 @@ export default function HospitalInfo() {
                       <InfoInput
                         name="postalCode"
                         style={{
-                          marginBottom: "0.5rem",
-                          marginLeft: "0.5rem",
-                          width: "6rem",
+                          marginBottom: '0.5rem',
+                          marginLeft: '0.5rem',
+                          width: '6rem',
                         }}
                         type="text"
-                        value={hospitalInfo?.address?.postalCode || ""}
+                        value={hospitalInfo?.address?.postalCode || ''}
                         onChange={onChangeAddress}
                       />
                     </Row>
@@ -596,9 +596,9 @@ export default function HospitalInfo() {
                       <InfoInput
                         name="address1"
                         style={{
-                          marginBottom: "0.5rem",
-                          marginLeft: "0.5rem",
-                          width: "20rem",
+                          marginBottom: '0.5rem',
+                          marginLeft: '0.5rem',
+                          width: '20rem',
                         }}
                         type="text"
                         value={hospitalInfo?.address?.address1}
@@ -609,15 +609,15 @@ export default function HospitalInfo() {
                       <InfoInput
                         name="address2"
                         style={{
-                          marginLeft: "0.5rem",
-                          width: "18rem",
+                          marginLeft: '0.5rem',
+                          width: '18rem',
                         }}
                         type="text"
                         value={hospitalInfo?.address?.address2}
                         onChange={onChangeAddress}
                       />
                       <InfoBtn
-                        style={{ marginLeft: "0.5rem" }}
+                        style={{ marginLeft: '0.5rem' }}
                         onClick={onOpenClick}
                       >
                         수정
@@ -630,14 +630,14 @@ export default function HospitalInfo() {
                 </Container>
               </Row>
               <Row>
-                <InputLabel style={{ marginBottom: "0.5rem" }}>
+                <InputLabel style={{ marginBottom: '0.5rem' }}>
                   카테고리
                 </InputLabel>
               </Row>
               <Row>
                 {CATEGORY_LIST.map((category) => (
-                  <Row key={category + "Row"}>
-                    <CategoryLabel htmlFor={category} key={category + "L"}>
+                  <Row key={category + 'Row'}>
+                    <CategoryLabel htmlFor={category} key={category + 'L'}>
                       <InfoInput
                         type="checkbox"
                         id={category}
@@ -652,13 +652,13 @@ export default function HospitalInfo() {
                 ))}
               </Row>
               <Row>
-                <InputLabel style={{ marginTop: "1rem" }}>키워드</InputLabel>
+                <InputLabel style={{ marginTop: '1rem' }}>키워드</InputLabel>
                 <span
                   style={{
-                    marginLeft: "1rem",
+                    marginLeft: '1rem',
                     color: `${
                       $keywordNumWarning?.textContent ===
-                      "키워드가 정상적으로 등록되었습니다."
+                      '키워드가 정상적으로 등록되었습니다.'
                         ? theme.palette.blue
                         : theme.palette.peach
                     }`,
@@ -686,12 +686,12 @@ export default function HospitalInfo() {
               </Row>
               <Row>
                 <Col>
-                  <InputLabel style={{ marginBottom: "0.5rem" }}>
+                  <InputLabel style={{ marginBottom: '0.5rem' }}>
                     영업시간
                   </InputLabel>
                   <Row>
                     {TIME_LIST.map((time) => (
-                      <TimeLabel htmlFor={time} key={time + "L"}>
+                      <TimeLabel htmlFor={time} key={time + 'L'}>
                         <input
                           type="checkbox"
                           id={time}
@@ -705,12 +705,12 @@ export default function HospitalInfo() {
                       </TimeLabel>
                     ))}
                   </Row>
-                  <Row style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
+                  <Row style={{ marginTop: '0.5rem', marginBottom: '0.5rem' }}>
                     <InputLabel>휴무일 선택</InputLabel>
                   </Row>
                   <Row>
                     {DAY_LIST.map((day) => (
-                      <DayLabel htmlFor={day} key={day + "L"}>
+                      <DayLabel htmlFor={day} key={day + 'L'}>
                         <input
                           type="checkbox"
                           id={day}
@@ -748,24 +748,24 @@ export default function HospitalInfo() {
                       )
                     })} */}
                   </Row>
-                  <Row style={{ marginTop: "1rem" }}>
+                  <Row style={{ marginTop: '1rem' }}>
                     <Container>
                       <InputLabel>시간당 예약가능 고객 수</InputLabel>
                       <InfoInput
                         name="hospitalCapacity"
-                        style={{ marginLeft: "0.5rem" }}
+                        style={{ marginLeft: '0.5rem' }}
                         type="text"
                         value={hospitalInfo?.hospitalCapacity}
                         onChange={onChange}
                       />
                     </Container>
                   </Row>
-                  <Row style={{ marginTop: "1rem" }}>
+                  <Row style={{ marginTop: '1rem' }}>
                     <Container>
                       <InputLabel>현재 비밀번호</InputLabel>
                       <InfoInput
                         name="currentPassword"
-                        style={{ marginLeft: "0.5rem" }}
+                        style={{ marginLeft: '0.5rem' }}
                         type="password"
                         onChange={onChange}
                       />
@@ -774,9 +774,9 @@ export default function HospitalInfo() {
                   <Row>
                     <InfoBtn
                       style={{
-                        marginLeft: "0.5rem",
-                        marginBottom: "1.5rem",
-                        margin: "auto",
+                        marginLeft: '0.5rem',
+                        marginBottom: '1.5rem',
+                        margin: 'auto',
                       }}
                       onClick={onhandleUpdate}
                     >
@@ -792,8 +792,8 @@ export default function HospitalInfo() {
               <Row>
                 <InputLabel
                   style={{
-                    margin: "auto",
-                    fontWeight: "bold",
+                    margin: 'auto',
+                    fontWeight: 'bold',
                   }}
                 >
                   서비스 추가
@@ -806,8 +806,8 @@ export default function HospitalInfo() {
                     name="serviceName"
                     onChange={onChange}
                     style={{
-                      marginLeft: "0.5rem",
-                      marginBottom: "0.5rem",
+                      marginLeft: '0.5rem',
+                      marginBottom: '0.5rem',
                     }}
                   />
                 </Container>
@@ -819,8 +819,8 @@ export default function HospitalInfo() {
                     name="servicePrice"
                     onChange={onChange}
                     style={{
-                      marginLeft: "0.5rem",
-                      marginBottom: "0.5rem",
+                      marginLeft: '0.5rem',
+                      marginBottom: '0.5rem',
                     }}
                   />
                 </Container>
@@ -832,8 +832,8 @@ export default function HospitalInfo() {
                     name="serviceDesc"
                     onChange={onChange}
                     style={{
-                      marginLeft: "0.5rem",
-                      marginBottom: "0.5rem",
+                      marginLeft: '0.5rem',
+                      marginBottom: '0.5rem',
                     }}
                   />
                 </Container>
@@ -845,8 +845,8 @@ export default function HospitalInfo() {
                     name="serviceCapacity"
                     onChange={onChange}
                     style={{
-                      marginLeft: "0.5rem",
-                      marginBottom: "0.5rem",
+                      marginLeft: '0.5rem',
+                      marginBottom: '0.5rem',
                     }}
                   />
                 </Container>
@@ -854,49 +854,49 @@ export default function HospitalInfo() {
               <Row>
                 <InfoBtn
                   style={{
-                    marginLeft: "0.5rem",
-                    marginBottom: "1.5rem",
-                    margin: "auto",
+                    marginLeft: '0.5rem',
+                    marginBottom: '1.5rem',
+                    margin: 'auto',
                   }}
                   onClick={onServiceSubmit}
                 >
                   추가
                 </InfoBtn>
               </Row>
-              <Row style={{ marginTop: "2rem" }}>
+              <Row style={{ marginTop: '2rem' }}>
                 <InputLabel
                   style={{
-                    marginBottom: "1rem",
-                    margin: "auto",
-                    fontWeight: "bold",
+                    marginBottom: '1rem',
+                    margin: 'auto',
+                    fontWeight: 'bold',
                   }}
                 >
                   제공중인 서비스 목록
                 </InputLabel>
               </Row>
               <Row>
-                <Col style={{ margin: "auto" }}>
+                <Col style={{ margin: 'auto' }}>
                   {serviceList?.map((item, index) => (
                     <Row
                       key={index}
                       style={{
-                        border: "2px solid",
-                        borderRadius: "15px",
-                        margin: ".5rem .5rem",
-                        padding: ".5rem .5rem",
+                        border: '2px solid',
+                        borderRadius: '15px',
+                        margin: '.5rem .5rem',
+                        padding: '.5rem .5rem',
                       }}
                     >
-                      <Col key={index + "Col1"}>
-                        <Row key={index + "N"}>
+                      <Col key={index + 'Col1'}>
+                        <Row key={index + 'N'}>
                           서비스명: {item.serviceName}
                         </Row>
-                        <Row key={index + "P"}>
+                        <Row key={index + 'P'}>
                           서비스 가격: {item.servicePrice}
                         </Row>
-                        <Row key={index + "D"}>
+                        <Row key={index + 'D'}>
                           서비스 설명: {item.serviceDesc}
                         </Row>
-                        <Row key={index + "C"}>
+                        <Row key={index + 'C'}>
                           서비스 동시 수용가능인원수: {item.serviceCapacity}
                         </Row>
                       </Col>
@@ -928,14 +928,14 @@ export default function HospitalInfo() {
         >
           <HospitalContainer
             style={{
-              position: "absolute",
-              top: "18%",
-              left: "30%",
-              maxWidth: "16rem",
+              position: 'absolute',
+              top: '18%',
+              left: '30%',
+              maxWidth: '16rem',
             }}
           >
-            <Container style={{ margin: "auto" }}>
-              <InputLabel style={{ marginBottom: "1rem" }}>
+            <Container style={{ margin: 'auto' }}>
+              <InputLabel style={{ marginBottom: '1rem' }}>
                 비밀번호를 입력해주세요.
               </InputLabel>
               <InfoInput

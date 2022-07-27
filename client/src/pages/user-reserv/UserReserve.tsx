@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Title } from "../../components/InfoForm";
-import { Header } from "../../components/Liststyle";
-import ReserveCard from "./ReserveCard";
-import { Container, Column } from "./ReserveStyle";
-import Pagination from "../home/Pagenation";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Title } from '../../components/InfoForm';
+import { Header } from '../../components/Liststyle';
+import ReserveCard from './ReserveCard';
+import { Container, Column } from './ReserveStyle';
+import Pagination from '../home/Pagenation';
 
 function UserReserve() {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   const [resInfo, setResInfo] = useState<any>({
     Reservations: [],
     hospInfoes: [],
@@ -25,7 +25,7 @@ function UserReserve() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       )
       .then((res) => {
         const data = res.data.data;

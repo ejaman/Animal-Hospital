@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import styled, { css } from "styled-components";
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
-import { TUser, userState } from "../state/UserState";
+import React, { useState, useEffect } from 'react';
+import styled, { css } from 'styled-components';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
+import { TUser, userState } from '../state/UserState';
 
-import Search from "./Search";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
-import { hospitalLoginState } from "../state/HospitalState";
-import { CustomAxiosGet } from "../common/CustomAxios";
+import Search from './Search';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
+import { hospitalLoginState } from '../state/HospitalState';
+import { CustomAxiosGet } from '../common/CustomAxios';
 
 const HeaderContainer = styled.div`
   width: 100%;
@@ -94,13 +94,13 @@ const ProfileBtn = styled.div<IIdx>`
   padding-left: 6px;
   line-height: 35px;
   ${(props) =>
-    props.num === "first" &&
+    props.num === 'first' &&
     css`
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
     `}
   ${(props) =>
-    props.num === "last" &&
+    props.num === 'last' &&
     css`
       border-bottom-right-radius: 10px;
       border-bottom-left-radius: 10px;
@@ -120,7 +120,7 @@ interface ISearch {
 
 export default function Header({ searchBox }: ISearch) {
   const [isLogin, setIsLogin] = useState<boolean>(
-    !!localStorage.getItem("token")
+    !!localStorage.getItem('token'),
   );
   const [profile, setProfile] = useState<boolean>(false); // 계정 아이콘 클릭 여부 체크
   const [role, setRole] = useRecoilState<TUser>(userState);
@@ -129,19 +129,19 @@ export default function Header({ searchBox }: ISearch) {
   const HospitalResetState = useResetRecoilState(hospitalLoginState);
   const UserResetState = useResetRecoilState(userState);
 
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    !token && hospital.hospitalName === "" && setIsLogin(false);
+    !token && hospital.hospitalName === '' && setIsLogin(false);
   }, [token, hospital]);
 
   // 로그아웃 클릭 시 로그아웃
   async function handleLogout() {
     if (token) {
-      localStorage.removeItem("token");
+      localStorage.removeItem('token');
       UserResetState();
     } else {
-      await CustomAxiosGet.get("/hospital/logout");
+      await CustomAxiosGet.get('/hospital/logout');
       HospitalResetState();
     }
 
@@ -161,7 +161,7 @@ export default function Header({ searchBox }: ISearch) {
           </LogoContainer>
           {haveSearch && <Search />}
           <BtnContainer>
-            {!isLogin && hospital.hospitalName === "" ? (
+            {!isLogin && hospital.hospitalName === '' ? (
               <LoginBtn to="/login">로그인</LoginBtn>
             ) : (
               <Profile
@@ -174,11 +174,11 @@ export default function Header({ searchBox }: ISearch) {
               <ProfileBtnbox profile="true">
                 <Link
                   to={
-                    role.role === "basic-user"
-                      ? "/user-mypage"
-                      : role.role === "admin"
-                      ? "admin-mypage"
-                      : "hospital-mypage"
+                    role.role === 'basic-user'
+                      ? '/user-mypage'
+                      : role.role === 'admin'
+                      ? 'admin-mypage'
+                      : 'hospital-mypage'
                   }
                 >
                   <ProfileBtn num="first" onClick={() => setProfile(false)}>

@@ -1,12 +1,12 @@
 // TODO: 디테일 예약 파트는 전면 리팩토링이 필요할 것 같음!!
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import styled from "styled-components";
-import axios from "axios";
-import { CustomAxiosGet, CustomAxiosPost } from "../../common/CustomAxios";
-import TimeButton from "../../components/detail/TimeButton";
-import MainKeyWord from "../../components/main/MainKeyWord";
-import CalendarUi from "./Calendar";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import axios from 'axios';
+import { CustomAxiosGet, CustomAxiosPost } from '../../common/CustomAxios';
+import TimeButton from '../../components/detail/TimeButton';
+import MainKeyWord from '../../components/main/MainKeyWord';
+import CalendarUi from './Calendar';
 import {
   ContentContainer,
   Header,
@@ -26,12 +26,12 @@ import {
   ServiceCol,
   ServiceDiv,
   Add,
-} from "./DetailStyle";
-import HospitalService from "./HospitalService";
-import PetSelect from "./PetSelect";
-import { useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { reservationState } from "../../state/ReservationState";
+} from './DetailStyle';
+import HospitalService from './HospitalService';
+import PetSelect from './PetSelect';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { reservationState } from '../../state/ReservationState';
 
 const BookingButtonContainer = styled.div``;
 const BookingButton = styled.button`
@@ -51,16 +51,16 @@ function Detail() {
   const navigate = useNavigate();
   const [hospitalInfo, setHospitalInfo] = useState<any>({});
   const bookDataPost = useRecoilValue(reservationState);
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   const [service, setService] = useState<any>([]);
 
   const fetchGetData = async () => {
     await CustomAxiosGet.get(`/hospital/${hospitalName}/detail`).then((res) =>
-      setHospitalInfo(res.data.data.hospDetailInfo)
+      setHospitalInfo(res.data.data.hospDetailInfo),
     );
     await axios
       .get(
-        `http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/${hospitalName}/Services`
+        `http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/${hospitalName}/Services`,
       ) //
       .then((res) => {
         setService(res.data.data.hospServices);
@@ -73,14 +73,14 @@ function Detail() {
   const handleLoginBtn = () => {
     // 토큰이 없으면 로그인하라고 먼저 알려주고 있으면 Post 요청
     if (!token) {
-      alert("로그인이 필요한 서비스입니다.");
-      navigate("/login");
+      alert('로그인이 필요한 서비스입니다.');
+      navigate('/login');
       return;
     }
-    CustomAxiosPost.post("/reservation/register", bookDataPost).then((res) =>
-      console.log(res)
+    CustomAxiosPost.post('/reservation/register', bookDataPost).then((res) =>
+      console.log(res),
     );
-    alert("예약이 완료되었습니다.");
+    alert('예약이 완료되었습니다.');
   };
 
   return (
@@ -123,7 +123,7 @@ function Detail() {
             {hospitalInfo.tag && (
               <MainKeyWord
                 mainKeyWord={hospitalInfo.tag.map(
-                  (items: { name: string }) => items.name
+                  (items: { name: string }) => items.name,
                 )}
               />
             )}

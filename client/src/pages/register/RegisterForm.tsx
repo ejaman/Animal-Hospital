@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import "antd/dist/antd.css";
-import { Input } from "antd";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import 'antd/dist/antd.css';
+import { Input } from 'antd';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-import Postcode from "./Postcode";
-import reg from "../../components/RegExp";
+import Postcode from './Postcode';
+import reg from '../../components/RegExp';
 
 const RegisterBtn = styled.button`
   width: 120px;
@@ -71,20 +71,20 @@ export interface IAddr {
 }
 
 const RegisterForm: React.FC<Props> = ({ isHospital }) => {
-  const [userName, setUserName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [checkPwd, setCheckPwd] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
+  const [userName, setUserName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [checkPwd, setCheckPwd] = useState<string>('');
+  const [phone, setPhone] = useState<string>('');
 
-  const [hospitalname, setHospitalname] = useState<string>("");
-  const [businessNumber, setBusinessNumber] = useState<string>("");
-  const [licenseNumber, setLicenseNumber] = useState<string>("");
+  const [hospitalname, setHospitalname] = useState<string>('');
+  const [businessNumber, setBusinessNumber] = useState<string>('');
+  const [licenseNumber, setLicenseNumber] = useState<string>('');
 
   const [address, setAddress] = useState<IAddr>({
-    postalCode: "",
-    address1: "",
-    address2: "",
+    postalCode: '',
+    address1: '',
+    address2: '',
   });
 
   const [isSamePwd, setIsSamePwd] = useState<boolean>(true);
@@ -95,25 +95,25 @@ const RegisterForm: React.FC<Props> = ({ isHospital }) => {
   const navigate = useNavigate();
 
   async function handleSubmit(
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) {
     e.preventDefault();
 
-    if (userName === "") return alert("이름을 입력해주세요.");
-    if (!isEmail || email === "") return alert("이메일을 확인해주세요.");
-    if (!isPwd || password === "")
-      return alert("비밀번호 형식을 확인해주세요.");
-    if (!isSamePwd || checkPwd === "")
-      return alert("비밀번호를 다르게 입력했습니다.");
-    if (!isPhone || phone === "") return alert("전화번호를 확인해주세요.");
-    if (address.postalCode === "") return alert("주소를 입력해주세요.");
+    if (userName === '') return alert('이름을 입력해주세요.');
+    if (!isEmail || email === '') return alert('이메일을 확인해주세요.');
+    if (!isPwd || password === '')
+      return alert('비밀번호 형식을 확인해주세요.');
+    if (!isSamePwd || checkPwd === '')
+      return alert('비밀번호를 다르게 입력했습니다.');
+    if (!isPhone || phone === '') return alert('전화번호를 확인해주세요.');
+    if (address.postalCode === '') return alert('주소를 입력해주세요.');
 
-    if (isHospital && hospitalname === "")
-      return alert("병원 이름을 입력해주세요.");
-    if (isHospital && licenseNumber === "")
-      return alert("면허 번호를 입력해주세요.");
-    if (isHospital && businessNumber === "")
-      return alert("사업자 번호를 입력해주세요.");
+    if (isHospital && hospitalname === '')
+      return alert('병원 이름을 입력해주세요.');
+    if (isHospital && licenseNumber === '')
+      return alert('면허 번호를 입력해주세요.');
+    if (isHospital && businessNumber === '')
+      return alert('사업자 번호를 입력해주세요.');
 
     if (isHospital) {
       const data: IHospData = {
@@ -129,13 +129,13 @@ const RegisterForm: React.FC<Props> = ({ isHospital }) => {
 
       try {
         const result = await axios.post(
-          "http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/register",
+          'http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/register',
           JSON.stringify(data),
           {
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
             },
-          }
+          },
         );
         console.log(result);
       } catch (e: any) {
@@ -148,19 +148,19 @@ const RegisterForm: React.FC<Props> = ({ isHospital }) => {
         password,
         phoneNumber: phone,
         address,
-        role: "basic-user",
-        userStatus: "normal",
+        role: 'basic-user',
+        userStatus: 'normal',
       };
 
       try {
         const result = await axios.post(
-          "http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/register",
+          'http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/register',
           JSON.stringify(data),
           {
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
             },
-          }
+          },
         );
         console.log(result);
       } catch (e: any) {
@@ -169,7 +169,7 @@ const RegisterForm: React.FC<Props> = ({ isHospital }) => {
     }
 
     alert(`회원가입이 완료되었습니다:)`);
-    navigate("/login");
+    navigate('/login');
   }
 
   function handleChangeEmail(e: React.ChangeEvent<HTMLInputElement>) {
@@ -205,20 +205,20 @@ const RegisterForm: React.FC<Props> = ({ isHospital }) => {
             placeholder="병원 이름을 입력해주세요"
             value={hospitalname}
             onChange={(e) => setHospitalname(e.target.value)}
-            style={{ marginTop: "1rem" }}
+            style={{ marginTop: '1rem' }}
           />
         )}
         <Input
           placeholder="이름을 입력해주세요"
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
-          style={{ marginTop: "1rem" }}
+          style={{ marginTop: '1rem' }}
         />
         <Input
           placeholder="이메일을 입력해주세요"
           value={email}
           onChange={handleChangeEmail}
-          style={{ marginTop: "1rem" }}
+          style={{ marginTop: '1rem' }}
         />
         {!isEmail && (
           <ErrorMessage>이메일 형식이 올바르지 않습니다.</ErrorMessage>
@@ -228,7 +228,7 @@ const RegisterForm: React.FC<Props> = ({ isHospital }) => {
           type="password"
           value={password}
           onChange={handleChangePwd}
-          style={{ marginTop: "1rem" }}
+          style={{ marginTop: '1rem' }}
         />
         {!isPwd && (
           <ErrorMessage>
@@ -240,7 +240,7 @@ const RegisterForm: React.FC<Props> = ({ isHospital }) => {
           type="password"
           value={checkPwd}
           onChange={(e) => setCheckPwd(e.target.value)}
-          style={{ marginTop: "1rem" }}
+          style={{ marginTop: '1rem' }}
         />
         {!isSamePwd && (
           <ErrorMessage>비밀번호와 일치하지 않습니다.</ErrorMessage>
@@ -249,7 +249,7 @@ const RegisterForm: React.FC<Props> = ({ isHospital }) => {
           placeholder="전화번호를 입력해주세요 (- 포함)"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          style={{ marginTop: "1rem" }}
+          style={{ marginTop: '1rem' }}
         />
         {!isPhone && (
           <ErrorMessage>전화번호를 바르게 입력해주세요.</ErrorMessage>
@@ -267,13 +267,13 @@ const RegisterForm: React.FC<Props> = ({ isHospital }) => {
               placeholder="사업자 등록번호를 입력해주세요"
               value={businessNumber}
               onChange={(e) => setBusinessNumber(e.target.value)}
-              style={{ marginTop: "1rem" }}
+              style={{ marginTop: '1rem' }}
             />
             <Input
               placeholder="면허 번호를 입력해주세요"
               value={licenseNumber}
               onChange={(e) => setLicenseNumber(e.target.value)}
-              style={{ marginTop: "1rem" }}
+              style={{ marginTop: '1rem' }}
             />
           </div>
         )}

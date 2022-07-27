@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import Calendar from "react-calendar";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
-import "react-calendar/dist/Calendar.css";
-import styled from "styled-components";
-import moment from "moment";
-import { useRecoilState } from "recoil";
-import { reservationState } from "../../state/ReservationState";
+import React, { useState } from 'react';
+import Calendar from 'react-calendar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
+import 'react-calendar/dist/Calendar.css';
+import styled from 'styled-components';
+import moment from 'moment';
+import { useRecoilState } from 'recoil';
+import { reservationState } from '../../state/ReservationState';
 
 export const CalendarTitle = styled.span`
   margin-left: 12px;
@@ -30,13 +30,13 @@ const CalenderUi = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: "20px" }}>
-        <FontAwesomeIcon style={{ fontSize: "20px" }} icon={faCalendarDays} />
+      <div style={{ marginBottom: '20px' }}>
+        <FontAwesomeIcon style={{ fontSize: '20px' }} icon={faCalendarDays} />
         <CalendarTitle>예약</CalendarTitle>
       </div>
       <Calendar
         onChange={setValue}
-        formatDay={(locale, date) => moment(date).format("DD")}
+        formatDay={(locale, date) => moment(date).format('DD')}
         value={value}
         onClickDay={onDateChange}
       />

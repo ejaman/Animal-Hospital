@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   InfoCard,
   TextContainer,
@@ -6,7 +6,7 @@ import {
   InfoText,
   StatusContainer,
   Select,
-} from "../../components/Liststyle";
+} from '../../components/Liststyle';
 function UserCard({ data }: any) {
   const [status, setStatus] = useState<string>(data?.userStatus);
   useEffect(() => {

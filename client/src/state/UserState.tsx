@@ -1,8 +1,8 @@
-import { atom } from "recoil";
-import { recoilPersist } from "recoil-persist";
+import { atom } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
 
 const { persistAtom }: any = recoilPersist({
-  key: "userState",
+  key: 'userState',
 });
 
 export type TUser = {
@@ -11,10 +11,10 @@ export type TUser = {
 };
 
 export const userState = atom<TUser>({
-  key: "userState",
+  key: 'userState',
   default: {
-    role: "",
-    userStatus: "",
+    role: '',
+    userStatus: '',
   },
   effects_UNSTABLE: [persistAtom],
 });

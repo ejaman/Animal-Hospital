@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import PetCard from "./PetCard";
-import { MainContainer, AddBtn } from "./PetInfoStyle";
-import AddPet from "./AddPet";
-import { PetInfoType } from "./PetInfoInterface";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import PetCard from './PetCard';
+import { MainContainer, AddBtn } from './PetInfoStyle';
+import AddPet from './AddPet';
+import { PetInfoType } from './PetInfoInterface';
 
 function PetInformation() {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   const [pets, setPets] = useState<PetInfoType[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   // 처음 한 번 서버 통신
@@ -16,12 +16,12 @@ function PetInformation() {
 
   const reload = async () => {
     const res = await axios.get(
-      "http://kdt-sw2-seoul-team14.elicecoding.com:5000/pet/mypets",
+      'http://kdt-sw2-seoul-team14.elicecoding.com:5000/pet/mypets',
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     const data = res.data;
     setPets(data);
@@ -29,13 +29,13 @@ function PetInformation() {
 
   const onhandleDelete = async (id: string) => {
     await axios.delete(
-      "http://kdt-sw2-seoul-team14.elicecoding.com:5000/pet/delete",
+      'http://kdt-sw2-seoul-team14.elicecoding.com:5000/pet/delete',
       {
         data: { petId: id },
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     await reload();
   };
@@ -43,14 +43,14 @@ function PetInformation() {
   const onhandleAdd = async (data: any) => {
     try {
       await axios.post(
-        "http://kdt-sw2-seoul-team14.elicecoding.com:5000/pet/register",
+        'http://kdt-sw2-seoul-team14.elicecoding.com:5000/pet/register',
         data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "content-type": "multipart/form-data",
+            'content-type': 'multipart/form-data',
           },
-        }
+        },
       );
       await reload();
     } catch (err) {

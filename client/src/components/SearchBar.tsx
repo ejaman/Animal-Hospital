@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import styled from "styled-components";
+import React, { useRef, useState } from 'react';
+import styled from 'styled-components';
 function SearchBar({ setSearch }: any) {
   const formRef = useRef<HTMLFormElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);

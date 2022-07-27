@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import UserCard from "./UserCard";
-import { InfoText, ListContainer, Header } from "../../components/Liststyle";
-import { UserInfoType } from "../user-info/Interface";
-import styled from "styled-components";
-import Checkbox from "../../components/Buttons/CheckBox";
-import SearchBar from "../../components/SearchBar";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import UserCard from './UserCard';
+import { InfoText, ListContainer, Header } from '../../components/Liststyle';
+import { UserInfoType } from '../user-info/Interface';
+import styled from 'styled-components';
+import Checkbox from '../../components/Buttons/CheckBox';
+import SearchBar from '../../components/SearchBar';
 
 const Container = styled(ListContainer)`
   max-width: 700px;
@@ -17,7 +17,7 @@ const FlexContainer = styled.div`
 `;
 
 const AdminUserList: React.FC = () => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   const [datas, setDatas] = useState<UserInfoType[]>([]);
   const [search, setSearch] = useState<string>();
   const [normal, setNormal] = useState<boolean>(true);
@@ -25,7 +25,7 @@ const AdminUserList: React.FC = () => {
 
   useEffect(() => {
     axios
-      .get("http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/userlist", {
+      .get('http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/userlist', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -36,17 +36,17 @@ const AdminUserList: React.FC = () => {
   }, []);
 
   const onhandleCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.target.name === "normal" ? setNormal(!normal) : setExpired(!expired);
+    event.target.name === 'normal' ? setNormal(!normal) : setExpired(!expired);
   };
 
   let list = datas.filter((data) =>
     normal && !expired
-      ? data.userStatus === "normal"
+      ? data.userStatus === 'normal'
       : !normal && expired
-      ? data.userStatus === "expired"
+      ? data.userStatus === 'expired'
       : !normal && !expired
-      ? data.userStatus === ""
-      : data.userName.includes("")
+      ? data.userStatus === ''
+      : data.userName.includes(''),
   );
 
   if (search) {
