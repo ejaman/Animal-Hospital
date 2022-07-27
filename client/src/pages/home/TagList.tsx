@@ -1,4 +1,4 @@
-import React   from 'react'
+import React from 'react';
 
 import styled from 'styled-components';
 import { IData } from '../../components/main/MainCard';
@@ -12,15 +12,20 @@ const TagContainer = styled.div`
 `;
 
 export interface ITagsProps {
-  setFiltered: (data:IData[]) => void,
-  setTotal: (total: number) => void,
-  limit: number,
-  page: number
-  setPage: (page:number) => void
+  setFiltered: (data: IData[]) => void;
+  setTotal: (total: number) => void;
+  limit: number;
+  page: number;
+  setPage: (page: number) => void;
 }
 
-export default function TagList({setFiltered, setTotal, limit, page, setPage}: ITagsProps) {
-
+export default function TagList({
+  setFiltered,
+  setTotal,
+  limit,
+  page,
+  setPage,
+}: ITagsProps) {
   return (
     <>
       <TagContainer>
@@ -29,7 +34,8 @@ export default function TagList({setFiltered, setTotal, limit, page, setPage}: I
           setTotal={(total: number) => setTotal(total)}
           limit={limit}
           page={page}
-          setPage={(page: number) => setPage(page)} />
+          setPage={(page: number) => setPage(page)}
+        />
       </TagContainer>
     </>
   );

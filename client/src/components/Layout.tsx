@@ -5,7 +5,6 @@ import { Outlet } from 'react-router-dom';
 import Footer from './Footer';
 import Header from './Header';
 
-
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -14,7 +13,7 @@ const Wrapper = styled.div`
 
 const ContentWrapper = styled.div`
   flex: 1;
-`
+`;
 
 export default function Layout() {
   return (
@@ -27,5 +26,5 @@ export default function Layout() {
         <Footer />
       </Wrapper>
     </>
-  )
+  );
 }

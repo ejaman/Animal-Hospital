@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   InfoCard,
   TextContainer,
@@ -6,7 +6,7 @@ import {
   InfoText,
   StatusContainer,
   Select,
-} from "../../components/Liststyle";
+} from '../../components/Liststyle';
 function HpCard() {
   return (
     <InfoCard>

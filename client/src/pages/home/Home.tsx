@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
 import MainCard, { IData } from '../../components/main/MainCard';
 import Pagination from './Pagenation';
 import TagList from './TagList';
 
-export default function Home() {  
+export default function Home() {
   const [page, setPage] = useState<number>(1);
   const limit = 4;
   const [total, setTotal] = useState<number>(0);
@@ -17,14 +17,15 @@ export default function Home() {
         setTotal={(total: number) => setTotal(total)}
         limit={limit}
         page={page}
-        setPage={(page: number) => setPage(page)} />
-      <MainCard
-        filtered={filtered} />
+        setPage={(page: number) => setPage(page)}
+      />
+      <MainCard filtered={filtered} />
       <Pagination
         total={total}
         limit={limit}
         page={page}
-        setPage={(page: number) => setPage(page)} />
+        setPage={(page: number) => setPage(page)}
+      />
     </>
-  )
+  );
 }

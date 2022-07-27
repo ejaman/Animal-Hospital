@@ -1,13 +1,13 @@
-import { atom } from "recoil";
+import { atom } from 'recoil';
 
 export const reservationState = atom<any>({
-  key: "reservationState",
+  key: 'reservationState',
   default: {
-    hospName: "",
-    service: "",
+    hospName: '',
+    service: '',
     price: 0,
-    pet: "",
-    rezDate: "",
+    pet: '',
+    rezDate: '',
     rezHour: 0,
   },
 });

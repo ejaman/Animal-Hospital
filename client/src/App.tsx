@@ -1,23 +1,23 @@
-import React from "react";
-import { Routes, BrowserRouter, Route } from "react-router-dom";
+import React from 'react';
+import { Routes, BrowserRouter, Route } from 'react-router-dom';
 
-import Login from "./pages/login/Login";
-import Register from "./pages/register/Register";
-import UserMypage from "./pages/user-mypage/UserMypage";
-import UserInfo from "./pages/user-info/UserInfo";
-import HospitalMypage from "./pages/hospital-mypage/HospitalMypage";
-import HospitalInfo from "./pages/hospital-info/HospitalInfo";
-import AdminMypage from "./pages/admin-mypage/AdminMypage";
-import Home from "./pages/home/Home";
-import AdminUserList from "./pages/admin-userlist/AdminUserList";
-import Detail from "./pages/detail/Detail";
-import AdminHospitalList from "./pages/admin-hplist/AdminHospitalList";
-import PetInformation from "./pages/pet-information/PetInformation";
-import HospitalReserve from "./pages/hospital-reserve/HospitalReserve";
+import Login from './pages/login/Login';
+import Register from './pages/register/Register';
+import UserMypage from './pages/user-mypage/UserMypage';
+import UserInfo from './pages/user-info/UserInfo';
+import HospitalMypage from './pages/hospital-mypage/HospitalMypage';
+import HospitalInfo from './pages/hospital-info/HospitalInfo';
+import AdminMypage from './pages/admin-mypage/AdminMypage';
+import Home from './pages/home/Home';
+import AdminUserList from './pages/admin-userlist/AdminUserList';
+import Detail from './pages/detail/Detail';
+import AdminHospitalList from './pages/admin-hplist/AdminHospitalList';
+import PetInformation from './pages/pet-information/PetInformation';
+import HospitalReserve from './pages/hospital-reserve/HospitalReserve';
 
-import UserReserve from "./pages/user-reserv/UserReserve";
-import Layout from "./components/Layout";
-import AdminReserve from "./pages/admin-reserv/AdminReserve";
+import UserReserve from './pages/user-reserv/UserReserve';
+import Layout from './components/Layout';
+import AdminReserve from './pages/admin-reserv/AdminReserve';
 
 function App() {
   return (

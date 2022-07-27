@@ -1,5 +1,5 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Card,
@@ -8,19 +8,19 @@ import {
   MypageHeader,
   HeaderTitle,
   HeaderDescription,
-} from "../../components/MypageCardBtn";
+} from '../../components/MypageCardBtn';
 
 function UserMypage() {
   const navigate = useNavigate();
   return (
-    <div style={{ maxWidth: "700px", margin: "2rem auto" }}>
+    <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
       <MypageHeader>
         <HeaderDescription>마이페이지에 오신걸 환영합니다.</HeaderDescription>
       </MypageHeader>
       <Container>
         <Card
           onClick={() => {
-            navigate("/user-info");
+            navigate('/user-info');
           }}
         >
           <i className="fa-solid fa-id-card fa-xl"></i>
@@ -29,7 +29,7 @@ function UserMypage() {
         </Card>
         <Card
           onClick={() => {
-            navigate("/pet-info");
+            navigate('/pet-info');
           }}
         >
           <i className="fa-solid fa-paw fa-xl"></i>
@@ -38,7 +38,7 @@ function UserMypage() {
         </Card>
         <Card
           onClick={() => {
-            navigate("/user-reservation");
+            navigate('/user-reservation');
           }}
         >
           <i className="fa-solid fa-list-check fa-xl"></i>

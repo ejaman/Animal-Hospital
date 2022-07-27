@@ -1,8 +1,8 @@
-import { atom } from "recoil";
-import { recoilPersist } from "recoil-persist";
+import { atom } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
 
 const { persistAtom }: any = recoilPersist({
-  key: "hospitalLoginState",
+  key: 'hospitalLoginState',
 });
 
 export type THospital = {
@@ -11,10 +11,10 @@ export type THospital = {
 };
 
 export const hospitalLoginState = atom<THospital>({
-  key: "hospitalLoginState",
+  key: 'hospitalLoginState',
   default: {
-    hospitalName: "",
-    hospitalState: "",
+    hospitalName: '',
+    hospitalState: '',
   },
   effects_UNSTABLE: [persistAtom],
 });

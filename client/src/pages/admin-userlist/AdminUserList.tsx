@@ -1,35 +1,31 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import UserCard from "./UserCard";
-import { InfoText, ListContainer, Header } from "../../components/Liststyle";
-import { UserInfoType } from "../user-info/Interface";
-import SearchBar from "./SearchBar";
-import styled from "styled-components";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import UserCard from './UserCard';
+import { InfoText, ListContainer, Header } from '../../components/Liststyle';
+import { UserInfoType } from '../user-info/Interface';
+import styled from 'styled-components';
+import Checkbox from '../../components/Buttons/CheckBox';
+import SearchBar from '../../components/SearchBar';
+
 const Container = styled(ListContainer)`
   max-width: 700px;
   margin: 0rem auto;
   padding: 1rem;
 `;
-const Btn = styled.button`
-  border: none;
-  border-radius: 10px;
-  padding: 0.5rem;
-  margin-left: 0.2rem;
-  background-color: ${(props) => props.theme.palette.orange};
-  color: white;
-  font-weight: bold;
+const FlexContainer = styled.div`
+  display: flex;
 `;
 
-function AdminUserList() {
-  const token = localStorage.getItem("token");
+const AdminUserList: React.FC = () => {
+  const token = localStorage.getItem('token');
   const [datas, setDatas] = useState<UserInfoType[]>([]);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>();
-  const [sort, serSort] = useState<string>();
+  const [normal, setNormal] = useState<boolean>(true);
+  const [expired, setExpired] = useState<boolean>(true);
 
   useEffect(() => {
     axios
-      .get("http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/userlist", {
+      .get('http://kdt-sw2-seoul-team14.elicecoding.com:5000/api/userlist', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -39,43 +35,41 @@ function AdminUserList() {
       });
   }, []);
 
-  const SearchLists = search
-    ? datas.filter((data: any) =>
-        data.email.includes(`${search}`.toLocaleLowerCase())
-      )
-    : datas;
-
-  const onhandleSort = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    serSort(event.currentTarget.name);
-    setIsOpen(false);
+  const onhandleCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.target.name === 'normal' ? setNormal(!normal) : setExpired(!expired);
   };
-  const ex = sort ? datas.filter((data) => data.userStatus === sort) : datas;
+
+  let list = datas.filter((data) =>
+    normal && !expired
+      ? data.userStatus === 'normal'
+      : !normal && expired
+      ? data.userStatus === 'expired'
+      : !normal && !expired
+      ? data.userStatus === ''
+      : data.userName.includes(''),
+  );
+
+  if (search) {
+    list = list.filter((data: any) => data.email.includes(search));
+  }
 
   return (
     <Container>
-      <div>
-        <Btn name="normal" onClick={onhandleSort}>
-          회원
-        </Btn>
-        <Btn name="expired" onClick={onhandleSort}>
-          탈퇴회원
-        </Btn>
-        <Btn
-          name="check"
-          onClick={() => {
-            setIsOpen(!isOpen);
-          }}
-        >
-          검색
-        </Btn>
-      </div>
-      {isOpen && (
-        <SearchBar
-          datas={datas}
-          setSearch={(search: string) => setSearch(search)}
+      <FlexContainer>
+        <Checkbox
+          onChange={onhandleCheck}
+          text="normal"
+          title="일반회원"
+          checked={normal}
         />
-      )}
+        <Checkbox
+          onChange={onhandleCheck}
+          text="expired"
+          title="탈퇴회원"
+          checked={expired}
+        />
+        <SearchBar setSearch={(search: string) => setSearch(search)} />
+      </FlexContainer>
 
       <Header>
         <InfoText>역할</InfoText>
@@ -83,15 +77,11 @@ function AdminUserList() {
         <InfoText>아이디</InfoText>
         <InfoText>상태</InfoText>
       </Header>
-      {isOpen
-        ? SearchLists.map((data: any, i: number) => (
-            <UserCard key={i} data={data} />
-          ))
-        : ex
-            .splice(0, 5)
-            .map((data: any, i: number) => <UserCard key={i} data={data} />)}
+      {list.map((data: any, i: number) => (
+        <UserCard key={i} data={data} />
+      ))}
     </Container>
   );
-}
+};
 
 export default AdminUserList;

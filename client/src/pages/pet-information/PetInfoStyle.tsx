@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 export const MainContainer = styled.div`
   max-width: 800px;
   margin: 1rem auto;

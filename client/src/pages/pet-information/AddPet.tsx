@@ -1,5 +1,5 @@
-import React, { useState, useRef, useCallback } from "react";
-import { UploadFileInput } from "../hospital-info/Style";
+import React, { useState, useRef, useCallback } from 'react';
+import { UploadFileInput } from '../hospital-info/Style';
 import {
   Title,
   RadioButton,
@@ -15,7 +15,7 @@ import {
   InfoContainer,
   Btn,
   UploadFileLabel,
-} from "./PetInfoStyle";
+} from './PetInfoStyle';
 
 function AddPet({ onhandleAdd }: any) {
   const [gender, setGender] = useState<string>();
@@ -56,8 +56,8 @@ function AddPet({ onhandleAdd }: any) {
     onhandleAdd(data);
     formRef.current?.reset();
     setImg(null);
-    setNeut("");
-    setGender("");
+    setNeut('');
+    setGender('');
   };
 
   const onLoadImg = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +86,7 @@ function AddPet({ onhandleAdd }: any) {
                 type="radio"
                 name="gender"
                 value="F"
-                checked={gender === "F"}
+                checked={gender === 'F'}
                 onChange={onhandleGender}
               />
               <RadioButtonLabel />
@@ -97,7 +97,7 @@ function AddPet({ onhandleAdd }: any) {
                 type="radio"
                 name="gender"
                 value="M"
-                checked={gender === "M"}
+                checked={gender === 'M'}
                 onChange={onhandleGender}
               />
               <RadioButtonLabel />
@@ -115,7 +115,7 @@ function AddPet({ onhandleAdd }: any) {
                 type="radio"
                 name="neutralized"
                 value="완료"
-                checked={neut === "완료"}
+                checked={neut === '완료'}
                 onChange={onhandleNeut}
               />
               <RadioButtonLabel />
@@ -126,7 +126,7 @@ function AddPet({ onhandleAdd }: any) {
                 type="radio"
                 name="neutralized"
                 value="미완료"
-                checked={neut === "미완료"}
+                checked={neut === '미완료'}
                 onChange={onhandleNeut}
               />
               <RadioButtonLabel />
@@ -137,7 +137,7 @@ function AddPet({ onhandleAdd }: any) {
                 type="radio"
                 name="neutralized"
                 value="모름"
-                checked={neut === "모름"}
+                checked={neut === '모름'}
                 onChange={onhandleNeut}
               />
               <RadioButtonLabel />

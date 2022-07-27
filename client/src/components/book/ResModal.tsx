@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Modal from "react-modal";
-import { ModalStyle } from "../ModalStyle";
-import styled from "styled-components";
-import ReservationContent from "./ReservationContent";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import { InfoBtn } from "../InfoForm";
-import { Link } from "react-router-dom";
-import { CheckBtn } from "../../pages/user-reserv/ReserveStyle";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Modal from 'react-modal';
+import { ModalStyle } from '../ModalStyle';
+import styled from 'styled-components';
+import ReservationContent from './ReservationContent';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import { InfoBtn } from '../InfoForm';
+import { Link } from 'react-router-dom';
+import { CheckBtn } from '../../pages/user-reserv/ReserveStyle';
 
 const ReservationTitle = styled.h2`
   text-align: center;
@@ -28,11 +28,11 @@ const ModalBtnContainer = styled.div`
   justify-content: flex-end;
 `;
 
-const token = localStorage.getItem("token");
+const token = localStorage.getItem('token');
 const ResModal = ({ res }: any) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [status, setStatus] = useState<string>();
-  const isToken = localStorage.getItem("token");
+  const isToken = localStorage.getItem('token');
   const handleChangeModalState = () => {
     setIsOpen(!isOpen);
   };
@@ -52,7 +52,7 @@ const ResModal = ({ res }: any) => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
     } catch {
       // alert("비밀번호가 틀렸습니다.");

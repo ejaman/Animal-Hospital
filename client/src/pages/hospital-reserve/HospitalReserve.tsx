@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Title } from "../../components/InfoForm";
-import { InfoText, ListContainer, Header } from "../../components/Liststyle";
+import { Title } from '../../components/InfoForm';
+import { InfoText, ListContainer, Header } from '../../components/Liststyle';
 import ReserveCard from './ReserveCard';
 
 const Container = styled(ListContainer)`
@@ -28,5 +28,5 @@ export default function HospitalReserve() {
         <ReserveCard />
       </Container>
     </>
-  )
+  );
 }

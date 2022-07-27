@@ -1,9 +1,9 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 import { theme } from '../../styles/Colors';
 
 const HospitalContainer = styled.div`
-max-width: 1000px;
-margin: 2rem auto;
+  max-width: 1000px;
+  margin: 2rem auto;
 `;
 
 const Container = styled.span`
@@ -16,37 +16,37 @@ const Container = styled.span`
 
 const UploadFileLabel = styled.label`
   display: inline-block;
-  padding: .5em .8em;
+  padding: 0.5em 0.8em;
   font-size: inherit;
   line-height: normal;
   vertical-align: middle;
   cursor: pointer;
   border: 1px solid ${theme.palette.lightgray};
-  border-radius: .25em;
+  border-radius: 0.25em;
 
   :hover {
     transition: 2ms ease-in;
     border-color: ${theme.palette.blue};
     color: ${theme.palette.blue};
   }
-`
+`;
 const UploadFileInput = styled.input`
   position: absolute;
   padding: 0;
   margin: -1px;
-  clip:rect(0,0,0,0);
+  clip: rect(0, 0, 0, 0);
   border: 0;
-`
+`;
 
 /* category css */
 const CategoryLabel = styled.label`
   display: inline-block;
-  padding: .5em .8em;
-  fontSize: inherit;
+  padding: 0.5em 0.8em;
+  fontsize: inherit;
   vertical-align: middle;
   cursor: pointer;
   border: 1px solid ${theme.palette.lightgray};
-  border-radius: .25em;
+  border-radius: 0.25em;
   color: black;
 
   :hover {
@@ -54,18 +54,17 @@ const CategoryLabel = styled.label`
     border-color: ${theme.palette.blue};
     color: ${theme.palette.blue};
   }
-};
-`
+`;
 
 /* day css */
 const DayLabel = styled.label`
   display: inline-block;
-  padding: .5em .8em;
-  fontSize: inherit;
+  padding: 0.5em 0.8em;
+  fontsize: inherit;
   vertical-align: middle;
   cursor: pointer;
   border: 1px solid ${theme.palette.lightgray};
-  border-radius: .25em;
+  border-radius: 0.25em;
   color: black;
 
   :hover {
@@ -73,18 +72,17 @@ const DayLabel = styled.label`
     border-color: ${theme.palette.blue};
     color: ${theme.palette.blue};
   }
-};
-`
+`;
 
 /* time css */
 const TimeLabel = styled.label`
   display: inline-block;
-  padding: .5em .8em;
-  fontSize: inherit;
+  padding: 0.5em 0.8em;
+  fontsize: inherit;
   vertical-align: middle;
   cursor: pointer;
   border: 1px solid ${theme.palette.lightgray};
-  border-radius: .25em;
+  border-radius: 0.25em;
   color: black;
 
   :hover {
@@ -92,8 +90,7 @@ const TimeLabel = styled.label`
     border-color: ${theme.palette.blue};
     color: ${theme.palette.blue};
   }
-};
-`
+`;
 
 /* keyword css */
 const KeywordInput = styled.div`
@@ -137,6 +134,15 @@ const KeywordInput = styled.div`
     min-width: 8rem;
     border: none;
   }
-`
+`;
 
-export { HospitalContainer, Container, UploadFileLabel, UploadFileInput, CategoryLabel, DayLabel, TimeLabel, KeywordInput };
+export {
+  HospitalContainer,
+  Container,
+  UploadFileLabel,
+  UploadFileInput,
+  CategoryLabel,
+  DayLabel,
+  TimeLabel,
+  KeywordInput,
+};
