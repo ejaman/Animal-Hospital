@@ -26,7 +26,7 @@ const AdminUserList: React.FC = () => {
   const [normal, setNormal] = useState<boolean>(true);
   const [expired, setExpired] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
-  const [pages, setPages] = useState<any>({ perPage: 10 });
+  const [pages, setPages] = useState<any>({ perPage: 100 });
 
   useEffect(() => {
     axios
