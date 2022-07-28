@@ -161,7 +161,11 @@ class UserService {
     }
   }
 
-
+  //전체 유저
+  async getAllUsers() : Promise<UserData[]>{
+    const users = await this.userModel.findAll();
+    return users;
+  }
 
   //유저 정보 pagination
   async getUsers(page : number, perPage : number): Promise<UserData[]> {
