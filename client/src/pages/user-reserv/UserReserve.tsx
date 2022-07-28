@@ -32,6 +32,8 @@ function UserReserve() {
       )
       .then((res) => {
         const data = res.data.data;
+        // console.log(data);
+
         const check = Object.values(data.ReservationsInfo);
         setPages({
           perPage: data.perPage,
