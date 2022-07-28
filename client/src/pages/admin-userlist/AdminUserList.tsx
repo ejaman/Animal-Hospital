@@ -26,7 +26,7 @@ const AdminUserList: React.FC = () => {
   const [normal, setNormal] = useState<boolean>(true);
   const [expired, setExpired] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
-  const [pages, setPages] = useState<any>({ perPage: 100 });
+  const [pages, setPages] = useState<any>({ perPage: 10 });
 
   useEffect(() => {
     axios
@@ -36,16 +36,14 @@ const AdminUserList: React.FC = () => {
         },
       })
       .then((res) => {
-        console.log(res.data);
-
         setDatas(res.data.users);
         setPages({
           perPage: res.data.perPage,
-          totalPage: res.data.total,
+          totalPage: res.data.totlaUsers,
         });
         setPage(res.data.page);
       });
-  }, []);
+  }, [page]);
 
   const onhandleCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.target.name === 'normal' ? setNormal(!normal) : setExpired(!expired);
@@ -64,6 +62,7 @@ const AdminUserList: React.FC = () => {
   if (search) {
     list = list.filter((data: any) => data.email.includes(search));
   }
+  console.log(pages);
 
   return (
     <Container>
