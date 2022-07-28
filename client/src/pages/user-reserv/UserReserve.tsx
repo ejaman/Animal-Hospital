@@ -6,6 +6,9 @@ import ReserveCard from './ReserveCard';
 import { Container, Column } from './ReserveStyle';
 import Pagination from '../home/Pagenation';
 
+// 바뀐 로컬 주소 URL
+const API_URL = 'http://localhost:5100';
+
 function UserReserve() {
   const token = localStorage.getItem('token');
   const [resInfo, setResInfo] = useState<any>({
@@ -20,7 +23,7 @@ function UserReserve() {
   useEffect(() => {
     axios
       .get(
-        `http://kdt-sw2-seoul-team14.elicecoding.com:5000/reservation/user/list?page=${page}&perPage=${pages.perPage}`,
+        `${API_URL}/reservation/user/list?page=${page}&perPage=${pages.perPage}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
