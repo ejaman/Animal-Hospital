@@ -55,7 +55,8 @@ export class UserModel {
         .limit(perPage) 
         const totalPage = Math.ceil(total/perPage);
         const usersPerPage = {users, page, perPage, totalPage};
-        return usersPerPage;
+        // return usersPerPage;
+        return users;
     }
 
     async statusExpired({userId} : StatusInfoRequired) : Promise<string> {
