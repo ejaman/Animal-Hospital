@@ -10,7 +10,10 @@ const AdminReserveCard = () => {
   const [totals, setTotals] = useState<number>(0);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
-  const offset = (page - 1) * limit;
+  const [count, setCount] = useState(1);
+  const [offset, setOffset] = useState(0);
+
+  // const offset = (page - 1) * limit;
 
   //TODO : 페이지네이션 적용시켜야함
   const getFetchData = async () => {
@@ -19,6 +22,7 @@ const AdminReserveCard = () => {
     );
     setTotals(result.data.data.totalHospitals);
     setReserveData(result.data.data.ReservationsInfo);
+    setOffset(() => (page - 1) * limit);
     console.log('page', page);
     console.log('perPage', limit);
     console.log('offset', offset);
