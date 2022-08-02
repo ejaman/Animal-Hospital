@@ -18,6 +18,7 @@ import HospitalReserve from './pages/hospital-reserve/HospitalReserve';
 import UserReserve from './pages/user-reserv/UserReserve';
 import Layout from './components/Layout';
 import AdminReserve from './pages/admin-reserv/AdminReserve';
+import PrivateRouter from './utils/PrivateRouter';
 
 function App() {
   return (
@@ -33,17 +34,21 @@ function App() {
           <Route path="detail" element={<Detail />} />
           <Route path="/hospital/:hospitalName/detail" element={<Detail />} />
           <Route path="/hospital/:hospitalName/Services" element={<Detail />} />
-          <Route path="/user-mypage" element={<UserMypage />} />
-          <Route path="/user-info" element={<UserInfo />} />
-          <Route path="/user-reservation" element={<UserReserve />} />
-          <Route path="/pet-info" element={<PetInformation />} />
+          {/* 토큰 인증이 필요한 페이지 */}
+          <Route element={<PrivateRouter authentication={true} />}>
+            <Route path="/user-mypage" element={<UserMypage />} />
+            <Route path="/user-info" element={<UserInfo />} />
+            <Route path="/pet-info" element={<PetInformation />} />
+            <Route path="/user-reservation" element={<UserReserve />} />
+            <Route path="/admin-mypage" element={<AdminMypage />} />
+            <Route path="/admin-userlist" element={<AdminUserList />} />
+            <Route path="/admin-hplist" element={<AdminHospitalList />} />
+            <Route path="/admin-reserv" element={<AdminReserve />} />
+          </Route>
+          {/* 호진 TODO: 병원 정보의 경우에는 cookie로 관리하기 때문에 추후 role을 확인하여 작업하겠습니다. */}
           <Route path="/hospital-mypage" element={<HospitalMypage />} />
           <Route path="/hospital-info" element={<HospitalInfo />} />
           <Route path="/hospital-reservation" element={<HospitalReserve />} />
-          <Route path="/admin-mypage" element={<AdminMypage />} />
-          <Route path="/admin-userlist" element={<AdminUserList />} />
-          <Route path="/admin-hplist" element={<AdminHospitalList />} />
-          <Route path="/admin-reserv" element={<AdminReserve />} />
         </Route>
       </Routes>
     </BrowserRouter>
