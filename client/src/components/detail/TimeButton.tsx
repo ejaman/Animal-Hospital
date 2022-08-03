@@ -20,14 +20,15 @@ const TimeContainer = styled.button`
   border-radius: 10px;
   border: 1px solid ${(props) => props.theme.palette.orange};
   background-color: ${(props) => props.theme.palette.orange};
+  color: white;
+  font-weight: bold;
   cursor: pointer;
   &:hover {
     transform: scale(1.05);
   }
   &:focus {
-    border: 1px solid ${(props) => props.theme.palette.peach};
-    background-color: ${(props) => props.theme.palette.peach};
-    color: white;
+    border: 1px solid #fa9829;
+    background-color: #fa9829;
   }
 `;
 

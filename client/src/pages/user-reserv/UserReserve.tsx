@@ -38,6 +38,8 @@ function UserReserve() {
       )
       .then((res) => {
         const data = res.data.data;
+        console.log(data);
+
         const check = Object.values(data.ReservationsInfo);
         setPages({
           perPage: data.perPage,
@@ -46,6 +48,7 @@ function UserReserve() {
         setPage(data.page);
         setResInfo(check);
       });
+    console.log(pages.perPage);
   }, [page]);
 
   // todo => 리팩토링! 더 좋은 방법있는지 찾아보기

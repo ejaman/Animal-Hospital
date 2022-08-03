@@ -339,7 +339,7 @@ export default function HospitalInfo() {
     const data = { currentPassword: currentPassword };
     try {
       const response = await axios.patch(
-        'http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/withdrawal',
+        'http://localhost:5100/hospital/withdrawal',
         data,
         {
           withCredentials: true,
@@ -363,7 +363,7 @@ export default function HospitalInfo() {
     try {
       console.log('try문 안 정보 출력:', hospitalInfo);
       const response = await axios.patch(
-        'http://kdt-sw2-seoul-team14.elicecoding.com:5000/hospital/',
+        'http://localhost:5100/hospital/',
         data,
         {
           withCredentials: true,
