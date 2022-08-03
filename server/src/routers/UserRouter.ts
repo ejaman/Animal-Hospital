@@ -1,10 +1,16 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import * as _ from 'lodash'; 
+import { Router } from 'express';
+import * as _ from 'lodash';
 
-import { loginRequired, adminOnly, } from '../middlewares';
-import { registerUserCTR, loginUserCTR, getUserInfoCTR, updateUserInfoCTR, getAllUsersCTR, ExpireUserCTR, loginKakaoCTR, loginPassportCTR, setUserStatusCTR } from '../controllers/UserController';
-import passport from 'passport';
-
+import { loginRequired, adminOnly } from '../middlewares';
+import {
+  registerUserCTR,
+  getUserInfoCTR,
+  updateUserInfoCTR,
+  getAllUsersCTR,
+  ExpireUserCTR,
+  loginPassportCTR,
+  setUserStatusCTR,
+} from '../controllers/UserController';
 
 const router = Router();
 
@@ -13,8 +19,6 @@ router.post('/register', registerUserCTR);
 
 //로그인
 router.post('/login', loginPassportCTR);
-
-
 
 //일반회원 개인정보 조회
 router.get('/user', loginRequired, getUserInfoCTR);
@@ -28,7 +32,7 @@ router.get('/userlist', adminOnly, getAllUsersCTR);
 // 관리자의 일반회원 상태 변경
 router.patch('/admin/status', loginRequired, adminOnly, setUserStatusCTR);
 
-// 일반 회원 탈퇴 
-router.patch('/expiration', loginRequired, ExpireUserCTR)
+// 일반 회원 탈퇴
+router.patch('/expiration', loginRequired, ExpireUserCTR);
 
 export { router as userRouter };
