@@ -5,9 +5,6 @@ import { HttpError } from '../middlewares';
 import { blockInvalidRequest } from './Utils';
 
 import passport from 'passport';
-import { Strategy as LocalStrategy } from 'passport-local';
-// import { passportLoginVerify } from '../passport/LocalStrategy';
-import logger from 'jet-logger';
 import jwt from 'jsonwebtoken';
 
 export async function registerUserCTR(
@@ -71,8 +68,7 @@ export async function loginUserCTR(
     const isExpired = await userService.blockExpiredUser(email);
 
     if (isExpired) {
-      // TODO : 메인페이지 경로로 이동시키기
-
+      
       res.status(400).json({
         result: 'failed',
         message: '탈퇴한 회원입니다.',
@@ -102,12 +98,14 @@ export async function loginPassportCTR(
         });
         return;
       }
-      req.login(user, { session: false }, async (loginError) => {
+      console.log('req.session : ', req.session);
+      req.login(user, { session: true }, async (loginError) => {
         if (loginError) {
           res.status(400).send(loginError);
           return;
         }
         // const userToken = await userService.getUserToken({ email, password });
+
         const secretKey = process.env.JWT_SECRET_KEY || 'secret-key';
         const token = jwt.sign(
           { userId: user._id, role: user.role, userStatus: user.userStatus },

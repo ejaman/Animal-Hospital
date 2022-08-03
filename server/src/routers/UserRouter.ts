@@ -12,10 +12,8 @@ const router = Router();
 router.post('/register', registerUserCTR);
 
 //로그인
-// router.post('/login', loginUserCTR);
 router.post('/login', loginPassportCTR);
-router.get('/login/kakao', passport.authenticate('kakao'));
-router.get('/oauth/kakao/callback', loginKakaoCTR)
+
 
 
 //일반회원 개인정보 조회
