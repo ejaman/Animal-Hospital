@@ -85,6 +85,20 @@ export class ReservationModel {
     )) as ReservationInfo;
     return updated;
   }
+
+  async findbyNameAndDate(
+    hospitalId: string,
+    rezDate: string,
+    rezHour: number
+  ): Promise<ReservationInfo[]> {
+    const filter = {
+      hospital: hospitalId,
+      rezDate: rezDate,
+      rezHour: rezHour,
+    };
+    const reservations = (await Reservation.find(filter)) as ReservationInfo[];
+    return reservations;
+  }
 }
 
 const reservationModel = new ReservationModel();

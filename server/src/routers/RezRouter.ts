@@ -277,4 +277,28 @@ reservationRouter.patch(
     }
   }
 );
+
+reservationRouter.get(
+  '/:hospitalName/:rezDate/:rezHour',
+  async (req, res, next) => {
+    try {
+      const { hospitalName, rezDate, rezHour } = req.params;
+
+      const hosiptal = await hospitalService.findHospitalByName(hospitalName);
+      const hospitalId = hosiptal._id.toString();
+
+      const reservations = await reservationService.findbyNameAndDate(
+        hospitalId,
+        rezDate,
+        parseInt(rezHour)
+      );
+      res
+        .status(201)
+        .json({ data: { reservations }, message: '수정되었습니다.' });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 export { reservationRouter };
