@@ -243,47 +243,6 @@ export async function ExpireUserCTR(
   }
 }
 
-export async function loginKakaoCTR(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    passport.authenticate('kakao', (err, user, info) => {
-      console.log('passport.authenticate(kakao)실행');
-      console.log(user);
-      console.log(req.user);
-
-      req.login(user, async (err) => {
-        console.log('kakao-callback user : ', user);
-        if (err) {
-          next(err);
-          return;
-        }
-
-        const accessToken = await userService.getAccessToken(
-          user._id,
-          user.role,
-          user.userStatus
-        );
-
-        await userService.saveRefreshToken(user._id);
-
-        return res.status(200).json({
-          userToken: {
-            accessToken,
-            role: user.role,
-            userStatus: user.userStatus,
-          },
-        });
-      });
-    })(req, res);
-  } catch (error) {
-    next(error);
-    return;
-  }
-}
-
 export async function setUserStatusCTR(
   req: Request,
   res: Response,
