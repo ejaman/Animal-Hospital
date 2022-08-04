@@ -10,10 +10,10 @@ import {
 import { loginRequired } from '../middlewares/LoginRequired';
 import { upload } from '../utils';
 
-const petRouter = Router();
+const router = Router();
 
 // 펫 정보 등록
-petRouter.post(
+router.post(
   '/register',
   loginRequired,
   upload.single('image'),
@@ -21,12 +21,12 @@ petRouter.post(
 );
 
 // 펫 정보 조회
-petRouter.get('/mypets', loginRequired, getPetCTR);
+router.get('/mypets', loginRequired, getPetCTR);
 
 //펫 정보 수정
-petRouter.patch('/update', loginRequired, upload.single('image'), updatePetCTR);
+router.patch('/update', loginRequired, upload.single('image'), updatePetCTR);
 
 //펫 정보 삭제
-petRouter.delete('/delete', loginRequired, deletePetCTR);
+router.delete('/delete', loginRequired, deletePetCTR);
 
-export { petRouter };
+export { router as petRouter};
