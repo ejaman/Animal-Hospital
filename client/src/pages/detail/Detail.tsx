@@ -38,12 +38,16 @@ const BookingButton = styled.button`
   margin: 20px;
   width: 328px;
   height: 52px;
-  background-color: #00d780;
+  background-color: ${(props) => props.theme.palette.orange};
   color: #fff;
   border-radius: 5px;
   border: none;
+  font-weight: bold;
   font-size: 18px;
   cursor: pointer;
+  &:hover {
+    background-color: #fea138;
+  }
 `;
 
 // 바뀐 로컬 주소 URL

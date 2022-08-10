@@ -101,7 +101,6 @@ function UserInfo() {
       currentPassword: currentPassword,
       newPassword: newPassword,
     };
-    console.log(data);
 
     axios.patch(`${API_URL}/api/users/${userInfo?.email}`, data, {
       headers: {
