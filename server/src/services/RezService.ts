@@ -58,6 +58,19 @@ class ReservationService {
     });
     return newHospRegStatus;
   }
+
+  async findbyNameAndDate(
+    hospitalId: string,
+    rezDate: string,
+    rezHour: number
+  ): Promise<ReservationInfo[]> {
+    const reservations = await this.reservationModel.findbyNameAndDate(
+      hospitalId,
+      rezDate,
+      rezHour
+    );
+    return reservations;
+  }
 }
 
 const reservationService = new ReservationService(reservationModel);
